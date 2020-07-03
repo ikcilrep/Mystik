@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Mystik.Models
+namespace Mystik.Entities
 {
     public class User
     {
