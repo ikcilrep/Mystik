@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Mystik.Helpers;
+using Mystik.Models;
 using Mystik.Services;
 
 namespace Mystik.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class UsersController : Controller
     {
         private IUserService _userService;
@@ -16,5 +17,18 @@ namespace Mystik.Controllers
             _userService = userService;
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Register(Registration model)
+        {
+            try
+            {
+                await _userService.Create(model.Username, model.Password);
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }
