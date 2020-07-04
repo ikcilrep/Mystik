@@ -76,6 +76,11 @@ namespace Mystik.Data
         {
             var user = await _context.FindAsync<User>(new object[1] { id });
             _context.Entry(user).CurrentValues.SetValues(updatedUser);
+            if (await _context.SaveChangesAsync() != 1)
+            {
+                throw new Exception("Failed to write to database.");
+            }
+
         }
 
         Task IUserRepository.Delete(Guid id)
