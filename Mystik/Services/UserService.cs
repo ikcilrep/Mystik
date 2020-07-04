@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +16,10 @@ namespace Mystik.Services
         private const int Iterations = 200000;
         private const int SaltSize = 16;
         private const int HashSize = 32;
+        private static readonly Regex _lowerCase = new Regex(@"[a-z]");
+        private static readonly Regex _upperCase = new Regex(@"[A-Z]");
+        private static readonly Regex _digit = new Regex(@"\d");
+        private static readonly Regex _specialCharacter = new Regex(@"[#$^+=!*()@%&]");
 
         private DataContext _context;
 
@@ -47,15 +52,7 @@ namespace Mystik.Services
 
         public async Task<User> Create(string username, string password)
         {
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                throw new AppException("Password is required.");
-            }
-
-            if (_context.Users.Any(user => user.Username == username))
-            {
-                throw new AppException($"Username \"{username}\" has already been taken.");
-            }
+            ValidateCredentials(username, password);
 
             byte[] passwordSalt = new byte[SaltSize];
             CreatePasswordHash(password, passwordSalt, out byte[] passwordHash);
@@ -90,6 +87,59 @@ namespace Mystik.Services
                 throw new Exception("Failed to write to database.");
             }
 
+        }
+
+        private void ValidateCredentials(string username, string password)
+        {
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                throw new AppException("Username is required.");
+            }
+
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                throw new AppException("Password is required.");
+            }
+
+            if (username[0] == '@')
+            {
+                throw new AppException("Username mustn't begin with \"@\".");
+            }
+
+            if (username.Length > 64)
+            {
+                throw new AppException("Username mustn't be longer than sixty four characters.");
+            }
+
+            if (password.Length < 8)
+            {
+                throw new AppException("Password must be at least eight characters long.");
+            }
+
+            if (!_digit.IsMatch(password))
+            {
+                throw new AppException("Password must contain at least one digit.");
+            }
+
+            if (!_lowerCase.IsMatch(password))
+            {
+                throw new AppException("Password must contain at least one lower case letter.");
+            }
+
+            if (!_upperCase.IsMatch(password))
+            {
+                throw new AppException("Password must contain at least one upper case letter.");
+            }
+
+            if (!_specialCharacter.IsMatch(password))
+            {
+                throw new AppException("Password must contain at least one special character.");
+            }
+
+            if (_context.Users.Any(user => user.Username == username))
+            {
+                throw new AppException($"Username \"{username}\" has already been taken.");
+            }
         }
 
         public async Task Delete(Guid id)
