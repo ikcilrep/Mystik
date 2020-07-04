@@ -33,9 +33,8 @@ namespace Mystik.Data
                 throw new AppException($"Username \"{username}\" has already been taken.");
             }
 
-            byte[] passwordHash;
             byte[] passwordSalt = new byte[SaltSize];
-            HashPassword(password, passwordSalt, out passwordHash);
+            HashPassword(password, passwordSalt, out byte[] passwordHash);
             var user = new User
             {
                 Username = username,
