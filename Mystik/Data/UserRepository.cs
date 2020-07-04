@@ -36,7 +36,7 @@ namespace Mystik.Data
             byte[] passwordHash;
             byte[] passwordSalt = new byte[SaltSize];
             HashPassword(password, passwordSalt, out passwordHash);
-            var user = new User()
+            var user = new User
             {
                 Username = username,
                 PasswordHash = passwordHash,
@@ -55,7 +55,6 @@ namespace Mystik.Data
         {
             using (var rng = RandomNumberGenerator.Create())
             {
-
                 rng.GetBytes(salt);
             }
 
@@ -85,7 +84,7 @@ namespace Mystik.Data
 
         public async Task Delete(Guid id)
         {
-            var user = await _context.FindAsync<User>(new object[1] { id });
+            var user = new User { Id = id };
             _context.Remove(user);
             if (await _context.SaveChangesAsync() != 1)
             {
