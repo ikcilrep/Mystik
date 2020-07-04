@@ -72,9 +72,10 @@ namespace Mystik.Data
             return await _context.FindAsync<User>(new object[1] { id });
         }
 
-        Task IUserRepository.Update(Guid id, User user)
+        public async Task Update(Guid id, User updatedUser)
         {
-            throw new NotImplementedException();
+            var user = await _context.FindAsync<User>(new object[1] { id });
+            _context.Entry(user).CurrentValues.SetValues(updatedUser);
         }
 
         Task IUserRepository.Delete(Guid id)
