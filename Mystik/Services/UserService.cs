@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.EntityFrameworkCore;
 using Mystik.Data;
 using Mystik.Entities;
 using Mystik.Helpers;
@@ -22,6 +23,22 @@ namespace Mystik.Services
             _context = context;
         }
 
+        public async Task<User> Authenticate(string username, string password)
+        {
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                return null;
+
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.Username == username);
+
+            if (user == null)
+                return null;
+
+            if (!DoesPasswordMatch(password, user.PasswordSalt, user.PasswordHash))
+                return null;
+
+            return user;
+        }
+
         public async Task<User> Create(string username, string password)
         {
             if (string.IsNullOrWhiteSpace(password))
@@ -35,7 +52,7 @@ namespace Mystik.Services
             }
 
             byte[] passwordSalt = new byte[SaltSize];
-            HashPassword(password, passwordSalt, out byte[] passwordHash);
+            CreatePasswordHash(password, passwordSalt, out byte[] passwordHash);
             var user = new User
             {
                 Username = username,
@@ -49,21 +66,6 @@ namespace Mystik.Services
                 throw new Exception("Failed to write to database.");
             }
             return user;
-        }
-
-        private static void HashPassword(string password, byte[] salt, out byte[] hash)
-        {
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(salt);
-            }
-
-            hash = KeyDerivation.Pbkdf2(
-                password: password,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: Iterations,
-                numBytesRequested: HashSize);
         }
 
         public async Task<User> Retrieve(Guid id)
@@ -90,6 +92,32 @@ namespace Mystik.Services
             {
                 throw new Exception("Failed to write to database.");
             }
+        }
+
+        private byte[] HashPassword(string password, byte[] salt)
+        {
+            return KeyDerivation.Pbkdf2(
+                    password: password,
+                    salt: salt,
+                    prf: KeyDerivationPrf.HMACSHA256,
+                    iterationCount: Iterations,
+                    numBytesRequested: HashSize);
+        }
+
+        private bool DoesPasswordMatch(string password, byte[] salt, byte[] hash)
+        {
+            return HashPassword(password, salt).SequenceEqual(hash);
+        }
+
+
+        private void CreatePasswordHash(string password, byte[] salt, out byte[] hash)
+        {
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+
+            hash = HashPassword(password, salt);
         }
     }
 }
