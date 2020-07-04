@@ -83,9 +83,14 @@ namespace Mystik.Data
 
         }
 
-        Task IUserRepository.Delete(Guid id)
+        public async Task Delete(Guid id)
         {
-            throw new NotImplementedException();
+            var user = await _context.FindAsync<User>(new object[1] { id });
+            _context.Remove(user);
+            if (await _context.SaveChangesAsync() != 1)
+            {
+                throw new Exception("Failed to write to database.");
+            }
         }
     }
 }
