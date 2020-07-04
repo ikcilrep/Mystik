@@ -3,12 +3,13 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Mystik.Data;
 using Mystik.Entities;
 using Mystik.Helpers;
 
-namespace Mystik.Data
+namespace Mystik.Services
 {
-    public class UserRepository : IUserRepository
+    public class UserService : IUserService
     {
         private const int Iterations = 200000;
         private const int SaltSize = 16;
@@ -16,7 +17,7 @@ namespace Mystik.Data
 
         private DataContext _context;
 
-        public UserRepository(DataContext context)
+        public UserService(DataContext context)
         {
             _context = context;
         }

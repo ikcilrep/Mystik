@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Mystik.Entities;
 
-namespace Mystik.Data
+namespace Mystik.Services
 {
-    public interface IUserRepository
+    public interface IUserService
     {
         Task<User> Create(string username, string password);
         Task<User> Retrieve(Guid id);
