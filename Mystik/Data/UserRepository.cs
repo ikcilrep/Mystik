@@ -42,7 +42,7 @@ namespace Mystik.Data
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt
             };
-            await _context.AddAsync(user);
+            _context.Add(user);
 
             if (await _context.SaveChangesAsync() != 1)
             {
