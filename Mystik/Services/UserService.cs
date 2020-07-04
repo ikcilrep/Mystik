@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.EntityFrameworkCore;
 using Mystik.Data;
 using Mystik.Entities;
@@ -13,9 +11,7 @@ namespace Mystik.Services
 {
     public class UserService : IUserService
     {
-        private const int Iterations = 200000;
-        private const int SaltSize = 16;
-        private const int HashSize = 32;
+
         private static readonly Regex _lowerCase = new Regex(@"[a-z]");
         private static readonly Regex _upperCase = new Regex(@"[A-Z]");
         private static readonly Regex _digit = new Regex(@"\d");
@@ -42,7 +38,7 @@ namespace Mystik.Services
                 return null;
             }
 
-            if (!DoesPasswordMatch(password, user.PasswordSalt, user.PasswordHash))
+            if (!Hashing.DoesPasswordMatch(password, user.PasswordSalt, user.PasswordHash))
             {
                 return null;
             }
@@ -54,8 +50,7 @@ namespace Mystik.Services
         {
             ValidateCredentials(username, password);
 
-            byte[] passwordSalt = new byte[SaltSize];
-            CreatePasswordHash(password, passwordSalt, out byte[] passwordHash);
+            Hashing.CreatePasswordHash(password, out byte[] passwordSalt, out byte[] passwordHash);
             var user = new User
             {
                 Username = username,
@@ -88,6 +83,19 @@ namespace Mystik.Services
             }
 
         }
+
+        public async Task Delete(Guid id)
+        {
+            var user = new User { Id = id };
+            _context.Remove(user);
+
+            if (await _context.SaveChangesAsync() != 1)
+            {
+                throw new Exception("Failed to write to database.");
+            }
+        }
+
+
 
         private void ValidateCredentials(string username, string password)
         {
@@ -142,41 +150,5 @@ namespace Mystik.Services
             }
         }
 
-        public async Task Delete(Guid id)
-        {
-            var user = new User { Id = id };
-            _context.Remove(user);
-
-            if (await _context.SaveChangesAsync() != 1)
-            {
-                throw new Exception("Failed to write to database.");
-            }
-        }
-
-        private byte[] HashPassword(string password, byte[] salt)
-        {
-            return KeyDerivation.Pbkdf2(
-                    password: password,
-                    salt: salt,
-                    prf: KeyDerivationPrf.HMACSHA256,
-                    iterationCount: Iterations,
-                    numBytesRequested: HashSize);
-        }
-
-        private bool DoesPasswordMatch(string password, byte[] salt, byte[] hash)
-        {
-            return HashPassword(password, salt).SequenceEqual(hash);
-        }
-
-
-        private void CreatePasswordHash(string password, byte[] salt, out byte[] hash)
-        {
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(salt);
-            }
-
-            hash = HashPassword(password, salt);
-        }
     }
 }
