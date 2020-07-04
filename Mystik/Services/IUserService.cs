@@ -6,6 +6,7 @@ namespace Mystik.Services
 {
     public interface IUserService
     {
+        Task<User> Authenticate(string username, string password);
         Task<User> Create(string username, string password);
         Task<User> Retrieve(Guid id);
         Task Update(Guid id, User user);
