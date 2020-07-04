@@ -67,9 +67,9 @@ namespace Mystik.Data
                 numBytesRequested: HashSize);
         }
 
-        Task<User> IUserRepository.Retrieve(Guid id)
+        public async Task<User> Retrieve(Guid id)
         {
-            throw new NotImplementedException();
+            return await _context.FindAsync<User>(new object[1] { id });
         }
 
         Task IUserRepository.Update(Guid id, User user)
