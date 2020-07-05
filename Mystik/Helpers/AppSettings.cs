@@ -1,8 +1,8 @@
 ﻿using System;
 namespace Mystik.Helpers
 {
-    public class AppSettings
+    public static class AppSettings
     {
-        public string Secret => Environment.GetEnvironmentVariable("MYSTIK_SECRET");
+        public static string Secret => Environment.GetEnvironmentVariable("MYSTIK_SECRET");
     }
 }
