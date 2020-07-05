@@ -51,15 +51,7 @@ namespace Mystik.Services
         {
             ValidateCredentials(nickname, username, password);
 
-            Hashing.CreatePasswordHash(password, out byte[] passwordSalt, out byte[] passwordHash);
-            var user = new User
-            {
-                Nickname = nickname,
-                Username = username,
-                Role = Role.User,
-                PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt
-            };
+            var user = new User(nickname, username, password);
             _context.Add(user);
 
             if (await _context.SaveChangesAsync() != 1)

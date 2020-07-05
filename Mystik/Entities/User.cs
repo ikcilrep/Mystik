@@ -1,4 +1,5 @@
 ﻿using System;
+using Mystik.Helpers;
 
 namespace Mystik.Entities
 {
@@ -10,5 +11,19 @@ namespace Mystik.Entities
         public string Role { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
+
+        public User(string nickname, string username, string password)
+        {
+            Nickname = nickname;
+            Username = username;
+            Hashing.CreatePasswordHash(password, out byte[] passwordSalt, out byte[] passwordHash);
+            PasswordSalt = passwordSalt;
+            PasswordHash = passwordHash;
+            Role = Entities.Role.User;
+        }
+
+        public User() { }
+
+
     }
 }
