@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mystik.Helpers;
 using Mystik.Models;
@@ -6,6 +7,7 @@ using Mystik.Services;
 
 namespace Mystik.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UsersController : Controller
@@ -17,7 +19,8 @@ namespace Mystik.Controllers
             _userService = userService;
         }
 
-        [HttpPost]
+        [AllowAnonymous]
+        [HttpPost("register")]
         public async Task<IActionResult> Register(Registration model)
         {
             try
