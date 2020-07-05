@@ -98,6 +98,10 @@ namespace Mystik.Services
             }
         }
 
+        public async Task<IEnumerable<User>> GetAll()
+        {
+            return await _context.Users.ToListAsync();
+        }
 
 
         private void ValidateCredentials(string nickname, string username, string password)
@@ -168,5 +172,6 @@ namespace Mystik.Services
                 throw new AppException($"Username \"{username}\" has already been taken.");
             }
         }
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mystik.Entities;
 
@@ -11,5 +12,6 @@ namespace Mystik.Services
         Task<User> Retrieve(Guid id);
         Task Update(Guid id, User user);
         Task Delete(Guid id);
+        Task<IEnumerable<User>> GetAll();
     }
 }
