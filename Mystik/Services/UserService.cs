@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -55,6 +56,7 @@ namespace Mystik.Services
             {
                 Nickname = nickname,
                 Username = username,
+                Role = Role.User,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt
             };
@@ -166,6 +168,5 @@ namespace Mystik.Services
                 throw new AppException($"Username \"{username}\" has already been taken.");
             }
         }
-
     }
 }
