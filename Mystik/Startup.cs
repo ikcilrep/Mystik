@@ -45,16 +45,15 @@ namespace Mystik
             {
                 x.Events = new JwtBearerEvents
                 {
-                    OnTokenValidated = context =>
+                    OnTokenValidated = async context =>
                     {
                         var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
                         var userId = Guid.Parse(context.Principal.Identity.Name);
-                        var user = userService.Retrieve(userId);
+                        var user = await userService.Retrieve(userId);
                         if (user == null)
                         {
                             context.Fail("Unauthorized");
                         }
-                        return Task.CompletedTask;
                     }
                 };
                 x.SaveToken = true;
