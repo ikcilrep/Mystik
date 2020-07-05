@@ -6,6 +6,9 @@ namespace Mystik.Models
     public class Registration
     {
         [Required]
+        public string Nickname { get; set; }
+
+        [Required]
         public string Username { get; set; }
 
         [Required]

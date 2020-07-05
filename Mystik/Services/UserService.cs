@@ -46,13 +46,14 @@ namespace Mystik.Services
             return user;
         }
 
-        public async Task<User> Create(string username, string password)
+        public async Task<User> Create(string nickname, string username, string password)
         {
-            ValidateCredentials(username, password);
+            ValidateCredentials(nickname, username, password);
 
             Hashing.CreatePasswordHash(password, out byte[] passwordSalt, out byte[] passwordHash);
             var user = new User
             {
+                Nickname = nickname,
                 Username = username,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt
@@ -97,8 +98,13 @@ namespace Mystik.Services
 
 
 
-        private void ValidateCredentials(string username, string password)
+        private void ValidateCredentials(string nickname, string username, string password)
         {
+            if (string.IsNullOrWhiteSpace(nickname))
+            {
+                throw new AppException("Nickname is required.");
+            }
+
             if (string.IsNullOrWhiteSpace(username))
             {
                 throw new AppException("Username is required.");
@@ -118,6 +124,17 @@ namespace Mystik.Services
             {
                 throw new AppException("Username mustn't be longer than sixty four characters.");
             }
+
+            if (nickname[0] == '@')
+            {
+                throw new AppException("Nickname mustn't begin with \"@\".");
+            }
+
+            if (nickname.Length > 64)
+            {
+                throw new AppException("Nickname mustn't be longer than sixty four characters.");
+            }
+
 
             if (password.Length < 8)
             {

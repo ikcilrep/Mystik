@@ -49,6 +49,7 @@ namespace Mystik.Controllers
             return Ok(new
             {
                 Id = user.Id,
+                Nickname = user.Nickname,
                 Username = user.Username,
                 Token = tokenString
             });
@@ -60,7 +61,7 @@ namespace Mystik.Controllers
         {
             try
             {
-                await _userService.Create(model.Username, model.Password);
+                await _userService.Create(model.Nickname, model.Username, model.Password);
                 return Ok();
             }
             catch (AppException ex)
