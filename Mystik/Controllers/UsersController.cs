@@ -32,6 +32,17 @@ namespace Mystik.Controllers
             return await _userService.GetAll();
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            var currentUserId = Guid.Parse(User.Identity.Name);
+
+            if (id != currentUserId && !User.IsInRole(Role.Admin))
+                return Forbid();
+
+            return Ok(await _userService.Retrieve(id));
+        }
+
         [HttpPatch("{id}")]
         public async Task<IActionResult> Patch(Guid id, [FromBody] UserPatch patch)
         {
