@@ -95,32 +95,30 @@ namespace Mystik.Services
             return await _context.Users.ToListAsync();
         }
 
+        public async Task Update(Guid id, string nickname, string password)
+        {
+            var user = await _context.FindAsync<User>(new object[1] { id });
+            if (nickname != null)
+            {
+                user.Nickname = nickname;
+            }
 
-        private void ValidateCredentials(string nickname, string username, string password)
+            if (password != null)
+            {
+                user.SetPassword(password);
+            }
+
+            if ((nickname != null || password != null) && await _context.SaveChangesAsync() != 1)
+            {
+                throw new Exception("Failed to write to database.");
+            }
+        }
+
+        private void ValidateNickname(string nickname)
         {
             if (string.IsNullOrWhiteSpace(nickname))
             {
                 throw new AppException("Nickname is required.");
-            }
-
-            if (string.IsNullOrWhiteSpace(username))
-            {
-                throw new AppException("Username is required.");
-            }
-
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                throw new AppException("Password is required.");
-            }
-
-            if (username[0] == '@')
-            {
-                throw new AppException("Username mustn't begin with \"@\".");
-            }
-
-            if (username.Length > 64)
-            {
-                throw new AppException("Username mustn't be longer than sixty four characters.");
             }
 
             if (nickname[0] == '@')
@@ -132,8 +130,13 @@ namespace Mystik.Services
             {
                 throw new AppException("Nickname mustn't be longer than sixty four characters.");
             }
-
-
+        }
+        private void ValidatePassword(string password)
+        {
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                throw new AppException("Password is required.");
+            }
             if (password.Length < 8)
             {
                 throw new AppException("Password must be at least eight characters long.");
@@ -157,6 +160,27 @@ namespace Mystik.Services
             if (!_specialCharacter.IsMatch(password))
             {
                 throw new AppException("Password must contain at least one special character.");
+            }
+        }
+
+        private void ValidateCredentials(string nickname, string username, string password)
+        {
+            ValidateNickname(nickname);
+            ValidatePassword(password);
+
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                throw new AppException("Username is required.");
+            }
+
+            if (username[0] == '@')
+            {
+                throw new AppException("Username mustn't begin with \"@\".");
+            }
+
+            if (username.Length > 64)
+            {
+                throw new AppException("Username mustn't be longer than sixty four characters.");
             }
 
             if (_context.Users.Any(user => user.Username == username))

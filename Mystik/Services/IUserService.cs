@@ -11,6 +11,7 @@ namespace Mystik.Services
         Task<User> Create(string nickname, string username, string password);
         Task<User> Retrieve(Guid id);
         Task Update(Guid id, User user);
+        Task Update(Guid id, string nickname, string password);
         Task Delete(Guid id);
         Task<IEnumerable<User>> GetAll();
     }

@@ -16,14 +16,17 @@ namespace Mystik.Entities
         {
             Nickname = nickname;
             Username = username;
-            Hashing.CreatePasswordHash(password, out byte[] passwordSalt, out byte[] passwordHash);
-            PasswordSalt = passwordSalt;
-            PasswordHash = passwordHash;
+            SetPassword(password);
             Role = Entities.Role.User;
         }
 
         public User() { }
 
-
+        public void SetPassword(string password)
+        {
+            Hashing.CreatePasswordHash(password, out byte[] passwordSalt, out byte[] passwordHash);
+            PasswordSalt = passwordSalt;
+            PasswordHash = passwordHash;
+        }
     }
 }

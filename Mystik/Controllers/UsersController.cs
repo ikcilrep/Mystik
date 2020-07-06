@@ -32,6 +32,25 @@ namespace Mystik.Controllers
             return await _userService.GetAll();
         }
 
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> Patch(Guid id, [FromBody] UserPatch patch)
+        {
+            try
+            {
+                var currentUserId = Guid.Parse(User.Identity.Name);
+
+                if (id != currentUserId && !User.IsInRole(Role.Admin))
+                    return Forbid();
+
+                await _userService.Update(id, patch.Nickname, patch.Password);
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         [AllowAnonymous]
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate(Authentication model)
