@@ -42,7 +42,7 @@ namespace Mystik.Controllers
                 if (id != currentUserId && !User.IsInRole(Role.Admin))
                     return Forbid();
 
-                await _userService.Update(id, patch.Nickname, patch.Password);
+                await _userService.Update(id, patch);
                 return Ok();
             }
             catch (AppException ex)

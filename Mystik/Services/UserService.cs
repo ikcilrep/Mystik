@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Mystik.Data;
 using Mystik.Entities;
 using Mystik.Helpers;
+using Mystik.Models;
 
 namespace Mystik.Services
 {
@@ -95,23 +96,20 @@ namespace Mystik.Services
             return await _context.Users.ToListAsync();
         }
 
-        public async Task Update(Guid id, string nickname, string password)
+        public async Task Update(Guid id, UserPatch model)
         {
             var user = await _context.FindAsync<User>(new object[1] { id });
-            if (nickname != null)
+            var updatedUser = model.ToUser(user);
+            ValidateNickname(updatedUser.Nickname);
+
+            if (model.Password != null)
             {
-                user.Nickname = nickname;
+                ValidatePassword(model.Password);
             }
 
-            if (password != null)
-            {
-                user.SetPassword(password);
-            }
+            _context.Entry(user).CurrentValues.SetValues(updatedUser);
 
-            if ((nickname != null || password != null) && await _context.SaveChangesAsync() != 1)
-            {
-                throw new Exception("Failed to write to database.");
-            }
+            await _context.SaveChangesAsync();
         }
 
         private void ValidateNickname(string nickname)
