@@ -62,6 +62,21 @@ namespace Mystik.Controllers
             }
         }
 
+        [Authorize(Roles = Role.Admin)]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(Guid id, [FromBody] UserPut model)
+        {
+            try
+            {
+                await _userService.Update(id, model);
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         [AllowAnonymous]
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate(Authentication model)
