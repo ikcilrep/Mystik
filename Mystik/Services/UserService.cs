@@ -49,7 +49,7 @@ namespace Mystik.Services
 
         public async Task<User> Create(string nickname, string username, string password)
         {
-            ValidateCredentials(nickname, username, password);
+            await ValidateCredentials(nickname, username, password);
 
             var user = new User(nickname, username, password);
             _context.Add(user);
@@ -163,7 +163,7 @@ namespace Mystik.Services
             }
         }
 
-        private void ValidateCredentials(string nickname, string username, string password)
+        private async Task ValidateCredentials(string nickname, string username, string password)
         {
             ValidateNickname(nickname);
             ValidatePassword(password);
@@ -183,7 +183,7 @@ namespace Mystik.Services
                 throw new AppException("Username mustn't be longer than sixty four characters.");
             }
 
-            if (_context.Users.Any(user => user.Username == username))
+            if (await _context.Users.AnyAsync(user => user.Username == username))
             {
                 throw new AppException($"Username \"{username}\" has already been taken.");
             }
