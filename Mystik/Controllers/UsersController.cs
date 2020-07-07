@@ -43,6 +43,18 @@ namespace Mystik.Controllers
             return Ok(await _userService.Retrieve(id));
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var currentUserId = Guid.Parse(User.Identity.Name);
+
+            if (id != currentUserId && !User.IsInRole(Role.Admin))
+                return Forbid();
+
+            await _userService.Delete(id);
+            return Ok();
+        }
+
         [HttpPatch("{id}")]
         public async Task<IActionResult> Patch(Guid id, [FromBody] UserPatch patch)
         {
