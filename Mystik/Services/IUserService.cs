@@ -15,5 +15,7 @@ namespace Mystik.Services
         Task Update(Guid id, UserPatch model);
         Task Delete(Guid id);
         Task<IEnumerable<User>> GetAll();
+
+        void Dispose();
     }
 }

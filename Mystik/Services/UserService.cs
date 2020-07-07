@@ -99,6 +99,11 @@ namespace Mystik.Services
             await _context.SaveChangesAsync();
         }
 
+        public void Dispose()
+        {
+            _context.Dispose();
+        }
+
         private void ValidateNickname(string nickname)
         {
             if (string.IsNullOrWhiteSpace(nickname))
@@ -173,6 +178,5 @@ namespace Mystik.Services
                 throw new AppException($"Username \"{username}\" has already been taken.");
             }
         }
-
     }
 }

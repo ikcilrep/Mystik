@@ -21,6 +21,12 @@ namespace Mystik.Controllers
     {
         private IUserService _userService;
 
+        protected override void Dispose(bool disposing)
+        {
+            _userService.Dispose();
+            base.Dispose(disposing);
+        }
+
         public UsersController(IUserService userService)
         {
             _userService = userService;
