@@ -55,11 +55,7 @@ namespace Mystik.Services
             var user = new User(nickname, username, password);
             _context.Add(user);
 
-            if (await _context.SaveChangesAsync() != 1)
-            {
-                throw new Exception("Failed to write to database.");
-            }
-
+            await _context.SaveChangesAsync();
             return user;
         }
 
@@ -72,23 +68,14 @@ namespace Mystik.Services
         {
             var user = await _context.FindAsync<User>(new object[1] { id });
             _context.Entry(user).CurrentValues.SetValues(updatedUser);
-
-            if (await _context.SaveChangesAsync() != 1)
-            {
-                throw new Exception("Failed to write to database.");
-            }
-
+            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(Guid id)
         {
             var user = new User { Id = id };
             _context.Remove(user);
-
-            if (await _context.SaveChangesAsync() != 1)
-            {
-                throw new Exception("Failed to write to database.");
-            }
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<User>> GetAll()
