@@ -38,5 +38,24 @@ namespace Tests
             var ok = response as OkObjectResult;
             Assert.Equal(expectedUser, ok.Value);
         }
+
+        [Fact]
+        public async Task GetById_AsAdmin_ReturnsCorrectUser()
+        {
+            var service = new MockUserService();
+            var adminId = "6c554aa4-3fd8-48d4-a0d8-13164f172d0c";
+            var controller = new UsersController(service).WithIdentity(
+                adminId,
+                Role.Admin);
+
+            var userId = Guid.Parse("4192105b-3256-40e2-9efb-eef265e5eaa6");
+
+            var expectedUser = await service.Retrieve(userId);
+            var response = await controller.Get(userId);
+
+            Assert.IsType<OkObjectResult>(response);
+            var ok = response as OkObjectResult;
+            Assert.Equal(expectedUser, ok.Value);
+        }
     }
 }
