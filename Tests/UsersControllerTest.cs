@@ -1,10 +1,8 @@
 using System;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Mystik.Controllers;
-using Mystik.Entities;
 using Tests.Helpers;
 using Xunit;
 
@@ -61,7 +59,6 @@ namespace Tests
 
             var id = Guid.Parse(MockUserService.User2Id);
 
-            var expectedUser = await service.Retrieve(id);
             var response = await controller.Get(id);
 
             Assert.IsType<ForbidResult>(response);
@@ -74,7 +71,6 @@ namespace Tests
             var controller = new UsersController(service).WithUser1Identity();
 
             var id = Guid.Parse(MockUserService.User1Id);
-            var expectedUser = await service.Retrieve(id);
             var response = await controller.Delete(id);
 
             Assert.IsType<OkResult>(response);
@@ -88,7 +84,6 @@ namespace Tests
 
             var id = Guid.Parse(MockUserService.User1Id);
 
-            var expectedUser = await service.Retrieve(id);
             var response = await controller.Delete(id);
 
             Assert.IsType<OkResult>(response);
@@ -102,7 +97,6 @@ namespace Tests
 
             var id = Guid.Parse(MockUserService.User2Id);
 
-            var expectedUser = await service.Retrieve(id);
             var response = await controller.Delete(id);
 
             Assert.IsType<ForbidResult>(response);
