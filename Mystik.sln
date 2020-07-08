@@ -1,7 +1,9 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mystik", "Mystik\Mystik.csproj", "{E7B6D386-97A8-4A59-9641-6DE264984344}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{5BFAAE22-3195-439D-9287-8092E03B0536}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,5 +15,9 @@ Global
 		{E7B6D386-97A8-4A59-9641-6DE264984344}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E7B6D386-97A8-4A59-9641-6DE264984344}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E7B6D386-97A8-4A59-9641-6DE264984344}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BFAAE22-3195-439D-9287-8092E03B0536}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BFAAE22-3195-439D-9287-8092E03B0536}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BFAAE22-3195-439D-9287-8092E03B0536}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BFAAE22-3195-439D-9287-8092E03B0536}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
