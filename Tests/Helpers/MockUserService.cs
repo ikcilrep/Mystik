@@ -17,7 +17,8 @@ namespace Tests.Helpers
         {
             _users = new HashSet<User> {
                 new User("Adamek", "Adam", "Kaczka123") {
-                    Id = Guid.Parse("6c554aa4-3fd8-48d4-a0d8-13164f172d0c")
+                    Id = Guid.Parse("6c554aa4-3fd8-48d4-a0d8-13164f172d0c"),
+                    Role = "Admin"
                     },
                 new User("Kacperek", "Kacper", "Myszka456") {
                     Id = Guid.Parse("4192105b-3256-40e2-9efb-eef265e5eaa6")
