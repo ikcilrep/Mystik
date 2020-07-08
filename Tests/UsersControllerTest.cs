@@ -74,5 +74,23 @@ namespace Tests
 
             Assert.IsType<ForbidResult>(response);
         }
+
+        [Fact]
+        public async Task Delete_AsAuthorizedUser_ReturnsOk()
+        {
+            var service = new MockUserService();
+            var id = Guid.Parse("4192105b-3256-40e2-9efb-eef265e5eaa6");
+            var controller = new UsersController(service).WithIdentity(
+                id.ToString(),
+                Role.User);
+
+
+            var expectedUser = await service.Retrieve(id);
+            var response = await controller.Delete(id);
+
+            Assert.IsType<OkResult>(response);
+        }
+
+
     }
 }
