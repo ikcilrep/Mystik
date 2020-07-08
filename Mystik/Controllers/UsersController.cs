@@ -62,7 +62,7 @@ namespace Mystik.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> Patch(Guid id, [FromBody] UserPatch patch)
+        public async Task<IActionResult> Patch(Guid id, UserPatch model)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace Mystik.Controllers
                 if (id != currentUserId && !User.IsInRole(Role.Admin))
                     return Forbid();
 
-                await _userService.Update(id, patch);
+                await _userService.Update(id, model);
                 return Ok();
             }
             catch (AppException ex)
@@ -82,7 +82,7 @@ namespace Mystik.Controllers
 
         [Authorize(Roles = Role.Admin)]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(Guid id, [FromBody] UserPut model)
+        public async Task<IActionResult> Put(Guid id, UserPut model)
         {
             try
             {
