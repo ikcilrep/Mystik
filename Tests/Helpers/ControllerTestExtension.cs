@@ -12,7 +12,7 @@ namespace Tests.Helpers
 
             var principal = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
                             {
-                                new Claim(ClaimTypes.NameIdentifier, id),
+                                new Claim(ClaimTypes.Name, id),
                                 new Claim(ClaimTypes.Role, role)
                             }, "TestAuthentication"));
 
