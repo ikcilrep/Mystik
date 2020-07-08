@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Mystik.Helpers;
 
 namespace Mystik.Entities
@@ -27,6 +28,22 @@ namespace Mystik.Entities
             Hashing.CreatePasswordHash(password, out byte[] passwordSalt, out byte[] passwordHash);
             PasswordSalt = passwordSalt;
             PasswordHash = passwordHash;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is User user
+                   && user.Id == Id
+                   && user.Nickname == Nickname
+                   && user.Username == Username
+                   && user.Role == Role
+                   && user.PasswordHash.SequenceEqual(PasswordHash)
+                   && user.PasswordSalt.SequenceEqual(PasswordSalt);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Nickname, Username, Role, PasswordHash, PasswordSalt);
         }
     }
 }
