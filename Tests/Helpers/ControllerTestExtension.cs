@@ -1,3 +1,7 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
 namespace Tests.Helpers
 {
     public static class ControllerTestExtensions
@@ -24,6 +28,21 @@ namespace Tests.Helpers
             var principal = new ClaimsPrincipal(new ClaimsIdentity());
 
             controller.ControllerContext.HttpContext.User = principal;
+
+            return controller;
+        }
+
+        private static T EnsureHttpContext<T>(this T controller) where T : Controller
+        {
+            if (controller.ControllerContext == null)
+            {
+                controller.ControllerContext = new ControllerContext();
+            }
+
+            if (controller.ControllerContext.HttpContext == null)
+            {
+                controller.ControllerContext.HttpContext = new DefaultHttpContext();
+            }
 
             return controller;
         }
