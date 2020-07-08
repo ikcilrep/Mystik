@@ -11,11 +11,11 @@ namespace Tests.Helpers
 {
     public class MockUserService : IUserService
     {
-        private HashSet<User> _users;
+        public HashSet<User> Users { get; set; }
 
         public MockUserService()
         {
-            _users = new HashSet<User> {
+            Users = new HashSet<User> {
                 new User("Adamek", "Adam", "Kaczka123") {
                     Id = Guid.Parse("6c554aa4-3fd8-48d4-a0d8-13164f172d0c"),
                     Role = "Admin"
@@ -31,19 +31,19 @@ namespace Tests.Helpers
 
         public Task<User> Authenticate(string username, string password)
         {
-            return Task.Run(() => _users.FirstOrDefault(user => user.Username == username));
+            return Task.Run(() => Users.FirstOrDefault(user => user.Username == username));
         }
 
         public Task<User> Create(string nickname, string username, string password)
         {
             var user = new User(nickname, username, password);
-            _users.Add(user);
+            Users.Add(user);
             return Task.Run(() => user);
         }
 
         public Task Delete(Guid id)
         {
-            _users.RemoveWhere(user => user.Id == id);
+            Users.RemoveWhere(user => user.Id == id);
             return Task.CompletedTask;
         }
 
@@ -54,29 +54,29 @@ namespace Tests.Helpers
 
         public Task<IEnumerable<User>> GetAll()
         {
-            IEnumerable<User> users = _users;
+            IEnumerable<User> users = Users;
             return Task.Run(() => users);
         }
 
         public Task<User> Retrieve(Guid id)
         {
-            return Task.Run(() => _users.FirstOrDefault(user => user.Id == id));
+            return Task.Run(() => Users.FirstOrDefault(user => user.Id == id));
         }
 
         public Task Update(Guid id, User user)
         {
-            _users.RemoveWhere(user => user.Id == id);
-            _users.Add(user);
+            Users.RemoveWhere(user => user.Id == id);
+            Users.Add(user);
             return Task.CompletedTask;
         }
 
         public Task Update(Guid id, UserPatch model)
         {
-            var user = _users.FirstOrDefault(user => user.Id == id);
+            var user = Users.FirstOrDefault(user => user.Id == id);
             var updatedUser = model.ToUser(user);
 
-            _users.RemoveWhere(user => user.Id == id);
-            _users.Add(updatedUser);
+            Users.RemoveWhere(user => user.Id == id);
+            Users.Add(updatedUser);
             return Task.CompletedTask;
         }
     }
