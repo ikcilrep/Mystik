@@ -91,6 +91,22 @@ namespace Tests
             Assert.IsType<OkResult>(response);
         }
 
+        [Fact]
+        public async Task Delete_AsAdmin_ReturnsOk()
+        {
+            var service = new MockUserService();
+            var adminId = "6c554aa4-3fd8-48d4-a0d8-13164f172d0c";
+            var controller = new UsersController(service).WithIdentity(
+                adminId,
+                Role.Admin);
+
+            var userId = Guid.Parse("4192105b-3256-40e2-9efb-eef265e5eaa6");
+
+            var expectedUser = await service.Retrieve(userId);
+            var response = await controller.Delete(userId);
+
+            Assert.IsType<OkResult>(response);
+        }
 
     }
 }
