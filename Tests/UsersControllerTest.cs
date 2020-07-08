@@ -25,11 +25,9 @@ namespace Tests
         public async Task GetById_AsAuthorizedUser_ReturnsCorrectUser()
         {
             var service = new MockUserService();
-            var id = Guid.Parse("4192105b-3256-40e2-9efb-eef265e5eaa6");
-            var controller = new UsersController(service).WithIdentity(
-                id.ToString(),
-                Role.User);
+            var controller = new UsersController(service).WithUser1Identity();
 
+            var id = Guid.Parse(MockUserService.User1Id);
 
             var expectedUser = await service.Retrieve(id);
             var response = await controller.Get(id);
@@ -43,15 +41,12 @@ namespace Tests
         public async Task GetById_AsAdmin_ReturnsCorrectUser()
         {
             var service = new MockUserService();
-            var adminId = "6c554aa4-3fd8-48d4-a0d8-13164f172d0c";
-            var controller = new UsersController(service).WithIdentity(
-                adminId,
-                Role.Admin);
+            var controller = new UsersController(service).WithAdminIdentity();
 
-            var userId = Guid.Parse("4192105b-3256-40e2-9efb-eef265e5eaa6");
+            var id = Guid.Parse(MockUserService.User1Id);
 
-            var expectedUser = await service.Retrieve(userId);
-            var response = await controller.Get(userId);
+            var expectedUser = await service.Retrieve(id);
+            var response = await controller.Get(id);
 
             Assert.IsType<OkObjectResult>(response);
             var ok = response as OkObjectResult;
@@ -62,15 +57,12 @@ namespace Tests
         public async Task GetById_AsUnauthorizedUser_ForbidsAccess()
         {
             var service = new MockUserService();
-            var unauthorizedId = "60398e2a-4439-46bf-9101-e26ea63d5326";
-            var controller = new UsersController(service).WithIdentity(
-                unauthorizedId,
-                Role.User);
+            var controller = new UsersController(service).WithUser1Identity();
 
-            var userId = Guid.Parse("4192105b-3256-40e2-9efb-eef265e5eaa6");
+            var id = Guid.Parse(MockUserService.User2Id);
 
-            var expectedUser = await service.Retrieve(userId);
-            var response = await controller.Get(userId);
+            var expectedUser = await service.Retrieve(id);
+            var response = await controller.Get(id);
 
             Assert.IsType<ForbidResult>(response);
         }
@@ -79,12 +71,9 @@ namespace Tests
         public async Task Delete_AsAuthorizedUser_ReturnsOk()
         {
             var service = new MockUserService();
-            var id = Guid.Parse("4192105b-3256-40e2-9efb-eef265e5eaa6");
-            var controller = new UsersController(service).WithIdentity(
-                id.ToString(),
-                Role.User);
+            var controller = new UsersController(service).WithUser1Identity();
 
-
+            var id = Guid.Parse(MockUserService.User1Id);
             var expectedUser = await service.Retrieve(id);
             var response = await controller.Delete(id);
 
@@ -95,15 +84,12 @@ namespace Tests
         public async Task Delete_AsAdmin_ReturnsOk()
         {
             var service = new MockUserService();
-            var adminId = "6c554aa4-3fd8-48d4-a0d8-13164f172d0c";
-            var controller = new UsersController(service).WithIdentity(
-                adminId,
-                Role.Admin);
+            var controller = new UsersController(service).WithAdminIdentity();
 
-            var userId = Guid.Parse("4192105b-3256-40e2-9efb-eef265e5eaa6");
+            var id = Guid.Parse(MockUserService.User1Id);
 
-            var expectedUser = await service.Retrieve(userId);
-            var response = await controller.Delete(userId);
+            var expectedUser = await service.Retrieve(id);
+            var response = await controller.Delete(id);
 
             Assert.IsType<OkResult>(response);
         }
@@ -112,15 +98,12 @@ namespace Tests
         public async Task Delete_AsUnauthorizedUser_ForbidsAccess()
         {
             var service = new MockUserService();
-            var unauthorizedId = "60398e2a-4439-46bf-9101-e26ea63d5326";
-            var controller = new UsersController(service).WithIdentity(
-                unauthorizedId,
-                Role.User);
+            var controller = new UsersController(service).WithUser1Identity();
 
-            var userId = Guid.Parse("4192105b-3256-40e2-9efb-eef265e5eaa6");
+            var id = Guid.Parse(MockUserService.User2Id);
 
-            var expectedUser = await service.Retrieve(userId);
-            var response = await controller.Delete(userId);
+            var expectedUser = await service.Retrieve(id);
+            var response = await controller.Delete(id);
 
             Assert.IsType<ForbidResult>(response);
         }

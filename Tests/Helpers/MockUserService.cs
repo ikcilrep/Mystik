@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,18 +12,22 @@ namespace Tests.Helpers
     {
         public HashSet<User> Users { get; set; }
 
+        public static string AdminId => "6c554aa4-3fd8-48d4-a0d8-13164f172d0c";
+        public static string User1Id => "4192105b-3256-40e2-9efb-eef265e5eaa6";
+        public static string User2Id => "60398e2a-4439-46bf-9101-e26ea63d5326";
+
         public MockUserService()
         {
             Users = new HashSet<User> {
                 new User("Adamek", "Adam", "Kaczka123") {
-                    Id = Guid.Parse("6c554aa4-3fd8-48d4-a0d8-13164f172d0c"),
-                    Role = "Admin"
+                    Id = Guid.Parse(AdminId),
+                    Role = Role.Admin
                     },
                 new User("Kacperek", "Kacper", "Myszka456") {
-                    Id = Guid.Parse("4192105b-3256-40e2-9efb-eef265e5eaa6")
+                    Id = Guid.Parse(User1Id)
                     },
                 new User("Oliwierek", "Oliwier", "Gruszka789") {
-                    Id = Guid.Parse("60398e2a-4439-46bf-9101-e26ea63d5326")
+                    Id = Guid.Parse(User2Id)
                     },
             };
         }
