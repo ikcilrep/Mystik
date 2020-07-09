@@ -1,3 +1,4 @@
+using Mystik.Entities;
 using Mystik.Models;
 using Tests.Helpers;
 using Xunit;
@@ -26,17 +27,25 @@ namespace Tests
         public void PutToUser_NotEmptyModel_ReturnsDifferentUser()
         {
             var originalUser = MockUserService.User1;
+            var user2 = MockUserService.User2;
             var model = new UserPut
             {
-                Nickname = MockUserService.User2.Nickname,
-                Username = MockUserService.User2.Username,
-                Role = MockUserService.User2.Role,
-                Password = MockUserService.User2.Password
+                Nickname = user2.Nickname,
+                Username = user2.Username,
+                Role = user2.Role,
             };
 
             var actualUser = model.ToUser(originalUser);
-            Assert.NotEqual(originalUser, actualUser);
-
+            var expectedUser = new User
+            {
+                Nickname = user2.Nickname,
+                Username = user2.Username,
+                Role = user2.Role,
+                Id = originalUser.Id,
+                PasswordHash = originalUser.PasswordHash,
+                PasswordSalt = originalUser.PasswordSalt,
+            };
+            Assert.Equal(expectedUser, actualUser);
         }
     }
 }
