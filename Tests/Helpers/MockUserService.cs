@@ -32,11 +32,17 @@ namespace Tests.Helpers
             "Gruszka!789",
             "60398e2a-4439-46bf-9101-e26ea63d5326");
 
+        private static UserWithPassword _notExistingUser = new UserWithPassword(
+            "Lukaszek",
+            "Lukasz",
+            "Jablko&101112",
+            "68fa61ae-8c9b-4470-8fd7-a36e1e14c035");
 
 
         public static User Admin => _admin;
         public static UserWithPassword User1 => _user1;
         public static UserWithPassword User2 => _user2;
+        public static UserWithPassword NotExistingUser => _notExistingUser;
 
         public MockUserService()
         {
