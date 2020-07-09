@@ -3,6 +3,14 @@ namespace Mystik.Helpers
 {
     public static class AppSettings
     {
-        public static string Secret => Environment.GetEnvironmentVariable("MYSTIK_SECRET");
+        private static string _variableName = "MYSTIK_SECRET";
+        public static string Secret
+        {
+            get => Environment.GetEnvironmentVariable(_variableName);
+            set
+            {
+                Environment.SetEnvironmentVariable(_variableName, value);
+            }
+        }
     }
 }
