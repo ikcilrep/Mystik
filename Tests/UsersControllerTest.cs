@@ -115,5 +115,20 @@ namespace Tests
 
             Assert.IsType<OkResult>(response);
         }
+
+        [Fact]
+        public async Task Patch_AsAdmin_ReturnsOk()
+        {
+            var service = new MockUserService();
+            var controller = new UsersController(service).WithAdminIdentity();
+
+            var id = MockUserService.User1.Id;
+            var model = new UserPatch { Nickname = MockUserService.User2.Nickname };
+            var response = await controller.Patch(id, model);
+
+            Assert.IsType<OkResult>(response);
+        }
+
+
     }
 }
