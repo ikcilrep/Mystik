@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Mystik.Controllers;
+using Mystik.Models;
 using Tests.Helpers;
 using Xunit;
 
@@ -25,7 +26,7 @@ namespace Tests
             var service = new MockUserService();
             var controller = new UsersController(service).WithUser1Identity();
 
-            var id = Guid.Parse(MockUserService.User1Id);
+            var id = MockUserService.User1.Id;
 
             var expectedUser = await service.Retrieve(id);
             var response = await controller.Get(id);
@@ -41,7 +42,7 @@ namespace Tests
             var service = new MockUserService();
             var controller = new UsersController(service).WithAdminIdentity();
 
-            var id = Guid.Parse(MockUserService.User1Id);
+            var id = MockUserService.User1.Id;
 
             var expectedUser = await service.Retrieve(id);
             var response = await controller.Get(id);
@@ -57,7 +58,7 @@ namespace Tests
             var service = new MockUserService();
             var controller = new UsersController(service).WithUser1Identity();
 
-            var id = Guid.Parse(MockUserService.User2Id);
+            var id = MockUserService.User2.Id;
 
             var response = await controller.Get(id);
 
@@ -70,7 +71,7 @@ namespace Tests
             var service = new MockUserService();
             var controller = new UsersController(service).WithUser1Identity();
 
-            var id = Guid.Parse(MockUserService.User1Id);
+            var id = MockUserService.User1.Id;
             var response = await controller.Delete(id);
 
             Assert.IsType<OkResult>(response);
@@ -82,7 +83,7 @@ namespace Tests
             var service = new MockUserService();
             var controller = new UsersController(service).WithAdminIdentity();
 
-            var id = Guid.Parse(MockUserService.User1Id);
+            var id = MockUserService.User1.Id;
 
             var response = await controller.Delete(id);
 
@@ -95,7 +96,7 @@ namespace Tests
             var service = new MockUserService();
             var controller = new UsersController(service).WithUser1Identity();
 
-            var id = Guid.Parse(MockUserService.User2Id);
+            var id = MockUserService.User2.Id;
 
             var response = await controller.Delete(id);
 

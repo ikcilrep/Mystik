@@ -12,24 +12,30 @@ namespace Tests.Helpers
     {
         public HashSet<User> Users { get; set; }
 
-        public static string AdminId => "6c554aa4-3fd8-48d4-a0d8-13164f172d0c";
-        public static string User1Id => "4192105b-3256-40e2-9efb-eef265e5eaa6";
-        public static string User2Id => "60398e2a-4439-46bf-9101-e26ea63d5326";
+        private static User _admin = new User("Adamek", "Adam", "Kaczka123")
+        {
+            Id = Guid.Parse("6c554aa4-3fd8-48d4-a0d8-13164f172d0c"),
+            Role = Role.Admin
+        };
+
+        private static User _user1 = new User("Kacperek", "Kacper", "Myszka456")
+        {
+            Id = Guid.Parse("4192105b-3256-40e2-9efb-eef265e5eaa6")
+        };
+
+        private static User _user2 = new User("Oliwierek", "Oliwier", "Gruszka789")
+        {
+            Id = Guid.Parse("60398e2a-4439-46bf-9101-e26ea63d5326")
+        };
+
+
+        public static User Admin => _admin;
+        public static User User1 => _user1;
+        public static User User2 => _user2;
 
         public MockUserService()
         {
-            Users = new HashSet<User> {
-                new User("Adamek", "Adam", "Kaczka123") {
-                    Id = Guid.Parse(AdminId),
-                    Role = Role.Admin
-                    },
-                new User("Kacperek", "Kacper", "Myszka456") {
-                    Id = Guid.Parse(User1Id)
-                    },
-                new User("Oliwierek", "Oliwier", "Gruszka789") {
-                    Id = Guid.Parse(User2Id)
-                    },
-            };
+            Users = new HashSet<User>() { Admin, User1, User2 };
         }
 
         public Task<User> Authenticate(string username, string password)

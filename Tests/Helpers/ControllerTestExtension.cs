@@ -9,17 +9,17 @@ namespace Tests.Helpers
     {
         public static T WithAdminIdentity<T>(this T controller) where T : Controller
         {
-            return controller.WithIdentity(MockUserService.AdminId, Role.Admin);
+            return controller.WithIdentity(MockUserService.Admin.Id.ToString(), Role.Admin);
         }
 
         public static T WithUser1Identity<T>(this T controller) where T : Controller
         {
-            return controller.WithIdentity(MockUserService.User1Id, Role.User);
+            return controller.WithIdentity(MockUserService.User1.Id.ToString(), Role.User);
         }
 
         public static T WithUser2Identity<T>(this T controller) where T : Controller
         {
-            return controller.WithIdentity(MockUserService.User2Id, Role.User);
+            return controller.WithIdentity(MockUserService.User2.Id.ToString(), Role.User);
         }
 
         private static T EnsureHttpContext<T>(this T controller) where T : Controller
