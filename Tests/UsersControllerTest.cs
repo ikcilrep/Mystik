@@ -102,5 +102,18 @@ namespace Tests
 
             Assert.IsType<ForbidResult>(response);
         }
+
+        [Fact]
+        public async Task Patch_AsAuthorizedUser_ReturnsOk()
+        {
+            var service = new MockUserService();
+            var controller = new UsersController(service).WithUser1Identity();
+
+            var id = MockUserService.User1.Id;
+            var model = new UserPatch { Nickname = MockUserService.User2.Nickname };
+            var response = await controller.Patch(id, model);
+
+            Assert.IsType<OkResult>(response);
+        }
     }
 }
