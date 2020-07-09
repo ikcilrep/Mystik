@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mystik.Entities;
+using Mystik.Helpers;
 using Mystik.Models;
 using Mystik.Services;
 
@@ -25,15 +26,17 @@ namespace Tests.Helpers
             "4192105b-3256-40e2-9efb-eef265e5eaa6");
 
 
-        private static User _user2 = new User("Oliwierek", "Oliwier", "Gruszka!789")
-        {
-            Id = Guid.Parse("60398e2a-4439-46bf-9101-e26ea63d5326")
-        };
+        private static UserWithPassword _user2 = new UserWithPassword(
+            "Oliwierek",
+            "Oliwier",
+            "Gruszka!789",
+            "60398e2a-4439-46bf-9101-e26ea63d5326");
+
 
 
         public static User Admin => _admin;
         public static UserWithPassword User1 => _user1;
-        public static User User2 => _user2;
+        public static UserWithPassword User2 => _user2;
 
         public MockUserService()
         {
@@ -42,7 +45,8 @@ namespace Tests.Helpers
 
         public Task<User> Authenticate(string username, string password)
         {
-            return Task.Run(() => Users.FirstOrDefault(user => user.Username == username));
+            return Task.Run(() => Users.FirstOrDefault(user => user.Username == username
+            && Hashing.DoesPasswordMatch(password, user.PasswordSalt, user.PasswordHash)));
         }
 
         public Task<User> Create(string nickname, string username, string password)
