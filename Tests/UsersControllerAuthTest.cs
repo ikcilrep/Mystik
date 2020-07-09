@@ -1,8 +1,8 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Mystik.Controllers;
+using Mystik.Helpers;
 using Mystik.Models;
 using Tests.Helpers;
 using Xunit;
@@ -153,6 +153,28 @@ namespace Tests
             var response = await controller.Put(id, model);
 
             Assert.IsType<OkResult>(response);
+        }
+
+        [Fact]
+        public async Task Authenticate_WithCorrectCredentials_ReturnsCorrectData()
+        {
+            AppSettings.Secret = "123456789012345678900987654321";
+
+            var service = new MockUserService();
+            var controller = new UsersController(service);
+
+            var model = new Authentication
+            {
+                Username = MockUserService.User1.Username,
+                Password = MockUserService.User1.Password
+            };
+
+            var response = await controller.Authenticate(model);
+            Assert.IsType<OkObjectResult>(response);
+            var ok = response as OkObjectResult;
+            Assert.Equal(MockUserService.User1.Username, ok.Value.GetProperty("Username"));
+            Assert.Equal(MockUserService.User1.Nickname, ok.Value.GetProperty("Nickname"));
+            Assert.Equal(MockUserService.User1.Id, ok.Value.GetProperty("Id"));
         }
     }
 }
