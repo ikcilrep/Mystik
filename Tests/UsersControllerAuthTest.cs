@@ -142,5 +142,17 @@ namespace Tests
             Assert.IsType<ForbidResult>(response);
         }
 
+        [Fact]
+        public async Task Put_AsAdmin_ReturnsOk()
+        {
+            var service = new MockUserService();
+            var controller = new UsersController(service).WithAdminIdentity();
+
+            var id = MockUserService.User1.Id;
+            var model = new UserPut { Username = MockUserService.User2.Username };
+            var response = await controller.Put(id, model);
+
+            Assert.IsType<OkResult>(response);
+        }
     }
 }
