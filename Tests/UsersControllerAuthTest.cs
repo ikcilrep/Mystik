@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Tests
 {
-    public class UsersControllerTest
+    public class UsersControllerAuthTest
     {
         [Fact]
         public async Task Get_ReturnsAllUsers()
