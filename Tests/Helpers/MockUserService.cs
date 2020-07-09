@@ -12,25 +12,27 @@ namespace Tests.Helpers
     {
         public HashSet<User> Users { get; set; }
 
-        private static User _admin = new User("Adamek", "Adam", "Kaczka123")
+        private static User _admin = new User("Adamek", "Adam", "Kaczka1%3")
         {
             Id = Guid.Parse("6c554aa4-3fd8-48d4-a0d8-13164f172d0c"),
             Role = Role.Admin
         };
 
-        private static User _user1 = new User("Kacperek", "Kacper", "Myszka456")
-        {
-            Id = Guid.Parse("4192105b-3256-40e2-9efb-eef265e5eaa6")
-        };
+        private static UserWithPassword _user1 = new UserWithPassword(
+            "Kacperek",
+            "Kacper",
+            "#Myszka456",
+            "4192105b-3256-40e2-9efb-eef265e5eaa6");
 
-        private static User _user2 = new User("Oliwierek", "Oliwier", "Gruszka789")
+
+        private static User _user2 = new User("Oliwierek", "Oliwier", "Gruszka!789")
         {
             Id = Guid.Parse("60398e2a-4439-46bf-9101-e26ea63d5326")
         };
 
 
         public static User Admin => _admin;
-        public static User User1 => _user1;
+        public static UserWithPassword User1 => _user1;
         public static User User2 => _user2;
 
         public MockUserService()
