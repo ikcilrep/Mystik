@@ -194,5 +194,22 @@ namespace Tests
             var response = await controller.Authenticate(model);
             Assert.IsType<BadRequestObjectResult>(response);
         }
+
+        [Fact]
+        public async Task Register_WithValidCredentials_ReturnsOk()
+        {
+            var service = new MockUserService();
+            var controller = new UsersController(service);
+
+            var model = new Registration
+            {
+                Nickname = MockUserService.NotExistingUser.Nickname,
+                Username = MockUserService.NotExistingUser.Username,
+                Password = MockUserService.NotExistingUser.Password
+            };
+
+            var response = await controller.Register(model);
+            Assert.IsType<OkResult>(response);
+        }
     }
 }
