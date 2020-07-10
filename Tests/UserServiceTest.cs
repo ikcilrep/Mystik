@@ -80,6 +80,15 @@ namespace Tests
             Assert.Equal(MockUserService.NotExistingUser.Username, actualUser.Username);
         }
 
+        [Fact]
+        public async Task Delete_RemovesExactlyOneUserFromTheDatabase()
+        {
+            var id = MockUserService.User2.Id;
+            await _provider.UserService.Delete(id);
+
+            Assert.Equal(0, _provider.Context.Users.Count());
+        }
+
         public void Dispose()
         {
             _provider.Dispose();
