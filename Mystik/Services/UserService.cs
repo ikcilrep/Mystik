@@ -73,7 +73,7 @@ namespace Mystik.Services
 
         public async Task Delete(Guid id)
         {
-            var user = new User { Id = id };
+            var user = await _context.FindAsync<User>(id);
             _context.Remove(user);
             await _context.SaveChangesAsync();
         }
