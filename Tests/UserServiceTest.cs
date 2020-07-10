@@ -54,6 +54,14 @@ namespace Tests
             Assert.Equal(2, _provider.Context.Users.Count());
         }
 
+        [Fact]
+        public async Task Retrieve_ReturnsCorrectUser()
+        {
+            var actualUser = await _provider.UserService.Retrieve(MockUserService.User2.Id);
+
+            Assert.Equal(MockUserService.User2, actualUser);
+        }
+
         public void Dispose()
         {
             _provider.Dispose();
