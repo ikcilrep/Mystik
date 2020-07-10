@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Mystik.Models;
 using Tests.Helpers;
 using Xunit;
 
@@ -60,6 +61,23 @@ namespace Tests
             var actualUser = await _provider.UserService.Retrieve(MockUserService.User2.Id);
 
             Assert.Equal(MockUserService.User2, actualUser);
+        }
+
+        [Fact]
+        public async Task Update_ChangesValues()
+        {
+            var model = new UserPut
+            {
+                Nickname = MockUserService.NotExistingUser.Nickname,
+                Username = MockUserService.NotExistingUser.Username
+            };
+
+            await _provider.UserService.Update(MockUserService.User2.Id, model);
+
+            var actualUser = _provider.Context.Users.Single();
+
+            Assert.Equal(MockUserService.NotExistingUser.Nickname, actualUser.Nickname);
+            Assert.Equal(MockUserService.NotExistingUser.Username, actualUser.Username);
         }
 
         public void Dispose()
