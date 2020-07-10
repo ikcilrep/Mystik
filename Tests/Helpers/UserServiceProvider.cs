@@ -22,10 +22,19 @@ namespace Tests.Helpers
                        .Options;
             _connection = RelationalOptionsExtension.Extract(options).Connection;
             Context = new DataContext(options);
+            Seed();
+
+            UserService = new UserService(Context);
+        }
+
+        private void Seed()
+        {
             Context.Database.EnsureDeleted();
             Context.Database.EnsureCreated();
 
-            UserService = new UserService(Context);
+            Context.Add(MockUserService.User2);
+
+            Context.SaveChanges();
         }
 
         private static DbConnection CreateInMemoryDatabase()

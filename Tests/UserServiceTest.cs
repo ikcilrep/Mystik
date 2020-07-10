@@ -51,7 +51,7 @@ namespace Tests
                 MockUserService.User1.Username,
                 MockUserService.User1.Password);
 
-            Assert.Equal(1, _provider.Context.Users.Count());
+            Assert.Equal(2, _provider.Context.Users.Count());
         }
 
         public void Dispose()
