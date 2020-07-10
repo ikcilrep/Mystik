@@ -89,6 +89,17 @@ namespace Tests
             Assert.Equal(0, _provider.Context.Users.Count());
         }
 
+        [Fact]
+        public async Task Authenticate_WithValidCredentials_ReturnsCorrectUser()
+        {
+            var expectedUser = MockUserService.User2;
+            var actualUser = await _provider.UserService.Authenticate(
+                expectedUser.Username,
+                expectedUser.Password);
+
+            Assert.Equal(expectedUser, actualUser);
+        }
+
         public void Dispose()
         {
             _provider.Dispose();
