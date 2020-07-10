@@ -13,14 +13,19 @@ namespace Tests.Helpers
         private readonly DbConnection _connection;
         public UserService UserService { get; }
 
+        public DataContext Context { get; set; }
+
         public UserServiceProvider()
         {
             var options = new DbContextOptionsBuilder<DataContext>()
                        .UseSqlite(CreateInMemoryDatabase())
                        .Options;
             _connection = RelationalOptionsExtension.Extract(options).Connection;
-            var context = new DataContext(options);
-            UserService = new UserService(context);
+            Context = new DataContext(options);
+            Context.Database.EnsureDeleted();
+            Context.Database.EnsureCreated();
+
+            UserService = new UserService(Context);
         }
 
         private static DbConnection CreateInMemoryDatabase()
