@@ -100,6 +100,16 @@ namespace Tests
             Assert.Equal(expectedUser, actualUser);
         }
 
+        [Fact]
+        public async Task Authenticate_WithInvalidCredentials_ReturnsNull()
+        {
+            var user = await _provider.UserService.Authenticate(
+                MockUserService.User2.Username,
+                MockUserService.NotExistingUser.Password);
+
+            Assert.Null(user);
+        }
+
         public void Dispose()
         {
             _provider.Dispose();
