@@ -61,12 +61,12 @@ namespace Mystik.Services
 
         public async Task<User> Retrieve(Guid id)
         {
-            return await _context.FindAsync<User>(new object[1] { id });
+            return await _context.FindAsync<User>(id);
         }
 
         public async Task Update(Guid id, User updatedUser)
         {
-            var user = await _context.FindAsync<User>(new object[1] { id });
+            var user = await _context.FindAsync<User>(id);
             _context.Entry(user).CurrentValues.SetValues(updatedUser);
             await _context.SaveChangesAsync();
         }
@@ -85,7 +85,7 @@ namespace Mystik.Services
 
         public async Task Update(Guid id, UserPatch model)
         {
-            var user = await _context.FindAsync<User>(new object[1] { id });
+            var user = await _context.FindAsync<User>(id);
             var updatedUser = model.ToUser(user);
             ValidateNickname(updatedUser.Nickname);
 
