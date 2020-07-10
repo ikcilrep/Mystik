@@ -9,17 +9,6 @@ namespace Mystik.Data
     {
         public DbSet<User> Users { get; set; }
 
-        protected readonly IConfiguration _configuration;
-
-        public DataContext(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            string connectionString = _configuration["DEFAULT_CONNECTION"];
-            optionsBuilder.UseNpgsql(connectionString);
-        }
+        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
     }
 }

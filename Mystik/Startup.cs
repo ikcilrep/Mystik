@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,7 +31,11 @@ namespace Mystik
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddEntityFrameworkNpgsql().AddDbContext<DataContext>();
+            services.AddDbContext<DataContext>(options =>
+            {
+                string connectionString = Configuration["DEFAULT_CONNECTION"];
+                options.UseNpgsql(connectionString);
+            });
             services.AddScoped<IUserService, UserService>();
             services.AddCors();
             services.AddControllers();
