@@ -28,8 +28,21 @@ namespace Tests
             actualUser.PasswordHash = expectedUser.PasswordHash;
             actualUser.PasswordSalt = expectedUser.PasswordSalt;
 
-
             Assert.Equal(expectedUser, actualUser);
+        }
+
+        [Fact]
+        public async Task Create_ReturnedUserHasAnId()
+        {
+            var expectedUser = MockUserService.User1;
+
+            var user = await _provider.UserService.Create(
+                MockUserService.User1.Nickname,
+                MockUserService.User1.Username,
+                MockUserService.User1.Password);
+
+            Assert.True(user.Id != null && user.Id != Guid.Empty);
+
         }
 
         public void Dispose()
