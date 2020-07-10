@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Tests.Helpers;
 using Xunit;
@@ -42,7 +43,19 @@ namespace Tests
                 MockUserService.User1.Password);
 
             Assert.True(user.Id != null && user.Id != Guid.Empty);
+        }
 
+        [Fact]
+        public async Task Create_AddsExactlyOneUserToTheDatabase()
+        {
+            var expectedUser = MockUserService.User1;
+
+            var user = await _provider.UserService.Create(
+                MockUserService.User1.Nickname,
+                MockUserService.User1.Username,
+                MockUserService.User1.Password);
+
+            Assert.Equal(1, _provider.Context.Users.Count());
         }
 
         public void Dispose()
