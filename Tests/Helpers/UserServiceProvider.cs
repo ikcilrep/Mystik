@@ -8,8 +8,9 @@ using Mystik.Services;
 
 namespace Tests.Helpers
 {
-    public class UserServiceProvider
+    public class UserServiceProvider : IDisposable
     {
+        private readonly DbConnection _connection;
         public UserService UserService { get; }
 
         public UserServiceProvider()
@@ -17,7 +18,7 @@ namespace Tests.Helpers
             var options = new DbContextOptionsBuilder<DataContext>()
                        .UseSqlite(CreateInMemoryDatabase())
                        .Options;
-            var connection = RelationalOptionsExtension.Extract(options).Connection;
+            _connection = RelationalOptionsExtension.Extract(options).Connection;
             var context = new DataContext(options);
             UserService = new UserService(context);
         }
@@ -31,5 +32,10 @@ namespace Tests.Helpers
             return connection;
         }
 
+        public void Dispose()
+        {
+            UserService.Dispose();
+            _connection.Dispose();
+        }
     }
 }
