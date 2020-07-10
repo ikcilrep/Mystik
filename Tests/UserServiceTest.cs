@@ -35,8 +35,6 @@ namespace Tests
         [Fact]
         public async Task Create_ReturnedUserHasAnId()
         {
-            var expectedUser = MockUserService.User1;
-
             var user = await _provider.UserService.Create(
                 MockUserService.User1.Nickname,
                 MockUserService.User1.Username,
@@ -48,8 +46,6 @@ namespace Tests
         [Fact]
         public async Task Create_AddsExactlyOneUserToTheDatabase()
         {
-            var expectedUser = MockUserService.User1;
-
             var user = await _provider.UserService.Create(
                 MockUserService.User1.Nickname,
                 MockUserService.User1.Username,
