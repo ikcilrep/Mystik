@@ -67,9 +67,14 @@ namespace Mystik.Services
             return await _context.FindAsync<Conversation>(id);
         }
 
-        public Task Update(Guid id, ConversationPatch model)
+        public async Task Update(Guid id, ConversationPatch model)
         {
-            throw new NotImplementedException();
+            var conversation = await _context.FindAsync<Conversation>(id);
+            var updatedConversation = model.ToConversation(conversation);
+
+            _context.Entry(conversation).CurrentValues.SetValues(updatedConversation);
+
+            await _context.SaveChangesAsync();
         }
     }
 }
