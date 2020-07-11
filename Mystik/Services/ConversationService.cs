@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Mystik.Data;
 using Mystik.Entities;
 using Mystik.Models;
 
@@ -8,6 +9,13 @@ namespace Mystik.Services
 {
     public class ConversationService : IConversationService
     {
+        private DataContext _context;
+
+        public ConversationService(DataContext context)
+        {
+            _context = context;
+        }
+
         public Task<User> Create(string name, User user)
         {
             throw new NotImplementedException();
