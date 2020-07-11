@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Mystik.Data;
 using Mystik.Entities;
 using Mystik.Models;
@@ -31,9 +32,9 @@ namespace Mystik.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Message>> GetAll()
+        public async Task<IEnumerable<Message>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _context.Messages.ToListAsync();
         }
 
         public Task<Message> Retrieve(Guid id)
