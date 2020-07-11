@@ -62,9 +62,9 @@ namespace Mystik.Services
             return await _context.Conversations.ToListAsync();
         }
 
-        public Task<Conversation> Retrieve(Guid id)
+        public async Task<Conversation> Retrieve(Guid id)
         {
-            throw new NotImplementedException();
+            return await _context.FindAsync<Conversation>(id);
         }
 
         public Task Update(Guid id, ConversationPatch model)
