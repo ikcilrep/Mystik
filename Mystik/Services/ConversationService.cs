@@ -57,9 +57,9 @@ namespace Mystik.Services
             _context.Dispose();
         }
 
-        public Task<IEnumerable<Conversation>> GetAll()
+        public async Task<IEnumerable<Conversation>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _context.Conversations.ToListAsync();
         }
 
         public Task<Conversation> Retrieve(Guid id)
