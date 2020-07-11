@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Mystik.Data;
 using Mystik.Entities;
 using Mystik.Models;
@@ -35,9 +37,19 @@ namespace Mystik.Services
             return conversation;
         }
 
-        public Task Delete(Guid id)
+        public async Task Delete(Guid id)
         {
-            throw new NotImplementedException();
+            var conversation = await _context.FindAsync<Conversation>(id);
+            var managedConversations = _context.ManagedConversations.Where(mc => mc.ConversationId == id);
+            var userConversations = _context.UserConversations.Where(mc => mc.ConversationId == id);
+            var messages = _context.Messages.Include(m => m.Conversation).Where(m => m.Conversation.Id == id);
+
+            _context.Remove(conversation);
+            _context.Remove(managedConversations);
+            _context.Remove(userConversations);
+            _context.Remove(messages);
+
+            await _context.SaveChangesAsync();
         }
 
         public void Dispose()
