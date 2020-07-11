@@ -8,7 +8,7 @@ namespace Mystik.Services
 {
     public interface IConversationService
     {
-        Task<User> Create(string name, User user);
+        Task<User> Create(string name, Guid userId);
         Task<User> Retrieve(Guid id);
         Task Update(Guid id, ConversationPatch model);
         Task Delete(Guid id);
