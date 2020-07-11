@@ -29,7 +29,7 @@ namespace Mystik.Services
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            _context.Dispose();
         }
 
         public async Task<IEnumerable<Message>> GetAll()
