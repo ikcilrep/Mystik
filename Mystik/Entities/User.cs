@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Mystik.Helpers;
 
@@ -12,6 +13,8 @@ namespace Mystik.Entities
         public string Role { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
+        public ICollection<UserConversation> UserConversations { get; set; }
+        public ICollection<ManagedConversation> ManagedConversations { get; set; }
 
         public User(string nickname, string username, string password)
         {
