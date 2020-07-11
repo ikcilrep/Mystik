@@ -54,7 +54,7 @@ namespace Mystik.Services
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            _context.Dispose();
         }
 
         public Task<IEnumerable<Conversation>> GetAll()
