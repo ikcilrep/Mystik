@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Mystik.Entities;
 using Mystik.Models;
 using Mystik.Services;
 
@@ -20,7 +22,6 @@ namespace Mystik.Controllers
             _conversationService.Dispose();
             base.Dispose(disposing);
         }
-
 
         public ConversationsController(IConversationService conversationService)
         {
@@ -56,6 +57,13 @@ namespace Mystik.Controllers
                 return Ok();
             }
             return Forbid();
+        }
+
+        [Authorize(Roles = Role.Admin)]
+        [HttpGet]
+        public async Task<IEnumerable<Conversation>> Get()
+        {
+            return await _conversationService.GetAll();
         }
     }
 }
