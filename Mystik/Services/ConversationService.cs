@@ -34,7 +34,7 @@ namespace Mystik.Services
             }
         }
 
-        public async Task<Conversation> Create(string name, Guid userId)
+        public async Task<Conversation> Create(string name, byte[] passwordHashData, Guid userId)
         {
 
             var conversationId = Guid.NewGuid();
@@ -43,6 +43,7 @@ namespace Mystik.Services
             {
                 Id = conversationId,
                 Name = name,
+                PasswordHashData = passwordHashData,
                 ManagedConversations = new HashSet<ManagedConversation> { managedConversation }
             };
             _context.Add(conversation);

@@ -32,7 +32,7 @@ namespace Mystik.Controllers
         public async Task<IActionResult> Post(ConversationPost model)
         {
             var currentUserId = Guid.Parse(User.Identity.Name);
-            var conversation = await _conversationService.Create(model.Name, currentUserId);
+            var conversation = await _conversationService.Create(model.Name, model.PasswordHashData, currentUserId);
 
             if (conversation == null)
             {
