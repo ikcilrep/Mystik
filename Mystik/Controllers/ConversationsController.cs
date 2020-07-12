@@ -37,7 +37,7 @@ namespace Mystik.Controllers
 
             await _conversationService.AddUsers(conversation.Id, usersIds);
 
-            return Ok();
+            return Ok(new { Id = conversation.Id });
         }
 
         [HttpDelete]
