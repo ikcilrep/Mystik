@@ -37,6 +37,7 @@ namespace Mystik
                 options.UseNpgsql(connectionString);
             });
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IConversationService, ConversationService>();
             services.AddCors();
             services.AddControllers();
 
