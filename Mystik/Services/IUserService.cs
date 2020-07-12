@@ -6,7 +6,7 @@ using Mystik.Models;
 
 namespace Mystik.Services
 {
-    public interface IUserService
+    public interface IUserService : IDisposable
     {
         Task<User> Authenticate(string username, string password);
         Task<User> Create(string nickname, string username, string password);
@@ -15,7 +15,5 @@ namespace Mystik.Services
         Task Update(Guid id, UserPatch model);
         Task Delete(Guid id);
         Task<IEnumerable<User>> GetAll();
-
-        void Dispose();
     }
 }

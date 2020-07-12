@@ -6,14 +6,12 @@ using Mystik.Models;
 
 namespace Mystik.Services
 {
-    public interface IConversationService
+    public interface IConversationService : IDisposable
     {
         Task<Conversation> Create(string name, Guid userId);
         Task<Conversation> Retrieve(Guid id);
         Task Update(Guid id, ConversationPatch model);
         Task Delete(Guid id);
         Task<IEnumerable<Conversation>> GetAll();
-
-        void Dispose();
     }
 }
