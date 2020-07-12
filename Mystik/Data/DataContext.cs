@@ -23,12 +23,14 @@ namespace Mystik.Data
             modelBuilder.Entity<ManagedConversation>()
                         .HasOne(mc => mc.Admin)
                         .WithMany(a => a.ManagedConversations)
-                        .HasForeignKey(mc => mc.AdminId);
+                        .HasForeignKey(mc => mc.AdminId)
+                        .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ManagedConversation>()
                         .HasOne(mc => mc.Conversation)
                         .WithMany(c => c.ManagedConversations)
-                        .HasForeignKey(mc => mc.ConversationId);
+                        .HasForeignKey(mc => mc.ConversationId)
+                        .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<UserConversation>()
                 .HasKey(uc => new { uc.UserId, uc.ConversationId });

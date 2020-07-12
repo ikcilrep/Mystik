@@ -40,10 +40,8 @@ namespace Mystik.Services
         public async Task Delete(Guid id)
         {
             var conversation = await _context.FindAsync<Conversation>(id);
-            var managedConversations = _context.ManagedConversations.Where(mc => mc.ConversationId == id);
 
             _context.Remove(conversation);
-            _context.Remove(managedConversations);
 
             await _context.SaveChangesAsync();
         }
