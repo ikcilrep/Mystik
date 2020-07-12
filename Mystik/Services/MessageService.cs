@@ -31,9 +31,12 @@ namespace Mystik.Services
             return message;
         }
 
-        public Task Delete(Guid id)
+        public async Task Delete(Guid id)
         {
-            throw new NotImplementedException();
+            var message = await _context.Messages.FindAsync(id);
+            message.DeleteEncryptedContent();
+            _context.Remove(message);
+            await _context.SaveChangesAsync();
         }
 
         public void Dispose()
