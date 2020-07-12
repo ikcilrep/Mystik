@@ -17,9 +17,18 @@ namespace Mystik.Services
             _context = context;
         }
 
-        public Task<Message> Create(byte[] encryptedContent, Guid senderId, Guid conversationId)
+        public async Task<Message> Create(byte[] encryptedContent, Guid senderId, Guid conversationId)
         {
-            throw new NotImplementedException();
+            var message = new Message
+            {
+                SenderId = senderId,
+                ConversationId = conversationId,
+                SentTime = DateTime.UtcNow
+            };
+
+            await message.SetEncryptedContent(encryptedContent);
+
+            return message;
         }
 
         public Task Delete(Guid id)
