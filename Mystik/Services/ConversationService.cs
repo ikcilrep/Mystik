@@ -53,7 +53,7 @@ namespace Mystik.Services
 
         public async Task<IEnumerable<Conversation>> GetAll()
         {
-            return await _context.Conversations.ToListAsync();
+            return await _context.Conversations.AsNoTracking().ToListAsync();
         }
 
         public async Task<Conversation> Retrieve(Guid id)

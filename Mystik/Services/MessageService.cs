@@ -50,7 +50,7 @@ namespace Mystik.Services
 
         public async Task<IEnumerable<Message>> GetAll()
         {
-            return await _context.Messages.ToListAsync();
+            return await _context.Messages.AsNoTracking().ToListAsync();
         }
 
         public async Task<Message> Retrieve(Guid id)

@@ -96,7 +96,7 @@ namespace Mystik.Services
 
         public async Task<IEnumerable<User>> GetAll()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.AsNoTracking().ToListAsync();
         }
 
         public async Task Update(Guid id, UserPatch model)
