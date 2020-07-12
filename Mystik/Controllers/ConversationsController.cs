@@ -40,7 +40,7 @@ namespace Mystik.Controllers
             return Ok(new { Id = conversation.Id });
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var currentUserId = Guid.Parse(User.Identity.Name);
