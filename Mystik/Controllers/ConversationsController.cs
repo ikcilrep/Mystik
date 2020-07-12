@@ -7,7 +7,7 @@ namespace Mystik.Controllers
     [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class ConversationsController
+    public class ConversationsController : Controller
     {
         private IConversationService _conversationService;
 
