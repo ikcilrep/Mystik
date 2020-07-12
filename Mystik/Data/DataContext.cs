@@ -42,7 +42,8 @@ namespace Mystik.Data
             modelBuilder.Entity<UserConversation>()
                         .HasOne(uc => uc.Conversation)
                         .WithMany(c => c.UserConversations)
-                        .HasForeignKey(uc => uc.ConversationId);
+                        .HasForeignKey(uc => uc.ConversationId)
+                        .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
                         .HasMany(u => u.Messages)
