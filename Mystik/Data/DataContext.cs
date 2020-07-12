@@ -47,6 +47,12 @@ namespace Mystik.Data
                         .HasMany(u => u.Messages)
                         .WithOne(m => m.Sender)
                         .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Conversation>()
+                        .HasMany(u => u.Messages)
+                        .WithOne(m => m.Conversation)
+                        .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }
