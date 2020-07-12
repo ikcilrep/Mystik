@@ -15,6 +15,7 @@ namespace Mystik.Entities
         public byte[] PasswordSalt { get; set; }
         public ICollection<UserConversation> UserConversations { get; set; }
         public ICollection<ManagedConversation> ManagedConversations { get; set; }
+        public ICollection<Message> Messages { get; set; }
 
         public User(string nickname, string username, string password)
         {
