@@ -19,16 +19,19 @@ namespace Mystik.Services
             _context = context;
         }
 
-        public async Task AddUsers(Guid id, HashSet<Guid> users)
+        public async Task AddUsers(Guid id, HashSet<Guid> usersIds)
         {
-            var userConversations = users.Select(userId => new UserConversation
+            if (usersIds.All(userId => _context.Users.Any(user => user.Id == userId)))
             {
-                ConversationId = id,
-                UserId = userId
-            });
+                var userConversations = usersIds.Select(userId => new UserConversation
+                {
+                    ConversationId = id,
+                    UserId = userId
+                });
 
-            _context.UserConversations.AddRange(userConversations);
-            await _context.SaveChangesAsync();
+                _context.UserConversations.AddRange(userConversations);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<Conversation> Create(string name, Guid userId)
