@@ -15,11 +15,17 @@ namespace Mystik.Controllers
     {
         private IConversationService _conversationService;
 
+        protected override void Dispose(bool disposing)
+        {
+            _conversationService.Dispose();
+            base.Dispose(disposing);
+        }
+
+
         public ConversationsController(IConversationService conversationService)
         {
             _conversationService = conversationService;
         }
-
 
         [HttpPost]
         public async Task<IActionResult> Post(ConversationPost model)
