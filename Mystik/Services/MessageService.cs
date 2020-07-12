@@ -58,9 +58,10 @@ namespace Mystik.Services
             return await _context.FindAsync<Message>(id);
         }
 
-        public Task Update(Guid id, MessagePatch model)
+        public async Task Update(Guid id, MessagePatch model)
         {
-            throw new NotImplementedException();
+            var message = new Message { Id = id };
+            await message.SetEncryptedContent(model.EncryptedContent);
         }
     }
 }
