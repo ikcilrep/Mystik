@@ -28,6 +28,10 @@ namespace Mystik.Services
 
             await message.SetEncryptedContent(encryptedContent);
 
+            _context.Add(message);
+
+            await _context.SaveChangesAsync();
+
             return message;
         }
 
