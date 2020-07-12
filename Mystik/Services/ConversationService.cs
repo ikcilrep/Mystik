@@ -41,11 +41,9 @@ namespace Mystik.Services
         {
             var conversation = await _context.FindAsync<Conversation>(id);
             var managedConversations = _context.ManagedConversations.Where(mc => mc.ConversationId == id);
-            var userConversations = _context.UserConversations.Where(mc => mc.ConversationId == id);
 
             _context.Remove(conversation);
             _context.Remove(managedConversations);
-            _context.Remove(userConversations);
 
             await _context.SaveChangesAsync();
         }
