@@ -71,6 +71,11 @@ namespace Mystik.Services
             return await _context.Conversations.AsNoTracking().ToListAsync();
         }
 
+        public async Task<bool> IsTheConversationAdmin(Guid conversationId, Guid userId)
+        {
+            return await _context.ManagedConversations.AnyAsync(mc => mc.ConversationId == conversationId && mc.AdminId == userId);
+        }
+
         public async Task<Conversation> Retrieve(Guid id)
         {
             return await _context.FindAsync<Conversation>(id);

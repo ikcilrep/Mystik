@@ -8,6 +8,7 @@ namespace Mystik.Services
 {
     public interface IConversationService : IDisposable
     {
+        Task<bool> IsTheConversationAdmin(Guid conversationId, Guid userId);
         Task AddUsers(Guid id, HashSet<Guid> users);
         Task<Conversation> Create(string name, Guid userId);
         Task<Conversation> Retrieve(Guid id);
