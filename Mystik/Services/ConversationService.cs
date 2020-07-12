@@ -19,6 +19,18 @@ namespace Mystik.Services
             _context = context;
         }
 
+        public async Task AddUsers(Guid id, HashSet<Guid> users)
+        {
+            var userConversations = users.Select(userId => new UserConversation
+            {
+                ConversationId = id,
+                UserId = userId
+            });
+
+            _context.UserConversations.AddRange(userConversations);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<Conversation> Create(string name, Guid userId)
         {
 
