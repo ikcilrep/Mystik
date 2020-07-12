@@ -73,14 +73,19 @@ namespace Mystik.Services
 
         public async Task Delete(Guid id)
         {
-            var user = await _context.FindAsync<User>(id);
-            var userConversations = _context.UserConversations.Where(uc => uc.UserId == id);
-            var managedConversations = _context.ManagedConversations.Where(uc => uc.AdminId == id);
-            var abandonedManagedConversations = _context.Conversations.Include(c => c.ManagedConversations)
-                .Where(c => c.ManagedConversations.Count == 1 && managedConversations.Any(mc => mc.ConversationId == c.Id));
+            var user = await _context.Users.Include(u => u.ManagedConversations)
+                                           .ThenInclude(mc => mc.Conversation)
+                                           .ThenInclude(c => c.ManagedConversations)
+                                           .Include(u => u.UserConversations)
+                                           .ThenInclude(uc => uc.Conversation)
+                                           .ThenInclude(c => c.UserConversations)
+                                           .FirstAsync(u => u.Id == id);
 
-            var abandonedConversations = _context.Conversations.Include(c => c.UserConversations)
-                .Where(c => c.UserConversations.Count == 1 && userConversations.Any(uc => uc.ConversationId == c.Id));
+            var abandonedManagedConversations = user.ManagedConversations.Where(mc => mc.Conversation.ManagedConversations.Count == 1)
+                                                                         .Select(mc => mc.Conversation);
+
+            var abandonedConversations = user.UserConversations.Where(mc => mc.Conversation.UserConversations.Count == 1)
+                                                               .Select(mc => mc.Conversation);
 
             _context.RemoveRange(abandonedManagedConversations);
             _context.RemoveRange(abandonedConversations);
