@@ -39,5 +39,17 @@ namespace Mystik.Controllers
 
             return Ok();
         }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var currentUserId = Guid.Parse(User.Identity.Name);
+            if (await _conversationService.IsTheConversationAdmin(id, currentUserId))
+            {
+                await _conversationService.Delete(id);
+                return Ok();
+            }
+            return Forbid();
+        }
     }
 }
