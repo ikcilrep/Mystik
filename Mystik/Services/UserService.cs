@@ -76,7 +76,6 @@ namespace Mystik.Services
             var user = await _context.FindAsync<User>(id);
             var userConversations = _context.UserConversations.Where(uc => uc.UserId == id);
             var managedConversations = _context.ManagedConversations.Where(uc => uc.AdminId == id);
-            var userMessages = _context.Messages.Include(m => m.Sender).Where(m => m.Sender.Id == id);
             var abandonedManagedConversations = _context.Conversations.Include(c => c.ManagedConversations)
                 .Where(c => c.ManagedConversations.Count == 1 && managedConversations.Any(mc => mc.ConversationId == c.Id));
 
@@ -85,7 +84,6 @@ namespace Mystik.Services
 
             _context.RemoveRange(abandonedManagedConversations);
             _context.RemoveRange(abandonedConversations);
-            _context.RemoveRange(userMessages);
 
             _context.Remove(user);
             await _context.SaveChangesAsync();
