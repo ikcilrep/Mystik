@@ -1,5 +1,9 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Mystik.Models;
 using Mystik.Services;
 
 namespace Mystik.Controllers
@@ -14,6 +18,24 @@ namespace Mystik.Controllers
         public ConversationsController(IConversationService conversationService)
         {
             _conversationService = conversationService;
+        }
+
+        public async Task<IActionResult> Post(ConversationPost model)
+        {
+            var currentUserId = Guid.Parse(User.Identity.Name);
+            var conversation = await _conversationService.Create(model.Name, currentUserId);
+
+            if (conversation == null)
+            {
+                return BadRequest();
+            }
+
+            var usersIds = model.UsersIds.ToHashSet();
+            usersIds.Add(currentUserId);
+
+            await _conversationService.AddUsers(conversation.Id, usersIds);
+
+            return Ok();
         }
     }
 }
