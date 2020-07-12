@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Threading.Tasks;
 using Mystik.Helpers;
@@ -14,10 +15,17 @@ namespace Mystik.Entities
         public Conversation Conversation { get; set; }
         public DateTime SentTime { get; set; }
 
+        [NotMapped]
+        public String EncryptedContentPath => Path.Combine(AppSettings.EncryptedMessagesPath, Id.ToString());
+
         public async Task SetEncryptedContent(byte[] encryptedContent)
         {
-            var path = Path.Combine(AppSettings.EncryptedMessagesPath, Id.ToString());
-            await File.WriteAllBytesAsync(path, encryptedContent);
+            await File.WriteAllBytesAsync(EncryptedContentPath, encryptedContent);
+        }
+
+        public void DeleteEncryptedContent()
+        {
+            File.Delete(EncryptedContentPath);
         }
     }
 }
