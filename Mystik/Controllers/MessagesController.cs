@@ -37,5 +37,25 @@ namespace Mystik.Controllers
 
             return Forbid();
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            var message = await _messageService.Retrieve(id);
+
+            if (message == null)
+            {
+                return NotFound();
+            }
+
+            var currentUserId = Guid.Parse(User.Identity.Name);
+
+            if (await _messageService.IsTheConversationMember(message.ConversationId, currentUserId))
+            {
+                return Ok(await message.ToJsonRepresentableObject());
+            }
+
+            return Forbid();
+        }
     }
 }
