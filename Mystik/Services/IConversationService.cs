@@ -12,7 +12,7 @@ namespace Mystik.Services
         Task AddUsers(Guid id, HashSet<Guid> users);
         Task<Conversation> Create(string name, byte[] passwordHashData, Guid userId);
         Task<Conversation> Retrieve(Guid id);
-        Task Update(Guid id, ConversationPatch model);
+        Task<bool> Update(Guid id, ConversationPatch model);
         Task Delete(Guid id);
         Task<IEnumerable<Conversation>> GetAll();
     }

@@ -90,14 +90,20 @@ namespace Mystik.Services
                                                .FirstAsync(c => c.Id == id);
         }
 
-        public async Task Update(Guid id, ConversationPatch model)
+        public async Task<bool> Update(Guid id, ConversationPatch model)
         {
             var conversation = await _context.FindAsync<Conversation>(id);
+            if (conversation == null)
+            {
+                return false;
+            }
+
             var updatedConversation = model.ToConversation(conversation);
 
             _context.Entry(conversation).CurrentValues.SetValues(updatedConversation);
 
             await _context.SaveChangesAsync();
+            return true;
         }
     }
 }
