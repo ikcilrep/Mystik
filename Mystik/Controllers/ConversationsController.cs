@@ -61,9 +61,10 @@ namespace Mystik.Controllers
 
         [Authorize(Roles = Role.Admin)]
         [HttpGet]
-        public async Task<IEnumerable<Conversation>> Get()
+        public async Task<IEnumerable<object>> Get()
         {
-            return await _conversationService.GetAll();
+            var conversations = await _conversationService.GetAll();
+            return conversations.Select(c => c.ToJsonRepresentableObject());
         }
     }
 }
