@@ -69,7 +69,11 @@ namespace Mystik.Services
 
         public async Task<IEnumerable<Conversation>> GetAll()
         {
-            return await _context.Conversations.AsNoTracking().ToListAsync();
+            return await _context.Conversations.AsNoTracking()
+                                               .Include(c => c.Messages)
+                                               .Include(c => c.ManagedConversations)
+                                               .Include(c => c.UserConversations)
+                                               .ToListAsync();
         }
 
         public async Task<bool> IsTheConversationAdmin(Guid conversationId, Guid userId)
