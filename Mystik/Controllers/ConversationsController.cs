@@ -66,5 +66,23 @@ namespace Mystik.Controllers
             var conversations = await _conversationService.GetAll();
             return conversations.Select(c => c.ToJsonRepresentableObject());
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            var currentUserId = Guid.Parse(User.Identity.Name);
+            var conversation = await _conversationService.Retrieve(id);
+
+            if (conversation == null)
+            {
+                return NotFound();
+            }
+            else if (conversation.UserConversations.All(c => c.UserId != currentUserId))
+            {
+                return Forbid();
+            }
+
+            return Ok(conversation.ToJsonRepresentableObject());
+        }
     }
 }
