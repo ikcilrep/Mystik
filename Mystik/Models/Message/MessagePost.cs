@@ -1,9 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using Mystik.Entities;
 
-namespace Mystik.Models
+namespace Mystik.Models.Message
 {
-    public class MessagePatch
+    public class Post
     {
         [Required]
         public byte[] EncryptedContent { get; set; }

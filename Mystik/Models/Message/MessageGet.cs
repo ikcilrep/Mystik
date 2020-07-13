@@ -1,8 +1,8 @@
 using System;
 
-namespace Mystik.Models
+namespace Mystik.Models.Message
 {
-    public class MessageGet
+    public class Get
     {
         public DateTime? Since { get; set; }
     }

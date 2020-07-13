@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mystik.Helpers;
 using Mystik.Models;
+using Mystik.Models.Message;
 using Mystik.Services;
 
 namespace Mystik.Controllers
@@ -28,7 +29,7 @@ namespace Mystik.Controllers
         }
 
         [HttpPost("conversations/{conversationId}")]
-        public async Task<IActionResult> Post(Guid conversationId, MessagePost model)
+        public async Task<IActionResult> Post(Guid conversationId, Post model)
         {
             var currentUserId = Guid.Parse(User.Identity.Name);
             if (await _messageService.IsTheConversationMember(conversationId, currentUserId))
@@ -61,7 +62,7 @@ namespace Mystik.Controllers
         }
 
         [HttpGet("conversations/{conversationId}")]
-        public async Task<object> Get(Guid conversationId, MessageGet model)
+        public async Task<object> Get(Guid conversationId, Get model)
         {
             var messages = _messageService.GetMessagesFromConversation(conversationId);
 
