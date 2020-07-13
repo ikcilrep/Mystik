@@ -11,6 +11,12 @@ namespace Mystik.Controllers
     {
         private IMessageService _messageService;
 
+        protected override void Dispose(bool disposing)
+        {
+            _messageService.Dispose();
+            base.Dispose(disposing);
+        }
+
         public MessagesController(IMessageService messageService)
         {
             _messageService = messageService;
