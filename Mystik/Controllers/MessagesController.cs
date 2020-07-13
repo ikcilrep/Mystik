@@ -25,7 +25,7 @@ namespace Mystik.Controllers
             _messageService = messageService;
         }
 
-        [HttpPost("conversations/{id}")]
+        [HttpPost("conversations/{conversationId}")]
         public async Task<IActionResult> Post(Guid conversationId, MessagePost model)
         {
             var currentUserId = Guid.Parse(User.Identity.Name);
