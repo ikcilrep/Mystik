@@ -37,7 +37,6 @@ namespace Mystik.Controllers
 
         public async Task<IActionResult> Patch(Guid id, ConversationPatch model)
         {
-
             var theCurrentUserCanModifyTheConversation = await CanTheCurrentUserModifyTheConversation(id);
             if (theCurrentUserCanModifyTheConversation && await _conversationService.Update(id, model))
             {
