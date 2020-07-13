@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mystik.Helpers;
 
 namespace Mystik.Entities
 {
@@ -19,21 +20,16 @@ namespace Mystik.Entities
 
         public byte[] PasswordHashData { get; set; }
 
+
+
         public async Task<object> ToJsonRepresentableObject()
         {
-            var messages = new List<byte[]>();
-
-            foreach (var message in Messages.OrderBy(m => m.SentTime))
-            {
-                messages.Add(await message.GetEncryptedContent());
-            }
-
             return new
             {
                 Id = Id,
                 Name = Name,
                 PasswordHashData = PasswordHashData,
-                Messages = messages,
+                Messages = await Messages.GetEncryptedContent(),
                 Users = UserConversations.Select(uc => uc.UserId),
                 Managers = ManagedConversations.Select(uc => uc.ManagerId),
             };
