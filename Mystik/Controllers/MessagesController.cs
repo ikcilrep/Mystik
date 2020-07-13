@@ -32,7 +32,7 @@ namespace Mystik.Controllers
             if (await _messageService.IsTheConversationMember(conversationId, currentUserId))
             {
                 var message = await _messageService.Create(model.EncryptedContent, currentUserId, conversationId);
-                return Ok(new { Id = message.Id, SentTime = message.SentTime });
+                return Ok();
             }
 
             return Forbid();
