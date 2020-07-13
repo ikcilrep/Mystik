@@ -23,9 +23,8 @@ namespace Mystik.Entities
             await File.WriteAllBytesAsync(EncryptedContentPath, encryptedContent);
         }
 
-        public void DeleteEncryptedContent()
-        {
-            File.Delete(EncryptedContentPath);
-        }
+        public async Task<byte[]> GetEncryptedContent() => await File.ReadAllBytesAsync(EncryptedContentPath);
+
+        public void DeleteEncryptedContent() => File.Delete(EncryptedContentPath);
     }
 }
