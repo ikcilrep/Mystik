@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Mystik.Entities;
-using Mystik.Models;
+using Mystik.Models.Conversation;
 using Mystik.Services;
 
 namespace Mystik.Controllers
@@ -35,7 +35,7 @@ namespace Mystik.Controllers
                    || await _conversationService.IsTheConversationManager(conversationId, currentUserId);
         }
 
-        public async Task<IActionResult> Patch(Guid id, ConversationPatch model)
+        public async Task<IActionResult> Patch(Guid id, Patch model)
         {
             var theCurrentUserCanModifyTheConversation = await CanTheCurrentUserModifyTheConversation(id);
             if (theCurrentUserCanModifyTheConversation && await _conversationService.Update(id, model))
@@ -47,7 +47,7 @@ namespace Mystik.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(ConversationPost model)
+        public async Task<IActionResult> Post(Post model)
         {
             var currentUserId = Guid.Parse(User.Identity.Name);
             var conversation = await _conversationService.Create(model.Name, model.PasswordHashData, currentUserId);

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mystik.Entities;
-using Mystik.Models;
+using Mystik.Models.Conversation;
 
 namespace Mystik.Services
 {
@@ -12,7 +12,7 @@ namespace Mystik.Services
         Task AddUsers(Guid id, HashSet<Guid> users);
         Task<Conversation> Create(string name, byte[] passwordHashData, Guid userId);
         Task<Conversation> Retrieve(Guid id);
-        Task<bool> Update(Guid id, ConversationPatch model);
+        Task<bool> Update(Guid id, Patch model);
         Task Delete(Guid id);
         Task<IEnumerable<Conversation>> GetAll();
     }

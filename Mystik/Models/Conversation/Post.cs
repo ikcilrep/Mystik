@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mystik.Models
+namespace Mystik.Models.Conversation
 {
-    public class ConversationPost
+    public class Post
     {
         [Required]
         public string Name { get; set; }

@@ -1,12 +1,11 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Mystik.Data;
 using Mystik.Entities;
-using Mystik.Models;
+using Mystik.Models.Conversation;
 
 namespace Mystik.Services
 {
@@ -90,7 +89,7 @@ namespace Mystik.Services
                                                .FirstAsync(c => c.Id == id);
         }
 
-        public async Task<bool> Update(Guid id, ConversationPatch model)
+        public async Task<bool> Update(Guid id, Patch model)
         {
             var conversation = await _context.FindAsync<Conversation>(id);
             if (conversation == null)

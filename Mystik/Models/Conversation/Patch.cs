@@ -1,16 +1,16 @@
 using System.ComponentModel.DataAnnotations;
 using Mystik.Entities;
 
-namespace Mystik.Models
+namespace Mystik.Models.Conversation
 {
-    public class ConversationPatch
+    public class Patch
     {
         [Required]
         public string Name { get; set; }
 
-        public Conversation ToConversation(Conversation originalConversation)
+        public Entities.Conversation ToConversation(Entities.Conversation originalConversation)
         {
-            return new Conversation
+            return new Entities.Conversation
             {
                 Name = Name == null ? originalConversation.Name : Name,
                 Id = originalConversation.Id,
