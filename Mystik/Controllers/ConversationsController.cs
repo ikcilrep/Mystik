@@ -28,6 +28,16 @@ namespace Mystik.Controllers
             _conversationService = conversationService;
         }
 
+        public async Task<IActionResult> Patch(Guid id, ConversationPatch model)
+        {
+            if (await _conversationService.Update(id, model))
+            {
+                return Ok();
+            }
+
+            return NotFound();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post(ConversationPost model)
         {
