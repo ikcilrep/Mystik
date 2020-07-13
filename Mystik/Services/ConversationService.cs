@@ -38,7 +38,7 @@ namespace Mystik.Services
         {
 
             var conversationId = Guid.NewGuid();
-            var managedConversation = new ManagedConversation { AdminId = userId, ConversationId = conversationId };
+            var managedConversation = new ManagedConversation { ManagerId = userId, ConversationId = conversationId };
             var conversation = new Conversation
             {
                 Id = conversationId,
@@ -76,9 +76,9 @@ namespace Mystik.Services
                                                .ToListAsync();
         }
 
-        public async Task<bool> IsTheConversationAdmin(Guid conversationId, Guid userId)
+        public async Task<bool> IsTheConversationManager(Guid conversationId, Guid userId)
         {
-            return await _context.ManagedConversations.AnyAsync(mc => mc.ConversationId == conversationId && mc.AdminId == userId);
+            return await _context.ManagedConversations.AnyAsync(mc => mc.ConversationId == conversationId && mc.ManagerId == userId);
         }
 
         public async Task<Conversation> Retrieve(Guid id)

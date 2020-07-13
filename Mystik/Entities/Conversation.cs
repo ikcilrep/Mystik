@@ -27,7 +27,7 @@ namespace Mystik.Entities
                 PasswordHashData = PasswordHashData,
                 Messages = Messages.OrderBy(m => m.SentTime).Select(m => m.GetEncryptedContent()),
                 Users = UserConversations.Select(uc => uc.UserId),
-                Managers = ManagedConversations.Select(uc => uc.AdminId),
+                Managers = ManagedConversations.Select(uc => uc.ManagerId),
             };
         }
     }
