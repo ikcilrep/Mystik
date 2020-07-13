@@ -36,8 +36,11 @@ namespace Mystik
                 string connectionString = Configuration["DEFAULT_CONNECTION"];
                 options.UseNpgsql(connectionString);
             });
+
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IConversationService, ConversationService>();
+            services.AddScoped<IMessageService, MessageService>();
+
             services.AddCors();
             services.AddControllers();
 
