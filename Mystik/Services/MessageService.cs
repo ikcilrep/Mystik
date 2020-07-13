@@ -26,11 +26,11 @@ namespace Mystik.Services
                 SentTime = DateTime.UtcNow
             };
 
-            await message.SetEncryptedContent(encryptedContent);
-
             _context.Add(message);
 
             await _context.SaveChangesAsync();
+
+            await message.SetEncryptedContent(encryptedContent);
 
             return message;
         }
