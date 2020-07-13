@@ -28,9 +28,18 @@ namespace Mystik.Controllers
             _conversationService = conversationService;
         }
 
+        private async Task<bool> CanTheCurrentUserModifyTheConversation(Guid conversationId)
+        {
+            var currentUserId = Guid.Parse(User.Identity.Name);
+            return User.IsInRole(Role.Admin)
+                   || await _conversationService.IsTheConversationAdmin(conversationId, currentUserId);
+        }
+
         public async Task<IActionResult> Patch(Guid id, ConversationPatch model)
         {
-            if (await _conversationService.Update(id, model))
+
+            var theCurrentUserCanModifyTheConversation = await CanTheCurrentUserModifyTheConversation(id);
+            if (theCurrentUserCanModifyTheConversation && await _conversationService.Update(id, model))
             {
                 return Ok();
             }
@@ -55,8 +64,7 @@ namespace Mystik.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var currentUserId = Guid.Parse(User.Identity.Name);
-            if (User.IsInRole(Role.Admin) || await _conversationService.IsTheConversationAdmin(id, currentUserId))
+            if (await CanTheCurrentUserModifyTheConversation(id))
             {
                 await _conversationService.Delete(id);
                 return Ok();
