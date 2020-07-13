@@ -51,7 +51,7 @@ namespace Mystik.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
             var currentUserId = Guid.Parse(User.Identity.Name);
-            if (await _conversationService.IsTheConversationAdmin(id, currentUserId))
+            if (User.IsInRole(Role.Admin) || await _conversationService.IsTheConversationAdmin(id, currentUserId))
             {
                 await _conversationService.Delete(id);
                 return Ok();
