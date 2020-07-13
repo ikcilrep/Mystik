@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Mystik.Data;
 using Mystik.Entities;
 using Mystik.Models;
+using Mystik.Models.Message;
 
 namespace Mystik.Services
 {
@@ -59,7 +60,7 @@ namespace Mystik.Services
             return await _context.FindAsync<Message>(id);
         }
 
-        public async Task Update(Guid id, MessagePatch model)
+        public async Task Update(Guid id, Patch model)
         {
             var message = new Message { Id = id };
             await message.SetEncryptedContent(model.EncryptedContent);
