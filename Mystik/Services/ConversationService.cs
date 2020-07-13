@@ -83,7 +83,11 @@ namespace Mystik.Services
 
         public async Task<Conversation> Retrieve(Guid id)
         {
-            return await _context.FindAsync<Conversation>(id);
+            return await _context.Conversations.AsNoTracking()
+                                               .Include(c => c.Messages)
+                                               .Include(c => c.ManagedConversations)
+                                               .Include(c => c.UserConversations)
+                                               .FirstAsync(c => c.Id == id);
         }
 
         public async Task Update(Guid id, ConversationPatch model)
