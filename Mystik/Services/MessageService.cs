@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Mystik.Data;
@@ -67,6 +68,11 @@ namespace Mystik.Services
         public async Task<bool> IsTheConversationMember(Guid conversationId, Guid userId)
         {
             return await _context.UserConversations.AnyAsync(mc => mc.ConversationId == conversationId && mc.UserId == userId);
+        }
+
+        public IEnumerable<Message> GetMessagesFromConversation(Guid conversationId)
+        {
+            return _context.Messages.Where(m => m.ConversationId == conversationId);
         }
     }
 }

@@ -1,7 +1,9 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Mystik.Helpers;
 using Mystik.Models;
 using Mystik.Services;
 
@@ -56,6 +58,22 @@ namespace Mystik.Controllers
             }
 
             return Forbid();
+        }
+
+        [HttpGet("conversations/{conversationId}")]
+        public async Task<object> Get(Guid conversationId, MessageGet model)
+        {
+            var messages = _messageService.GetMessagesFromConversation(conversationId);
+
+            if (model.Since != null)
+            {
+                messages = messages.Where(m => m.SentTime > model.Since);
+            }
+
+            return new
+            {
+                Messages = await messages.GetEncryptedContent(),
+            };
         }
     }
 }
