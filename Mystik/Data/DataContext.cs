@@ -18,12 +18,12 @@ namespace Mystik.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ManagedConversation>()
-                .HasKey(mc => new { mc.AdminId, mc.ConversationId });
+                .HasKey(mc => new { mc.ManagerId, mc.ConversationId });
 
             modelBuilder.Entity<ManagedConversation>()
-                        .HasOne(mc => mc.Admin)
+                        .HasOne(mc => mc.Manager)
                         .WithMany(a => a.ManagedConversations)
-                        .HasForeignKey(mc => mc.AdminId)
+                        .HasForeignKey(mc => mc.ManagerId)
                         .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ManagedConversation>()
