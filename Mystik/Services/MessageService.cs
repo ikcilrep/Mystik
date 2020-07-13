@@ -63,5 +63,10 @@ namespace Mystik.Services
             var message = new Message { Id = id };
             await message.SetEncryptedContent(model.EncryptedContent);
         }
+
+        public async Task<bool> IsTheConversationMember(Guid conversationId, Guid userId)
+        {
+            return await _context.UserConversations.AnyAsync(mc => mc.ConversationId == conversationId && mc.UserId == userId);
+        }
     }
 }
