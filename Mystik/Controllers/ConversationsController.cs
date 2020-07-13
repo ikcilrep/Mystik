@@ -76,7 +76,14 @@ namespace Mystik.Controllers
         public async Task<IEnumerable<object>> Get()
         {
             var conversations = await _conversationService.GetAll();
-            return conversations.Select(c => c.ToJsonRepresentableObject());
+            var result = new List<object>();
+
+            foreach (var conversation in conversations)
+            {
+                result.Add(await conversation.ToJsonRepresentableObject());
+            }
+
+            return result;
         }
 
         [HttpGet("{id}")]
@@ -94,7 +101,7 @@ namespace Mystik.Controllers
                 return Forbid();
             }
 
-            return Ok(conversation.ToJsonRepresentableObject());
+            return Ok(await conversation.ToJsonRepresentableObject());
         }
     }
 }
