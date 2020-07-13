@@ -1,17 +1,13 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-using Mystik.Entities;
-
-namespace Mystik.Models
+namespace Mystik.Models.User
 {
-    public class UserPatch
+    public class Patch
     {
         public string Nickname { get; set; }
         public string Password { get; set; }
 
-        public virtual User ToUser(User originalUser)
+        public virtual Entities.User ToUser(Entities.User originalUser)
         {
-            var user = new User
+            var user = new Entities.User
             {
                 Id = originalUser.Id,
                 Username = originalUser.Username,

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Mystik.Data;
 using Mystik.Entities;
 using Mystik.Helpers;
-using Mystik.Models;
+using Mystik.Models.User;
 
 namespace Mystik.Services
 {
@@ -99,7 +99,7 @@ namespace Mystik.Services
             return await _context.Users.AsNoTracking().ToListAsync();
         }
 
-        public async Task Update(Guid id, UserPatch model)
+        public async Task Update(Guid id, Patch model)
         {
             var user = await _context.FindAsync<User>(id);
             var updatedUser = model.ToUser(user);

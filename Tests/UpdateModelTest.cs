@@ -1,5 +1,5 @@
 using Mystik.Entities;
-using Mystik.Models;
+using Mystik.Models.User;
 using Tests.Helpers;
 using Xunit;
 
@@ -11,7 +11,7 @@ namespace Tests
         public void PutToUser_EmptyModel_ReturnsTheSameUser()
         {
             var originalUser = MockUserService.User1;
-            var model = new UserPut
+            var model = new Put
             {
                 Nickname = null,
                 Username = null,
@@ -28,7 +28,7 @@ namespace Tests
         {
             var originalUser = MockUserService.User1;
             var user2 = MockUserService.User2;
-            var model = new UserPut
+            var model = new Put
             {
                 Nickname = user2.Nickname,
                 Username = user2.Username,

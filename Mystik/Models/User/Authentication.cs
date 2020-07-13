@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Mystik.Models
+namespace Mystik.Models.User
 {
     public class Authentication
     {

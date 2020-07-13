@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Mystik.Models;
+using Mystik.Models.User;
 using Tests.Helpers;
 using Xunit;
 
@@ -66,7 +66,7 @@ namespace Tests
         [Fact]
         public async Task Update_ChangesValues()
         {
-            var model = new UserPut
+            var model = new Put
             {
                 Nickname = MockUserService.NotExistingUser.Nickname,
                 Username = MockUserService.NotExistingUser.Username
