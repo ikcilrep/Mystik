@@ -26,5 +26,17 @@ namespace Mystik.Entities
         public async Task<byte[]> GetEncryptedContent() => await File.ReadAllBytesAsync(EncryptedContentPath);
 
         public void DeleteEncryptedContent() => File.Delete(EncryptedContentPath);
+
+        public async Task<object> ToJsonRepresentableObject()
+        {
+            return new
+            {
+                Id = Id,
+                SenderId = SenderId,
+                ConversationId = ConversationId,
+                SentTime = SentTime,
+                EncryptedContent = await GetEncryptedContent()
+            };
+        }
     }
 }
