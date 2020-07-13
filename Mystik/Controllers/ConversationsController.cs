@@ -33,13 +33,8 @@ namespace Mystik.Controllers
         {
             var currentUserId = Guid.Parse(User.Identity.Name);
             var conversation = await _conversationService.Create(model.Name, model.PasswordHashData, currentUserId);
-
-            if (conversation == null)
-            {
-                return BadRequest();
-            }
-
             var usersIds = model.UsersIds.ToHashSet();
+
             usersIds.Add(currentUserId);
 
             await _conversationService.AddUsers(conversation.Id, usersIds);
