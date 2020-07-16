@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Mystik.Controllers;
 using Mystik.Helpers;
-using Mystik.Models;
+using Mystik.Models.User;
 using Tests.Helpers;
 using Xunit;
 
@@ -110,7 +110,7 @@ namespace Tests
             var controller = new UsersController(service).WithUser1Identity();
 
             var id = MockUserService.User1.Id;
-            var model = new UserPatch { Nickname = MockUserService.User2.Nickname };
+            var model = new Patch { Nickname = MockUserService.User2.Nickname };
             var response = await controller.Patch(id, model);
 
             Assert.IsType<OkResult>(response);
@@ -123,7 +123,7 @@ namespace Tests
             var controller = new UsersController(service).WithAdminIdentity();
 
             var id = MockUserService.User1.Id;
-            var model = new UserPatch { Nickname = MockUserService.User2.Nickname };
+            var model = new Patch { Nickname = MockUserService.User2.Nickname };
             var response = await controller.Patch(id, model);
 
             Assert.IsType<OkResult>(response);
@@ -136,7 +136,7 @@ namespace Tests
             var controller = new UsersController(service).WithUser1Identity();
 
             var id = MockUserService.User2.Id;
-            var model = new UserPatch { Nickname = MockUserService.User1.Nickname };
+            var model = new Patch { Nickname = MockUserService.User1.Nickname };
             var response = await controller.Patch(id, model);
 
             Assert.IsType<ForbidResult>(response);
@@ -149,7 +149,7 @@ namespace Tests
             var controller = new UsersController(service).WithAdminIdentity();
 
             var id = MockUserService.User1.Id;
-            var model = new UserPut { Username = MockUserService.User2.Username };
+            var model = new Put { Username = MockUserService.User2.Username };
             var response = await controller.Put(id, model);
 
             Assert.IsType<OkResult>(response);

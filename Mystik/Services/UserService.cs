@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Mystik.Data;
 using Mystik.Entities;
 using Mystik.Helpers;
-using Mystik.Models;
+using Mystik.Models.User;
 
 namespace Mystik.Services
 {
@@ -73,17 +73,33 @@ namespace Mystik.Services
 
         public async Task Delete(Guid id)
         {
-            var user = await _context.FindAsync<User>(id);
+            var user = await _context.Users.Include(u => u.ManagedConversations)
+                                           .ThenInclude(mc => mc.Conversation)
+                                           .ThenInclude(c => c.ManagedConversations)
+                                           .Include(u => u.UserConversations)
+                                           .ThenInclude(uc => uc.Conversation)
+                                           .ThenInclude(c => c.UserConversations)
+                                           .FirstAsync(u => u.Id == id);
+
+            var abandonedManagedConversations = user.ManagedConversations.Where(mc => mc.Conversation.ManagedConversations.Count == 1)
+                                                                         .Select(mc => mc.Conversation);
+
+            var abandonedConversations = user.UserConversations.Where(mc => mc.Conversation.UserConversations.Count == 1)
+                                                               .Select(mc => mc.Conversation);
+
+            _context.RemoveRange(abandonedManagedConversations);
+            _context.RemoveRange(abandonedConversations);
+
             _context.Remove(user);
             await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<User>> GetAll()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.AsNoTracking().ToListAsync();
         }
 
-        public async Task Update(Guid id, UserPatch model)
+        public async Task Update(Guid id, Patch model)
         {
             var user = await _context.FindAsync<User>(id);
             var updatedUser = model.ToUser(user);

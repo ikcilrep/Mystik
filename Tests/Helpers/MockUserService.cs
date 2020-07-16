@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Mystik.Entities;
 using Mystik.Helpers;
-using Mystik.Models;
+using Mystik.Models.User;
 using Mystik.Services;
 
 namespace Tests.Helpers
@@ -91,7 +91,7 @@ namespace Tests.Helpers
             return Task.CompletedTask;
         }
 
-        public Task Update(Guid id, UserPatch model)
+        public Task Update(Guid id, Patch model)
         {
             var user = Users.FirstOrDefault(user => user.Id == id);
             var updatedUser = model.ToUser(user);

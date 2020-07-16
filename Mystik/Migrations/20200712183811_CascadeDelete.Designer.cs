@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Mystik.Data;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -9,9 +10,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Mystik.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20200712183811_CascadeDelete")]
+    partial class CascadeDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,13 +40,13 @@ namespace Mystik.Migrations
 
             modelBuilder.Entity("Mystik.Entities.ManagedConversation", b =>
                 {
-                    b.Property<Guid>("ManagerId")
+                    b.Property<Guid>("AdminId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ConversationId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("ManagerId", "ConversationId");
+                    b.HasKey("AdminId", "ConversationId");
 
                     b.HasIndex("ConversationId");
 
@@ -118,15 +120,15 @@ namespace Mystik.Migrations
 
             modelBuilder.Entity("Mystik.Entities.ManagedConversation", b =>
                 {
-                    b.HasOne("Mystik.Entities.Conversation", "Conversation")
+                    b.HasOne("Mystik.Entities.User", "Admin")
                         .WithMany("ManagedConversations")
-                        .HasForeignKey("ConversationId")
+                        .HasForeignKey("AdminId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Mystik.Entities.User", "Manager")
+                    b.HasOne("Mystik.Entities.Conversation", "Conversation")
                         .WithMany("ManagedConversations")
-                        .HasForeignKey("ManagerId")
+                        .HasForeignKey("ConversationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

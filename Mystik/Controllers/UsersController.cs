@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Mystik.Entities;
 using Mystik.Helpers;
 using Mystik.Models;
+using Mystik.Models.User;
 using Mystik.Services;
 
 namespace Mystik.Controllers
@@ -62,7 +63,7 @@ namespace Mystik.Controllers
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> Patch(Guid id, UserPatch model)
+        public async Task<IActionResult> Patch(Guid id, Patch model)
         {
             try
             {
@@ -82,7 +83,7 @@ namespace Mystik.Controllers
 
         [Authorize(Roles = Role.Admin)]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(Guid id, UserPut model)
+        public async Task<IActionResult> Put(Guid id, Put model)
         {
             try
             {
