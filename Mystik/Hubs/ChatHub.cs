@@ -50,7 +50,7 @@ namespace Mystik.Hubs
             await _conversationService.AddUsers(conversation.Id, membersIds);
 
             var membersStringIds = membersIds.Select(id => id.ToString()).ToList();
-            await Clients.Users(membersStringIds).ReceiveConversation(conversation.Id);
+            await Clients.Users(membersStringIds).CreateConversation(conversation.Id);
         }
 
         private async Task<bool> CanTheCurrentUserModifyTheConversation(Guid conversationId)
