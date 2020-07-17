@@ -28,19 +28,6 @@ namespace Mystik.Controllers
             _messageService = messageService;
         }
 
-        [HttpPost("conversations/{conversationId}")]
-        public async Task<IActionResult> Post(Guid conversationId, Post model)
-        {
-            var currentUserId = Guid.Parse(User.Identity.Name);
-            if (await _messageService.IsTheConversationMember(conversationId, currentUserId))
-            {
-                var message = await _messageService.Create(model.EncryptedContent, currentUserId, conversationId);
-                return Ok();
-            }
-
-            return Forbid();
-        }
-
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
