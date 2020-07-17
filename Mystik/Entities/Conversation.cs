@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 using Mystik.Helpers;
@@ -20,8 +21,6 @@ namespace Mystik.Entities
 
         public byte[] PasswordHashData { get; set; }
 
-
-
         public async Task<object> ToJsonRepresentableObject()
         {
             return new
@@ -34,5 +33,10 @@ namespace Mystik.Entities
                 Managers = ManagedConversations.Select(uc => uc.ManagerId),
             };
         }
+
+        public bool IsMember(Guid userId) => UserConversations.Any(uc => uc.UserId == userId);
+
+        [NotMapped]
+        public IReadOnlyList<string> Members => UserConversations.Select(uc => uc.UserId.ToString()).ToList();
     }
 }
