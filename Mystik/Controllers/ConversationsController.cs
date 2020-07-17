@@ -28,13 +28,6 @@ namespace Mystik.Controllers
             _conversationService = conversationService;
         }
 
-        private async Task<bool> CanTheCurrentUserModifyTheConversation(Guid conversationId)
-        {
-            var currentUserId = Guid.Parse(User.Identity.Name);
-            return User.IsInRole(Role.Admin)
-                   || await _conversationService.IsTheConversationManager(conversationId, currentUserId);
-        }
-
         [Authorize(Roles = Role.Admin)]
         [HttpGet]
         public async Task<IEnumerable<object>> Get()
