@@ -35,17 +35,6 @@ namespace Mystik.Controllers
                    || await _conversationService.IsTheConversationManager(conversationId, currentUserId);
         }
 
-        public async Task<IActionResult> Patch(Guid id, Patch model)
-        {
-            var theCurrentUserCanModifyTheConversation = await CanTheCurrentUserModifyTheConversation(id);
-            if (theCurrentUserCanModifyTheConversation && await _conversationService.Update(id, model))
-            {
-                return Ok();
-            }
-
-            return NotFound();
-        }
-
         [Authorize(Roles = Role.Admin)]
         [HttpGet]
         public async Task<IEnumerable<object>> Get()

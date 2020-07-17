@@ -91,20 +91,20 @@ namespace Mystik.Services
                                                .FirstAsync(c => c.Id == id);
         }
 
-        public async Task<bool> Update(Guid id, Patch model)
+        public async Task<IReadOnlyList<string>> ChangeName(Guid id, string newName)
         {
-            var conversation = await _context.FindAsync<Conversation>(id);
+            var conversation = await _context.Conversations.Include(c => c.UserConversations)
+                                                           .FirstOrDefaultAsync(c => c.Id == id);
             if (conversation == null)
             {
-                return false;
+                return new List<string>();
             }
 
-            var updatedConversation = model.ToConversation(conversation);
-
-            _context.Entry(conversation).CurrentValues.SetValues(updatedConversation);
+            conversation.Name = newName;
 
             await _context.SaveChangesAsync();
-            return true;
+
+            return conversation.Members;
         }
     }
 }

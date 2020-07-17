@@ -53,13 +53,6 @@ namespace Mystik.Hubs
             await Clients.Users(membersStringIds).CreateConversation(conversation.Id);
         }
 
-        private async Task<bool> CanTheCurrentUserModifyTheConversation(Guid conversationId)
-        {
-            var currentUserId = Guid.Parse(Context.User.Identity.Name);
-            return Context.User.IsInRole(Role.Admin)
-                   || await _conversationService.IsTheConversationManager(conversationId, currentUserId);
-        }
-
         public async Task DeleteConversation(Guid conversationId)
         {
             if (await CanTheCurrentUserModifyTheConversation(conversationId))
@@ -68,5 +61,23 @@ namespace Mystik.Hubs
                 await Clients.Users(members).DeleteConversation(conversationId);
             }
         }
+
+        public async Task ChangeConversationName(Guid conversationId, string newName)
+        {
+            if (await CanTheCurrentUserModifyTheConversation(conversationId))
+            {
+                var members = await _conversationService.ChangeName(conversationId, newName);
+                await Clients.Users(members).ChangeConversationName(conversationId, newName);
+            }
+        }
+
+        private async Task<bool> CanTheCurrentUserModifyTheConversation(Guid conversationId)
+        {
+            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            return Context.User.IsInRole(Role.Admin)
+                   || await _conversationService.IsTheConversationManager(conversationId, currentUserId);
+        }
+
+
     }
 }
