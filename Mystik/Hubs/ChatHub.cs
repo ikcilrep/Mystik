@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using Mystik.Entities;
 using Mystik.Services;
 
 namespace Mystik.Hubs
@@ -34,6 +37,20 @@ namespace Mystik.Hubs
                 await Clients.Users(conversation.Members)
                              .ReceiveMessage(encryptedContent, message.SentTime, sender.Nickname);
             }
+        }
+
+        public async Task CreateConversation(string name, byte[] passwordHashData, IEnumerable<Guid> usersIds)
+        {
+            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            var conversation = await _conversationService.Create(name, passwordHashData, currentUserId);
+            var membersIds = usersIds.ToHashSet();
+
+            membersIds.Add(currentUserId);
+
+            await _conversationService.AddUsers(conversation.Id, membersIds);
+
+            var membersStringIds = membersIds.Select(id => id.ToString()).ToList();
+            await Clients.Users(membersStringIds).ReceiveConversation(conversation.Id);
         }
     }
 }

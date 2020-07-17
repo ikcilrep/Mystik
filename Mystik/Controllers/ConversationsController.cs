@@ -46,20 +46,6 @@ namespace Mystik.Controllers
             return NotFound();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post(Post model)
-        {
-            var currentUserId = Guid.Parse(User.Identity.Name);
-            var conversation = await _conversationService.Create(model.Name, model.PasswordHashData, currentUserId);
-            var usersIds = model.UsersIds.ToHashSet();
-
-            usersIds.Add(currentUserId);
-
-            await _conversationService.AddUsers(conversation.Id, usersIds);
-
-            return Ok(new { Id = conversation.Id });
-        }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
