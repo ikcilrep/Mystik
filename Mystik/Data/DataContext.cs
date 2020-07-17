@@ -47,6 +47,21 @@ namespace Mystik.Data
                         .HasForeignKey(uc => uc.ConversationId)
                         .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<InvitedUser>()
+                .HasKey(iu => new { iu.InvitedId, iu.InviterId });
+
+            modelBuilder.Entity<InvitedUser>()
+                        .HasOne(iu => iu.Inviter)
+                        .WithMany(u => u.InvitedUsers)
+                        .HasForeignKey(iu => iu.InviterId)
+                        .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<InvitedUser>()
+                        .HasOne(iu => iu.Invited)
+                        .WithMany(u => u.Invitations)
+                        .HasForeignKey(iu => iu.InvitedId)
+                        .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<User>()
                         .HasMany(u => u.Messages)
                         .WithOne(m => m.Sender)

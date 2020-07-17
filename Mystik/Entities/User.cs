@@ -14,6 +14,8 @@ namespace Mystik.Entities
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
         public ICollection<UserConversation> UserConversations { get; set; }
+        public ICollection<InvitedUser> InvitedUsers { get; set; }
+        public ICollection<InvitedUser> Invitations { get; set; }
         public ICollection<ManagedConversation> ManagedConversations { get; set; }
         public ICollection<Message> Messages { get; set; }
 
