@@ -52,13 +52,15 @@ namespace Mystik.Services
             return conversation;
         }
 
-        public async Task Delete(Guid id)
+        public async Task<IReadOnlyList<string>> Delete(Guid id)
         {
-            var conversation = await _context.FindAsync<Conversation>(id);
+            var conversation = await _context.Conversations.Include(c => c.UserConversations)
+                                                           .FirstOrDefaultAsync(c => c.Id == id);
 
             _context.Remove(conversation);
 
             await _context.SaveChangesAsync();
+            return conversation.Members;
         }
 
         public void Dispose()
