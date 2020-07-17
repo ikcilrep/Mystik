@@ -7,5 +7,6 @@ namespace Mystik.Hubs
     {
         Task ReceiveMessage(byte[] encryptedContent, DateTime sentTime, string senderNickname);
         Task ReceiveConversation(Guid conversationId);
+        Task DeleteConversation(Guid conversationId);
     }
 }

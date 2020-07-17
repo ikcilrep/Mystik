@@ -46,17 +46,6 @@ namespace Mystik.Controllers
             return NotFound();
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
-        {
-            if (await CanTheCurrentUserModifyTheConversation(id))
-            {
-                await _conversationService.Delete(id);
-                return Ok();
-            }
-            return Forbid();
-        }
-
         [Authorize(Roles = Role.Admin)]
         [HttpGet]
         public async Task<IEnumerable<object>> Get()

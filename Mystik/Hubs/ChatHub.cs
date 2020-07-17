@@ -52,5 +52,21 @@ namespace Mystik.Hubs
             var membersStringIds = membersIds.Select(id => id.ToString()).ToList();
             await Clients.Users(membersStringIds).ReceiveConversation(conversation.Id);
         }
+
+        private async Task<bool> CanTheCurrentUserModifyTheConversation(Guid conversationId)
+        {
+            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            return Context.User.IsInRole(Role.Admin)
+                   || await _conversationService.IsTheConversationManager(conversationId, currentUserId);
+        }
+
+        public async Task DeleteConversation(Guid conversationId)
+        {
+            if (await CanTheCurrentUserModifyTheConversation(conversationId))
+            {
+                var members = await _conversationService.Delete(conversationId);
+                await Clients.Users(members).DeleteConversation(conversationId);
+            }
+        }
     }
 }
