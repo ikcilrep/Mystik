@@ -240,5 +240,17 @@ namespace Mystik.Services
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task DeleteInvitations(Guid id, List<Guid> usersIds)
+        {
+            _context.RemoveRange(usersIds.Select(userId => new InvitedUser
+            {
+                InviterId = id,
+                InvitedId = userId
+            }));
+
+            await _context.SaveChangesAsync();
+
+        }
     }
 }
