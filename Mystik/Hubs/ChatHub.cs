@@ -80,16 +80,24 @@ namespace Mystik.Hubs
 
         public async Task InviteFriends(Guid inviterId, List<Guid> invitedIds)
         {
-            await _userService.InviteFriends(inviterId, invitedIds);
+            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            if (inviterId == currentUserId)
+            {
+                await _userService.InviteFriends(inviterId, invitedIds);
 
-            await Clients.Users(invitedIds.ToStringList()).ReceiveInvitation(inviterId);
+                await Clients.Users(invitedIds.ToStringList()).ReceiveInvitation(inviterId);
+            }
         }
 
         public async Task DeleteInvitations(Guid inviterId, List<Guid> invitedIds)
         {
-            await _userService.DeleteInvitations(inviterId, invitedIds);
+            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            if (inviterId == currentUserId)
+            {
+                await _userService.DeleteInvitations(inviterId, invitedIds);
 
-            await Clients.Users(invitedIds.ToStringList()).DeleteInvitation(inviterId);
+                await Clients.Users(invitedIds.ToStringList()).DeleteInvitation(inviterId);
+            }
         }
     }
 }
