@@ -18,7 +18,7 @@ namespace Mystik.Services
             _context = context;
         }
 
-        public async Task AddUsers(Guid id, HashSet<Guid> usersIds)
+        public async Task AddMembers(Guid id, HashSet<Guid> usersIds)
         {
             if (usersIds.All(userId => _context.Users.Any(user => user.Id == userId)))
             {

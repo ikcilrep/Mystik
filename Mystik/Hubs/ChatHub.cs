@@ -48,7 +48,7 @@ namespace Mystik.Hubs
 
             membersIds.Add(currentUserId);
 
-            await _conversationService.AddUsers(conversation.Id, membersIds);
+            await _conversationService.AddMembers(conversation.Id, membersIds);
 
             await Clients.Users(membersIds.ToStringList()).CreateConversation(conversation.Id);
         }
