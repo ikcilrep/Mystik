@@ -85,5 +85,11 @@ namespace Mystik.Hubs
             await Clients.Users(invitedIds.Select(id => id.ToString()).ToList()).ReceiveInvitation(inviterId);
         }
 
+        public async Task DeleteInvitations(Guid inviterId, List<Guid> invitedIds)
+        {
+            await _userService.DeleteInvitations(inviterId, invitedIds);
+
+            await Clients.Users(invitedIds.Select(id => id.ToString()).ToList()).DeleteInvitation(inviterId);
+        }
     }
 }

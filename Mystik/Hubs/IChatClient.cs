@@ -10,5 +10,6 @@ namespace Mystik.Hubs
         Task DeleteConversation(Guid conversationId);
         Task ChangeConversationName(Guid conversationId, string newName);
         Task ReceiveInvitation(Guid inviterId);
+        Task DeleteInvitation(Guid inviterId);
     }
 }
