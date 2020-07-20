@@ -78,6 +78,12 @@ namespace Mystik.Hubs
                    || await _conversationService.IsTheConversationManager(conversationId, currentUserId);
         }
 
+        public async Task InviteFriends(Guid inviterId, List<Guid> invitedIds)
+        {
+            await _userService.InviteFriends(inviterId, invitedIds);
+
+            await Clients.Users(invitedIds.Select(id => id.ToString()).ToList()).ReceiveInvitation(inviterId);
+        }
 
     }
 }
