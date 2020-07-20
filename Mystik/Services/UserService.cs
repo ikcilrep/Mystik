@@ -194,5 +194,16 @@ namespace Mystik.Services
                 throw new AppException($"Username \"{username}\" has already been taken.");
             }
         }
+
+        public async Task AddFriends(Guid id, List<Guid> usersIds)
+        {
+            await _context.AddRangeAsync(usersIds.Select(userId => new CoupleOfFriends
+            {
+                Friend1Id = id,
+                Friend2Id = userId
+            }));
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

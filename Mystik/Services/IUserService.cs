@@ -14,6 +14,7 @@ namespace Mystik.Services
         Task Update(Guid id, Entities.User user);
         Task Update(Guid id, Patch model);
         Task Delete(Guid id);
+        Task AddFriends(Guid id, List<Guid> usersIds);
         Task<IEnumerable<User>> GetAll();
     }
 }
