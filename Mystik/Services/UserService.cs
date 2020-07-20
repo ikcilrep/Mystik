@@ -229,5 +229,16 @@ namespace Mystik.Services
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task InviteFriends(Guid id, List<Guid> usersIds)
+        {
+            _context.AddRange(usersIds.Select(userId => new InvitedUser
+            {
+                InviterId = id,
+                InvitedId = userId
+            }));
+
+            await _context.SaveChangesAsync();
+        }
     }
 }
