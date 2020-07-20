@@ -12,5 +12,6 @@ namespace Mystik.Hubs
         Task ReceiveInvitation(Guid inviterId);
         Task DeleteInvitation(Guid inviterId);
         Task AddFriend(Guid inviterId);
+        Task DeleteFriend(Guid userId);
     }
 }

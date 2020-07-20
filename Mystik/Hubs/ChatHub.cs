@@ -110,5 +110,16 @@ namespace Mystik.Hubs
                 await Clients.User(inviterId.ToString()).AddFriend(inviterId);
             }
         }
+
+        public async Task DeleteFriends(Guid userId, List<Guid> friendsIds)
+        {
+            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            if (userId == currentUserId)
+            {
+                await _userService.DeleteFriends(userId, friendsIds);
+
+                await Clients.Users(friendsIds.ToStringList()).DeleteFriend(userId);
+            }
+        }
     }
 }
