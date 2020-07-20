@@ -78,48 +78,39 @@ namespace Mystik.Hubs
                    || await _conversationService.IsTheConversationManager(conversationId, currentUserId);
         }
 
-        public async Task InviteFriends(Guid inviterId, List<Guid> invitedIds)
+        public async Task InviteFriends(List<Guid> invitedIds)
         {
             var currentUserId = Guid.Parse(Context.User.Identity.Name);
-            if (inviterId == currentUserId)
-            {
-                await _userService.InviteFriends(inviterId, invitedIds);
+            await _userService.InviteFriends(currentUserId, invitedIds);
 
-                await Clients.Users(invitedIds.ToStringList()).ReceiveInvitation(inviterId);
-            }
+            await Clients.Users(invitedIds.ToStringList()).ReceiveInvitation(currentUserId);
         }
 
-        public async Task DeleteInvitations(Guid inviterId, List<Guid> invitedIds)
+        public async Task DeleteInvitations(List<Guid> invitedIds)
         {
             var currentUserId = Guid.Parse(Context.User.Identity.Name);
-            if (inviterId == currentUserId)
-            {
-                await _userService.DeleteInvitations(inviterId, invitedIds);
+            await _userService.DeleteInvitations(currentUserId, invitedIds);
 
-                await Clients.Users(invitedIds.ToStringList()).DeleteInvitation(inviterId);
-            }
+            await Clients.Users(invitedIds.ToStringList()).DeleteInvitation(currentUserId);
         }
 
-        public async Task AddFriend(Guid inviterId, Guid invitedId)
+        public async Task AddFriend(Guid inviterId)
         {
             var currentUserId = Guid.Parse(Context.User.Identity.Name);
-            if (invitedId == currentUserId && await _userService.IsUserInvited(inviterId, invitedId))
+            if (await _userService.IsUserInvited(inviterId, currentUserId))
             {
-                await _userService.AddFriend(inviterId, invitedId);
+                await _userService.AddFriend(inviterId, currentUserId);
 
                 await Clients.User(inviterId.ToString()).AddFriend(inviterId);
             }
         }
 
-        public async Task DeleteFriends(Guid userId, List<Guid> friendsIds)
+        public async Task DeleteFriends(List<Guid> friendsIds)
         {
             var currentUserId = Guid.Parse(Context.User.Identity.Name);
-            if (userId == currentUserId)
-            {
-                await _userService.DeleteFriends(userId, friendsIds);
+            await _userService.DeleteFriends(currentUserId, friendsIds);
 
-                await Clients.Users(friendsIds.ToStringList()).DeleteFriend(userId);
-            }
+            await Clients.Users(friendsIds.ToStringList()).DeleteFriend(currentUserId);
         }
     }
 }
