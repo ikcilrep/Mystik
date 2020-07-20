@@ -16,6 +16,8 @@ namespace Mystik.Entities
         public ICollection<UserConversation> UserConversations { get; set; }
         public ICollection<InvitedUser> InvitedUsers { get; set; }
         public ICollection<InvitedUser> Invitations { get; set; }
+        public ICollection<CoupleOfFriends> Friends1 { get; set; }
+        public ICollection<CoupleOfFriends> Friends2 { get; set; }
         public ICollection<ManagedConversation> ManagedConversations { get; set; }
         public ICollection<Message> Messages { get; set; }
 

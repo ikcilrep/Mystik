@@ -8,6 +8,7 @@ namespace Mystik.Data
     public class DataContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<CoupleOfFriends> Friends { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<UserConversation> UserConversations { get; set; }
@@ -61,6 +62,21 @@ namespace Mystik.Data
                         .HasOne(iu => iu.Invited)
                         .WithMany(u => u.Invitations)
                         .HasForeignKey(iu => iu.InvitedId)
+                        .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CoupleOfFriends>()
+                .HasKey(cof => new { cof.Friend1Id, cof.Friend2Id });
+
+            modelBuilder.Entity<CoupleOfFriends>()
+                        .HasOne(cof => cof.Friend1)
+                        .WithMany(u => u.Friends2)
+                        .HasForeignKey(cof => cof.Friend1Id)
+                        .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<CoupleOfFriends>()
+                        .HasOne(cof => cof.Friend2)
+                        .WithMany(u => u.Friends1)
+                        .HasForeignKey(cof => cof.Friend2Id)
                         .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<User>()
