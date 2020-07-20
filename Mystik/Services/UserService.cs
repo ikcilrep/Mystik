@@ -203,6 +203,12 @@ namespace Mystik.Services
                 Friend2Id = userId
             }));
 
+            _context.AddRange(usersIds.Select(userId => new CoupleOfFriends
+            {
+                Friend1Id = userId,
+                Friend2Id = id
+            }));
+
             await _context.SaveChangesAsync();
         }
 
@@ -213,6 +219,13 @@ namespace Mystik.Services
                 Friend1Id = id,
                 Friend2Id = userId
             }));
+
+            _context.RemoveRange(usersIds.Select(userId => new CoupleOfFriends
+            {
+                Friend1Id = userId,
+                Friend2Id = id
+            }));
+
 
             await _context.SaveChangesAsync();
         }
