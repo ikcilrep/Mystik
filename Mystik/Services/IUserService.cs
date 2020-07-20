@@ -14,7 +14,7 @@ namespace Mystik.Services
         Task Update(Guid id, Entities.User user);
         Task Update(Guid id, Patch model);
         Task Delete(Guid id);
-        Task AddFriends(Guid id, List<Guid> usersIds);
+        Task AddFriend(Guid inviterId, Guid invitedId);
         Task DeleteFriends(Guid id, List<Guid> usersIds);
         Task InviteFriends(Guid id, List<Guid> usersIds);
         Task DeleteInvitations(Guid id, List<Guid> usersIds);

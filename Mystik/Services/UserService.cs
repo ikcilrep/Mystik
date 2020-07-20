@@ -195,19 +195,19 @@ namespace Mystik.Services
             }
         }
 
-        public async Task AddFriends(Guid id, List<Guid> usersIds)
+        public async Task AddFriend(Guid inviterId, Guid invitedId)
         {
-            _context.AddRange(usersIds.Select(userId => new CoupleOfFriends
+            _context.Add(new CoupleOfFriends
             {
-                Friend1Id = id,
-                Friend2Id = userId
-            }));
+                Friend1Id = inviterId,
+                Friend2Id = invitedId
+            });
 
-            _context.AddRange(usersIds.Select(userId => new CoupleOfFriends
+            _context.AddRange(new CoupleOfFriends
             {
-                Friend1Id = userId,
-                Friend2Id = id
-            }));
+                Friend1Id = invitedId,
+                Friend2Id = inviterId
+            });
 
             await _context.SaveChangesAsync();
         }
