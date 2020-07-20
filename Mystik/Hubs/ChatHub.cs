@@ -50,7 +50,7 @@ namespace Mystik.Hubs
 
             await _conversationService.AddMembers(conversation.Id, membersIds);
 
-            await Clients.Users(membersIds.ToStringList()).CreateConversation(conversation.Id);
+            await Clients.Users(membersIds.ToStringList()).JoinConversation(conversation.Id);
         }
 
         public async Task DeleteConversation(Guid conversationId)
@@ -58,7 +58,7 @@ namespace Mystik.Hubs
             if (await CanTheCurrentUserModifyTheConversation(conversationId))
             {
                 var members = await _conversationService.Delete(conversationId);
-                await Clients.Users(members).DeleteConversation(conversationId);
+                await Clients.Users(members).LeaveConversation(conversationId);
             }
         }
 
@@ -119,7 +119,7 @@ namespace Mystik.Hubs
             {
                 await _conversationService.AddMembers(conversationId, usersIds);
 
-                await Clients.Users(usersIds.ToStringList()).CreateConversation(conversationId);
+                await Clients.Users(usersIds.ToStringList()).JoinConversation(conversationId);
             }
         }
     }
