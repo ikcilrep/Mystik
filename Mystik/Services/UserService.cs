@@ -214,18 +214,9 @@ namespace Mystik.Services
 
         public async Task DeleteFriends(Guid id, List<Guid> usersIds)
         {
-            _context.RemoveRange(usersIds.Select(userId => new CoupleOfFriends
-            {
-                Friend1Id = id,
-                Friend2Id = userId
-            }));
-
-            _context.RemoveRange(usersIds.Select(userId => new CoupleOfFriends
-            {
-                Friend1Id = userId,
-                Friend2Id = id
-            }));
-
+            var existingFriends = _context.Friends.Where(f => (f.Friend1Id == id && usersIds.Contains(f.Friend2Id))
+                                                              || (f.Friend2Id == id && usersIds.Contains(f.Friend1Id)));
+            _context.RemoveRange(existingFriends);
 
             await _context.SaveChangesAsync();
         }
