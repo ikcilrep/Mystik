@@ -251,5 +251,10 @@ namespace Mystik.Services
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> IsUserInvited(Guid inviterId, Guid invitedId)
+        {
+            return await _context.Invitations.AnyAsync(i => i.InviterId == inviterId && i.InvitedId == invitedId);
+        }
     }
 }
