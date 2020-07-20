@@ -197,7 +197,7 @@ namespace Mystik.Services
 
         public async Task AddFriends(Guid id, List<Guid> usersIds)
         {
-            await _context.AddRangeAsync(usersIds.Select(userId => new CoupleOfFriends
+            _context.AddRange(usersIds.Select(userId => new CoupleOfFriends
             {
                 Friend1Id = id,
                 Friend2Id = userId
