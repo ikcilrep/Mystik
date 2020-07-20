@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Mystik.Entities;
+using Mystik.Helpers;
 using Mystik.Services;
 
 namespace Mystik.Hubs
@@ -49,8 +50,7 @@ namespace Mystik.Hubs
 
             await _conversationService.AddUsers(conversation.Id, membersIds);
 
-            var membersStringIds = membersIds.Select(id => id.ToString()).ToList();
-            await Clients.Users(membersStringIds).CreateConversation(conversation.Id);
+            await Clients.Users(membersIds.ToStringList()).CreateConversation(conversation.Id);
         }
 
         public async Task DeleteConversation(Guid conversationId)
@@ -82,14 +82,14 @@ namespace Mystik.Hubs
         {
             await _userService.InviteFriends(inviterId, invitedIds);
 
-            await Clients.Users(invitedIds.Select(id => id.ToString()).ToList()).ReceiveInvitation(inviterId);
+            await Clients.Users(invitedIds.ToStringList()).ReceiveInvitation(inviterId);
         }
 
         public async Task DeleteInvitations(Guid inviterId, List<Guid> invitedIds)
         {
             await _userService.DeleteInvitations(inviterId, invitedIds);
 
-            await Clients.Users(invitedIds.Select(id => id.ToString()).ToList()).DeleteInvitation(inviterId);
+            await Clients.Users(invitedIds.ToStringList()).DeleteInvitation(inviterId);
         }
     }
 }

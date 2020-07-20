@@ -18,5 +18,10 @@ namespace Mystik.Helpers
 
             return result;
         }
+
+        public static List<string> ToStringList<T>(this IEnumerable<T> enumerable)
+        {
+            return enumerable.Select(e => e.ToString()).ToList();
+        }
     }
 }
