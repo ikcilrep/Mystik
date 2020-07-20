@@ -243,11 +243,9 @@ namespace Mystik.Services
 
         public async Task DeleteInvitations(Guid inviterId, List<Guid> invitedIds)
         {
-            _context.RemoveRange(invitedIds.Select(invitedId => new InvitedUser
-            {
-                InviterId = inviterId,
-                InvitedId = invitedId
-            }));
+            var existingInvitations = _context.Invitations.Where(i => inviterId == i.InviterId
+                                                                     && invitedIds.Contains(i.InvitedId));
+            _context.RemoveRange(existingInvitations);
 
             await _context.SaveChangesAsync();
         }
