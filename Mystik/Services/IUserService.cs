@@ -16,8 +16,8 @@ namespace Mystik.Services
         Task Delete(Guid id);
         Task AddFriend(Guid inviterId, Guid invitedId);
         Task DeleteFriends(Guid id, List<Guid> usersIds);
-        Task InviteFriends(Guid id, List<Guid> usersIds);
-        Task DeleteInvitations(Guid id, List<Guid> usersIds);
+        Task InviteFriends(Guid inviterId, List<Guid> invitedIds);
+        Task DeleteInvitations(Guid inviterId, List<Guid> invitedIds);
         Task<bool> IsUserInvited(Guid inviterId, Guid invitedId);
         Task<IEnumerable<User>> GetAll();
     }

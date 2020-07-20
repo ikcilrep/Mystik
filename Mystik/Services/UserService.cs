@@ -230,23 +230,23 @@ namespace Mystik.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task InviteFriends(Guid id, List<Guid> usersIds)
+        public async Task InviteFriends(Guid inviterId, List<Guid> invitedIds)
         {
-            _context.AddRange(usersIds.Select(userId => new InvitedUser
+            _context.AddRange(invitedIds.Select(invitedId => new InvitedUser
             {
-                InviterId = id,
-                InvitedId = userId
+                InviterId = inviterId,
+                InvitedId = invitedId
             }));
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteInvitations(Guid id, List<Guid> usersIds)
+        public async Task DeleteInvitations(Guid inviterId, List<Guid> invitedIds)
         {
-            _context.RemoveRange(usersIds.Select(userId => new InvitedUser
+            _context.RemoveRange(invitedIds.Select(invitedId => new InvitedUser
             {
-                InviterId = id,
-                InvitedId = userId
+                InviterId = inviterId,
+                InvitedId = invitedId
             }));
 
             await _context.SaveChangesAsync();
