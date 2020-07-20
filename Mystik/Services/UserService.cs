@@ -205,5 +205,16 @@ namespace Mystik.Services
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task DeleteFriends(Guid id, List<Guid> usersIds)
+        {
+            _context.RemoveRange(usersIds.Select(userId => new CoupleOfFriends
+            {
+                Friend1Id = id,
+                Friend2Id = userId
+            }));
+
+            await _context.SaveChangesAsync();
+        }
     }
 }
