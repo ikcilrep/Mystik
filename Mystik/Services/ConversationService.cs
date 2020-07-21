@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Mystik.Data;
 using Mystik.Entities;
-using Mystik.Models.Conversation;
 
 namespace Mystik.Services
 {
