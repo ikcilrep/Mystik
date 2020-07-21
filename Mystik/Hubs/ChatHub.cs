@@ -96,9 +96,9 @@ namespace Mystik.Hubs
         public async Task InviteFriends(List<Guid> invitedIds)
         {
             var currentUserId = Guid.Parse(Context.User.Identity.Name);
-            await _userService.InviteFriends(currentUserId, invitedIds);
+            var usersToNotify = await _userService.InviteFriends(currentUserId, invitedIds);
 
-            await Clients.Users(invitedIds.ToStringList()).ReceiveInvitation(currentUserId);
+            await Clients.Users(usersToNotify).ReceiveInvitation(currentUserId);
         }
 
         public async Task DeleteInvitations(List<Guid> invitedIds)
