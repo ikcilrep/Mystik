@@ -66,13 +66,10 @@ namespace Tests
         [Fact]
         public async Task Update_ChangesValues()
         {
-            var model = new Put
-            {
-                Nickname = MockUserService.NotExistingUser.Nickname,
-                Username = MockUserService.NotExistingUser.Username
-            };
-
-            await _provider.UserService.Update(MockUserService.User2.Id, model);
+            await _provider.UserService.Update(
+                MockUserService.User2.Id,
+                MockUserService.NotExistingUser.Nickname,
+                MockUserService.NotExistingUser.Username);
 
             var actualUser = _provider.Context.Users.Single();
 
