@@ -104,58 +104,6 @@ namespace Tests
         }
 
         [Fact]
-        public async Task Patch_AsAuthorizedUser_ReturnsOk()
-        {
-            var service = new MockUserService();
-            var controller = new UsersController(service).WithUser1Identity();
-
-            var id = MockUserService.User1.Id;
-            var model = new Patch { Nickname = MockUserService.User2.Nickname };
-            var response = await controller.Patch(id, model);
-
-            Assert.IsType<OkResult>(response);
-        }
-
-        [Fact]
-        public async Task Patch_AsAdmin_ReturnsOk()
-        {
-            var service = new MockUserService();
-            var controller = new UsersController(service).WithAdminIdentity();
-
-            var id = MockUserService.User1.Id;
-            var model = new Patch { Nickname = MockUserService.User2.Nickname };
-            var response = await controller.Patch(id, model);
-
-            Assert.IsType<OkResult>(response);
-        }
-
-        [Fact]
-        public async Task Patch_AsUnauthorizedUser_ForbidsAccess()
-        {
-            var service = new MockUserService();
-            var controller = new UsersController(service).WithUser1Identity();
-
-            var id = MockUserService.User2.Id;
-            var model = new Patch { Nickname = MockUserService.User1.Nickname };
-            var response = await controller.Patch(id, model);
-
-            Assert.IsType<ForbidResult>(response);
-        }
-
-        [Fact]
-        public async Task Put_AsAdmin_ReturnsOk()
-        {
-            var service = new MockUserService();
-            var controller = new UsersController(service).WithAdminIdentity();
-
-            var id = MockUserService.User1.Id;
-            var model = new Put { Username = MockUserService.User2.Username };
-            var response = await controller.Put(id, model);
-
-            Assert.IsType<OkResult>(response);
-        }
-
-        [Fact]
         public async Task Authenticate_WithCorrectCredentials_ReturnsCorrectData()
         {
             AppSettings.Secret = "123456789012345678900987654321";
