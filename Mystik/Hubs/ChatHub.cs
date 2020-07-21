@@ -45,7 +45,7 @@ namespace Mystik.Hubs
             var currentUserId = Guid.Parse(Context.User.Identity.Name);
             var message = await _messageService.Retrieve(messageId);
 
-            if (message.SenderId == currentUserId)
+            if (message != null && message.SenderId == currentUserId)
             {
                 await _messageService.Edit(messageId, newEncryptedContent);
 
