@@ -64,13 +64,6 @@ namespace Mystik.Services
             return await _context.FindAsync<User>(id);
         }
 
-        public async Task Update(Guid id, User updatedUser)
-        {
-            var user = await _context.FindAsync<User>(id);
-            _context.Entry(user).CurrentValues.SetValues(updatedUser);
-            await _context.SaveChangesAsync();
-        }
-
         public async Task Delete(Guid id)
         {
             var user = await _context.Users.Include(u => u.ManagedConversations)
