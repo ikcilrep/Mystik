@@ -60,10 +60,10 @@ namespace Mystik.Services
             return await _context.FindAsync<Message>(id);
         }
 
-        public async Task Update(Guid id, Patch model)
+        public async Task Edit(Guid id, byte[] newEncryptedContent)
         {
             var message = new Message { Id = id };
-            await message.SetEncryptedContent(model.EncryptedContent);
+            await message.SetEncryptedContent(newEncryptedContent);
         }
 
         public async Task<bool> IsTheConversationMember(Guid conversationId, Guid userId)
