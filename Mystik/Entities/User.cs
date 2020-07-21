@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using Mystik.Helpers;
 
@@ -20,6 +21,9 @@ namespace Mystik.Entities
         public ICollection<CoupleOfFriends> Friends2 { get; set; }
         public ICollection<ManagedConversation> ManagedConversations { get; set; }
         public ICollection<Message> Messages { get; set; }
+
+        [NotMapped]
+        public IReadOnlyList<string> Friends => Friends1.Select(cof => cof.Friend2Id).ToStringList();
 
         public User(string nickname, string username, string password)
         {
