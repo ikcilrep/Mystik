@@ -62,40 +62,6 @@ namespace Mystik.Controllers
             return Ok();
         }
 
-        [HttpPatch("{id}")]
-        public async Task<IActionResult> Patch(Guid id, Patch model)
-        {
-            try
-            {
-                var currentUserId = Guid.Parse(User.Identity.Name);
-
-                if (id != currentUserId && !User.IsInRole(Role.Admin))
-                    return Forbid();
-
-                await _userService.Update(id, model);
-                return Ok();
-            }
-            catch (AppException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
-        [Authorize(Roles = Role.Admin)]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(Guid id, Put model)
-        {
-            try
-            {
-                await _userService.Update(id, model);
-                return Ok();
-            }
-            catch (AppException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
         [AllowAnonymous]
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate(Authentication model)
