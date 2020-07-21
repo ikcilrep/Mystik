@@ -40,6 +40,21 @@ namespace Mystik.Hubs
             }
         }
 
+        public async Task EditMessage(Guid messageId, byte[] newEncryptedContent)
+        {
+            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            var message = await _messageService.Retrieve(messageId);
+
+            if (message.SenderId == currentUserId)
+            {
+                await _messageService.Edit(messageId, newEncryptedContent);
+
+                var conversation = await _conversationService.Retrieve(message.ConversationId);
+
+                await Clients.Users(conversation.Members).EditMessage(messageId, newEncryptedContent);
+            }
+        }
+
         public async Task CreateConversation(string name, byte[] passwordHashData, IEnumerable<Guid> usersIds)
         {
             var currentUserId = Guid.Parse(Context.User.Identity.Name);
