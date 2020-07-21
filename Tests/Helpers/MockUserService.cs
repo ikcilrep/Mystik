@@ -84,15 +84,17 @@ namespace Tests.Helpers
             return Task.Run(() => Users.FirstOrDefault(user => user.Id == id));
         }
 
-        public Task Update(Guid id, string newNickname, string newPassword)
+        public Task<IReadOnlyList<string>> Update(Guid id, string newNickname, string newPassword)
         {
             var user = Users.FirstOrDefault(user => user.Id == id);
+            var usersToNotify = newNickname == user.Nickname ? new List<string>() : user.Friends;
+
             user.Nickname = newNickname;
             user.SetPassword(newPassword);
 
             Users.RemoveWhere(user => user.Id == id);
             Users.Add(user);
-            return Task.CompletedTask;
+            return Task.Run(() => usersToNotify);
         }
 
         public Task AddFriend(Guid inviterId, Guid invitedId)
