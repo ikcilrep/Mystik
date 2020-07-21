@@ -92,9 +92,10 @@ namespace Mystik.Services
             return await _context.Users.AsNoTracking().ToListAsync();
         }
 
-        public async Task Update(Guid id, string newNickname, string newPassword)
+        public async Task<IReadOnlyList<string>> Update(Guid id, string newNickname, string newPassword)
         {
-            var user = await _context.FindAsync<User>(id);
+            var user = await _context.Users.Include(u => u.Friends1).FirstOrDefaultAsync(u => u.Id == id);
+            var usersToNotify = newNickname == user.Nickname ? new List<string>() : user.Friends;
 
             if (newNickname != null)
             {
@@ -109,6 +110,8 @@ namespace Mystik.Services
             }
 
             await _context.SaveChangesAsync();
+
+            return usersToNotify;
         }
 
         public void Dispose()
