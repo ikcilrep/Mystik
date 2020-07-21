@@ -122,5 +122,15 @@ namespace Mystik.Hubs
                 await Clients.Users(usersIds.ToStringList()).JoinConversation(conversationId);
             }
         }
+
+        public async Task DeleteConversationMembers(Guid conversationId, List<Guid> usersIds)
+        {
+            if (await CanTheCurrentUserModifyTheConversation(conversationId))
+            {
+                await _conversationService.DeleteMembers(conversationId, usersIds);
+
+                await Clients.Users(usersIds.ToStringList()).LeaveConversation(conversationId);
+            }
+        }
     }
 }
