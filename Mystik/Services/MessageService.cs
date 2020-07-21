@@ -48,11 +48,6 @@ namespace Mystik.Services
             _context.Dispose();
         }
 
-        public async Task<IEnumerable<Message>> GetAll()
-        {
-            return await _context.Messages.AsNoTracking().ToListAsync();
-        }
-
         public async Task<Message> Retrieve(Guid id)
         {
             return await _context.FindAsync<Message>(id);

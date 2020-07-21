@@ -13,6 +13,5 @@ namespace Mystik.Services
         Task<Message> Retrieve(Guid id);
         Task Edit(Guid id, byte[] newEncryptedContent);
         Task Delete(Guid id);
-        Task<IEnumerable<Message>> GetAll();
     }
 }
