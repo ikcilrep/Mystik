@@ -222,7 +222,15 @@ namespace Mystik.Services
 
         public async Task InviteFriends(Guid inviterId, List<Guid> invitedIds)
         {
-            _context.AddRange(invitedIds.Select(invitedId => new InvitedUser
+            var existingNotInvitedUsers = _context.Users.Include(u => u.Friends1)
+                                                        .Include(u => u.Invitations)
+                                                        .Include(u => u.InvitedUsers)
+                                                        .Where(u => invitedIds.Contains(u.Id)
+                                                                    && u.Friends1.All(cof => cof.Friend2Id != inviterId)
+                                                                    && u.Invitations.All(iu => iu.InviterId != inviterId)
+                                                                    && u.InvitedUsers.All(iu => iu.InvitedId != inviterId))
+                                                        .Select(u => u.Id);
+            _context.AddRange(existingNotInvitedUsers.Select(invitedId => new InvitedUser
             {
                 InviterId = inviterId,
                 InvitedId = invitedId
