@@ -147,5 +147,14 @@ namespace Mystik.Hubs
                 await Clients.Users(usersIds.ToStringList()).LeaveConversation(conversationId);
             }
         }
+
+        public async Task UpdateUser(string newNickname, string newPassword)
+        {
+            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+
+            var usersToNotify = await _userService.Update(currentUserId, newNickname, newPassword);
+
+            await Clients.Users(usersToNotify).UpdateFriend(currentUserId, newNickname);
+        }
     }
 }
