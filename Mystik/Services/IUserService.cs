@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Mystik.Entities;
-using Mystik.Models.User;
 
 namespace Mystik.Services
 {

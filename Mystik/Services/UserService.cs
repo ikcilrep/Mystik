@@ -7,7 +7,6 @@ using Microsoft.EntityFrameworkCore;
 using Mystik.Data;
 using Mystik.Entities;
 using Mystik.Helpers;
-using Mystik.Models.User;
 
 namespace Mystik.Services
 {
