@@ -106,5 +106,15 @@ namespace Mystik.Services
 
             return conversation.Members;
         }
+
+        public async Task DeleteMembers(Guid conversationId, List<Guid> usersIds)
+        {
+            var existingMembers = _context.UserConversations.Where(uc => uc.ConversationId == conversationId
+                                                                         && usersIds.Contains(uc.UserId));
+
+            _context.RemoveRange(existingMembers);
+
+            await _context.SaveChangesAsync();
+        }
     }
 }
