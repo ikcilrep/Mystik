@@ -55,6 +55,21 @@ namespace Mystik.Hubs
             }
         }
 
+        public async Task DeleteMessage(Guid messageId)
+        {
+            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            var message = await _messageService.Retrieve(messageId);
+
+            if (message != null && message.SenderId == currentUserId)
+            {
+                await _messageService.Delete(messageId);
+
+                var conversation = await _conversationService.Retrieve(message.ConversationId);
+
+                await Clients.Users(conversation.Members).DeleteMessage(messageId);
+            }
+        }
+
         public async Task CreateConversation(string name, byte[] passwordHashData, IEnumerable<Guid> usersIds)
         {
             var currentUserId = Guid.Parse(Context.User.Identity.Name);

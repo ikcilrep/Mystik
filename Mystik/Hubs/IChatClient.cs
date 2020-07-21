@@ -7,6 +7,7 @@ namespace Mystik.Hubs
     {
         Task ReceiveMessage(Guid messageId, byte[] encryptedContent, DateTime sentTime, string senderNickname);
         Task EditMessage(Guid messageId, byte[] newEncryptedContent);
+        Task DeleteMessage(Guid messageId);
         Task JoinConversation(Guid conversationId);
         Task LeaveConversation(Guid conversationId);
         Task ChangeConversationName(Guid conversationId, string newName);
