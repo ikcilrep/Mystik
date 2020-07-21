@@ -156,5 +156,16 @@ namespace Mystik.Hubs
 
             await Clients.Users(usersToNotify).UpdateFriend(currentUserId, newNickname);
         }
+
+        public async Task DeleteUser(Guid userId)
+        {
+            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            if (userId == currentUserId || Context.User.IsInRole(Role.Admin))
+            {
+                var usersToNotify = await _userService.Delete(userId);
+
+                await Clients.Users(usersToNotify).DeleteFriend(userId);
+            }
+        }
     }
 }
