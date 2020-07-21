@@ -107,7 +107,7 @@ namespace Tests.Helpers
             throw new NotImplementedException();
         }
 
-        public Task InviteFriends(Guid inviterId, List<Guid> invitedIds)
+        public Task<IReadOnlyList<string>> InviteFriends(Guid inviterId, List<Guid> invitedIds)
         {
             throw new NotImplementedException();
         }

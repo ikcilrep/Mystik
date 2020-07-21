@@ -220,7 +220,7 @@ namespace Mystik.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task InviteFriends(Guid inviterId, List<Guid> invitedIds)
+        public async Task<IReadOnlyList<string>> InviteFriends(Guid inviterId, List<Guid> invitedIds)
         {
             var existingNotInvitedUsers = _context.Users.Include(u => u.Friends1)
                                                         .Include(u => u.Invitations)
@@ -237,6 +237,8 @@ namespace Mystik.Services
             }));
 
             await _context.SaveChangesAsync();
+
+            return existingNotInvitedUsers.ToStringList();
         }
 
         public async Task DeleteInvitations(Guid inviterId, List<Guid> invitedIds)
