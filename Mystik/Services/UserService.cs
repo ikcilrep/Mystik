@@ -230,7 +230,7 @@ namespace Mystik.Services
                                                                     && u.Invitations.All(iu => iu.InviterId != inviterId)
                                                                     && u.InvitedUsers.All(iu => iu.InvitedId != inviterId))
                                                         .Select(u => u.Id);
-            _context.AddRange(existingNotInvitedUsers.Select(invitedId => new InvitedUser
+            _context.AddRange(existingNotInvitedUsers.Select(invitedId => new Invitation
             {
                 InviterId = inviterId,
                 InvitedId = invitedId

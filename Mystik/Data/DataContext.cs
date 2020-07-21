@@ -13,7 +13,7 @@ namespace Mystik.Data
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<UserConversation> UserConversations { get; set; }
         public DbSet<ManagedConversation> ManagedConversations { get; set; }
-        public DbSet<InvitedUser> Invitations { get; set; }
+        public DbSet<Invitation> Invitations { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
@@ -49,16 +49,16 @@ namespace Mystik.Data
                         .HasForeignKey(uc => uc.ConversationId)
                         .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<InvitedUser>()
+            modelBuilder.Entity<Invitation>()
                 .HasKey(iu => new { iu.InvitedId, iu.InviterId });
 
-            modelBuilder.Entity<InvitedUser>()
+            modelBuilder.Entity<Invitation>()
                         .HasOne(iu => iu.Inviter)
                         .WithMany(u => u.InvitedUsers)
                         .HasForeignKey(iu => iu.InviterId)
                         .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<InvitedUser>()
+            modelBuilder.Entity<Invitation>()
                         .HasOne(iu => iu.Invited)
                         .WithMany(u => u.Invitations)
                         .HasForeignKey(iu => iu.InvitedId)

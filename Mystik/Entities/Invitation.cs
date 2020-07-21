@@ -2,7 +2,7 @@ using System;
 
 namespace Mystik.Entities
 {
-    public class InvitedUser
+    public class Invitation
     {
         public Guid InviterId { get; set; }
         public User Inviter { get; set; }
