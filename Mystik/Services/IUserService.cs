@@ -11,7 +11,7 @@ namespace Mystik.Services
         Task<User> Authenticate(string username, string password);
         Task<User> Create(string nickname, string username, string password);
         Task<User> Retrieve(Guid id);
-        Task Update(Guid id, Patch model);
+        Task Update(Guid id, string newNickname, string newPassword);
         Task Delete(Guid id);
         Task AddFriend(Guid inviterId, Guid invitedId);
         Task DeleteFriends(Guid id, List<Guid> usersIds);

@@ -92,18 +92,21 @@ namespace Mystik.Services
             return await _context.Users.AsNoTracking().ToListAsync();
         }
 
-        public async Task Update(Guid id, Patch model)
+        public async Task Update(Guid id, string newNickname, string newPassword)
         {
             var user = await _context.FindAsync<User>(id);
-            var updatedUser = model.ToUser(user);
-            ValidateNickname(updatedUser.Nickname);
 
-            if (model.Password != null)
+            if (newNickname != null)
             {
-                ValidatePassword(model.Password);
+                ValidateNickname(newNickname);
+                user.Nickname = newNickname;
             }
 
-            _context.Entry(user).CurrentValues.SetValues(updatedUser);
+            if (newPassword != null)
+            {
+                ValidatePassword(newPassword);
+                user.SetPassword(newPassword);
+            }
 
             await _context.SaveChangesAsync();
         }
