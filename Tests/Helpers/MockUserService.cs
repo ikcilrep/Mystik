@@ -84,21 +84,40 @@ namespace Tests.Helpers
             return Task.Run(() => Users.FirstOrDefault(user => user.Id == id));
         }
 
-        public Task Update(Guid id, User user)
+        public Task Update(Guid id, string newNickname, string newPassword)
         {
+            var user = Users.FirstOrDefault(user => user.Id == id);
+            user.Nickname = newNickname;
+            user.SetPassword(newPassword);
+
             Users.RemoveWhere(user => user.Id == id);
             Users.Add(user);
             return Task.CompletedTask;
         }
 
-        public Task Update(Guid id, Patch model)
+        public Task AddFriend(Guid inviterId, Guid invitedId)
         {
-            var user = Users.FirstOrDefault(user => user.Id == id);
-            var updatedUser = model.ToUser(user);
+            throw new NotImplementedException();
+        }
 
-            Users.RemoveWhere(user => user.Id == id);
-            Users.Add(updatedUser);
-            return Task.CompletedTask;
+        public Task DeleteFriends(Guid id, List<Guid> usersIds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task InviteFriends(Guid inviterId, List<Guid> invitedIds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteInvitations(Guid inviterId, List<Guid> invitedIds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> IsUserInvited(Guid inviterId, Guid invitedId)
+        {
+            throw new NotImplementedException();
         }
     }
 }
