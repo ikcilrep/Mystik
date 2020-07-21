@@ -54,13 +54,13 @@ namespace Mystik.Data
 
             modelBuilder.Entity<Invitation>()
                         .HasOne(iu => iu.Inviter)
-                        .WithMany(u => u.InvitedUsers)
+                        .WithMany(u => u.SentInvitations)
                         .HasForeignKey(iu => iu.InviterId)
                         .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Invitation>()
                         .HasOne(iu => iu.Invited)
-                        .WithMany(u => u.Invitations)
+                        .WithMany(u => u.ReceivedInvitations)
                         .HasForeignKey(iu => iu.InvitedId)
                         .OnDelete(DeleteBehavior.Cascade);
 

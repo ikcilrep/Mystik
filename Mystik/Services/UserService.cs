@@ -223,12 +223,12 @@ namespace Mystik.Services
         public async Task<IReadOnlyList<string>> InviteFriends(Guid inviterId, List<Guid> invitedIds)
         {
             var existingNotInvitedUsers = _context.Users.Include(u => u.Friends1)
-                                                        .Include(u => u.Invitations)
-                                                        .Include(u => u.InvitedUsers)
+                                                        .Include(u => u.ReceivedInvitations)
+                                                        .Include(u => u.SentInvitations)
                                                         .Where(u => invitedIds.Contains(u.Id)
                                                                     && u.Friends1.All(cof => cof.Friend2Id != inviterId)
-                                                                    && u.Invitations.All(iu => iu.InviterId != inviterId)
-                                                                    && u.InvitedUsers.All(iu => iu.InvitedId != inviterId))
+                                                                    && u.ReceivedInvitations.All(iu => iu.InviterId != inviterId)
+                                                                    && u.SentInvitations.All(iu => iu.InvitedId != inviterId))
                                                         .Select(u => u.Id);
             _context.AddRange(existingNotInvitedUsers.Select(invitedId => new Invitation
             {
