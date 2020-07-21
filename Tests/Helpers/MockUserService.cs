@@ -62,10 +62,11 @@ namespace Tests.Helpers
             return Task.Run(() => user);
         }
 
-        public Task Delete(Guid id)
+        public Task<IReadOnlyList<string>> Delete(Guid id)
         {
-            Users.RemoveWhere(user => user.Id == id);
-            return Task.CompletedTask;
+            var user = Users.First(u => u.Id == id);
+            Users.Remove(user);
+            return Task.Run(() => user.Friends);
         }
 
         public void Dispose()

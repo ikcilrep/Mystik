@@ -12,7 +12,7 @@ namespace Mystik.Services
         Task<User> Create(string nickname, string username, string password);
         Task<User> Retrieve(Guid id);
         Task<IReadOnlyList<string>> Update(Guid id, string newNickname, string newPassword);
-        Task Delete(Guid id);
+        Task<IReadOnlyList<string>> Delete(Guid id);
         Task AddFriend(Guid inviterId, Guid invitedId);
         Task DeleteFriends(Guid id, List<Guid> usersIds);
         Task<IReadOnlyList<string>> InviteFriends(Guid inviterId, List<Guid> invitedIds);

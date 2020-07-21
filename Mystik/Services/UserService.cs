@@ -64,15 +64,17 @@ namespace Mystik.Services
             return await _context.FindAsync<User>(id);
         }
 
-        public async Task Delete(Guid id)
+        public async Task<IReadOnlyList<string>> Delete(Guid id)
         {
-            var user = await _context.Users.Include(u => u.ManagedConversations)
+            var user = await _context.Users.Include(u => u.Friends1)
+                                           .Include(u => u.ManagedConversations)
                                            .ThenInclude(mc => mc.Conversation)
                                            .ThenInclude(c => c.ManagedConversations)
                                            .Include(u => u.UserConversations)
                                            .ThenInclude(uc => uc.Conversation)
                                            .ThenInclude(c => c.UserConversations)
                                            .FirstAsync(u => u.Id == id);
+            var usersToNotify = user.Friends;
 
             var abandonedManagedConversations = user.ManagedConversations.Where(mc => mc.Conversation.ManagedConversations.Count == 1)
                                                                          .Select(mc => mc.Conversation);
@@ -85,6 +87,8 @@ namespace Mystik.Services
 
             _context.Remove(user);
             await _context.SaveChangesAsync();
+
+            return usersToNotify;
         }
 
         public async Task<IEnumerable<User>> GetAll()
