@@ -157,9 +157,15 @@ namespace Mystik.Hubs
         {
             if (await CanTheCurrentUserModifyTheConversation(conversationId))
             {
-                await _conversationService.DeleteMembers(conversationId, usersIds);
+                var currentUserId = Guid.Parse(Context.User.Identity.Name);
+                var usersToDeleteIds = await usersIds.GetUsersToDelete(
+                    conversationId,
+                    currentUserId,
+                    _conversationService);
 
-                await Clients.Users(usersIds.ToStringList()).LeaveConversation(conversationId);
+                await _conversationService.DeleteMembers(conversationId, usersToDeleteIds);
+
+                await Clients.Users(usersToDeleteIds.ToStringList()).LeaveConversation(conversationId);
             }
         }
 

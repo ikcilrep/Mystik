@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mystik.Entities;
+using Mystik.Services;
 
 namespace Mystik.Helpers
 {
@@ -22,6 +24,18 @@ namespace Mystik.Helpers
         public static List<string> ToStringList<T>(this IEnumerable<T> enumerable)
         {
             return enumerable.Select(e => e.ToString()).ToList();
+        }
+
+        public static async Task<List<Guid>> GetUsersToDelete(
+            this IEnumerable<Guid> usersIds,
+            Guid conversationId,
+            Guid currentUserId,
+            IConversationService conversationService)
+        {
+            var usersToDeleteIds = new List<Guid>();
+            var notManagingMembersIds = await conversationService.GetNotManagingMembersIds(conversationId);
+
+            return notManagingMembersIds.Intersect(usersIds).ToList();
         }
     }
 }
