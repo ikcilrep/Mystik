@@ -238,7 +238,8 @@ namespace Mystik.Services
             _context.AddRange(existingNotInvitedUsers.Select(invitedId => new Invitation
             {
                 InviterId = inviterId,
-                InvitedId = invitedId
+                InvitedId = invitedId,
+                CreatedDate = DateTime.UtcNow
             }));
 
             await _context.SaveChangesAsync();
