@@ -120,5 +120,16 @@ namespace Mystik.Services
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<Guid>> GetNotManagingMembersIds(Guid conversationId)
+        {
+            var conversation = await _context.Conversations.Include(c => c.UserConversations)
+                                                           .Include(c => c.ManagedConversations)
+                                                           .FirstAsync(c => c.Id == conversationId);
+
+            return conversation.UserConversations.Select(uc => uc.UserId)
+                                                 .Where(userId => conversation.ManagedConversations.All(mc => mc.ManagerId != userId));
+        }
+
     }
 }
