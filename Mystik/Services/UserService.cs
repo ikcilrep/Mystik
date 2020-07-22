@@ -202,13 +202,15 @@ namespace Mystik.Services
             _context.Add(new CoupleOfFriends
             {
                 Friend1Id = inviterId,
-                Friend2Id = invitedId
+                Friend2Id = invitedId,
+                CreatedDate = DateTime.UtcNow
             });
 
             _context.AddRange(new CoupleOfFriends
             {
                 Friend1Id = invitedId,
-                Friend2Id = inviterId
+                Friend2Id = inviterId,
+                CreatedDate = DateTime.UtcNow
             });
 
             await _context.SaveChangesAsync();
