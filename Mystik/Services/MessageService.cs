@@ -23,7 +23,7 @@ namespace Mystik.Services
             {
                 SenderId = senderId,
                 ConversationId = conversationId,
-                SentTime = DateTime.UtcNow
+                CreatedDate = DateTime.UtcNow
             };
 
             _context.Add(message);

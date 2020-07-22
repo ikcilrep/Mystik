@@ -36,7 +36,7 @@ namespace Mystik.Hubs
                 var message = await _messageService.Create(encryptedContent, currentUserId, conversationId);
                 var sender = await _userService.Retrieve(currentUserId);
                 await Clients.Users(conversation.Members)
-                             .ReceiveMessage(message.Id, encryptedContent, message.SentTime, sender.Nickname);
+                             .ReceiveMessage(message.Id, encryptedContent, message.CreatedDate, sender.Nickname);
             }
         }
 

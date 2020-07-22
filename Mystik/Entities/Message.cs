@@ -13,7 +13,7 @@ namespace Mystik.Entities
         public User Sender { get; set; }
         public Guid ConversationId { get; set; }
         public Conversation Conversation { get; set; }
-        public DateTime SentTime { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         [NotMapped]
         public String EncryptedContentPath => Path.Combine(AppSettings.EncryptedMessagesPath, Id.ToString());
@@ -34,7 +34,7 @@ namespace Mystik.Entities
                 Id = Id,
                 SenderId = SenderId,
                 ConversationId = ConversationId,
-                SentTime = SentTime,
+                CreatedDate = CreatedDate,
                 EncryptedContent = await GetEncryptedContent()
             };
         }

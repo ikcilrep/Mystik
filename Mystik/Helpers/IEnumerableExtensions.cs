@@ -11,7 +11,7 @@ namespace Mystik.Helpers
         {
             var result = new List<byte[]>();
 
-            foreach (var message in messages.OrderBy(m => m.SentTime))
+            foreach (var message in messages.OrderBy(m => m.CreatedDate))
             {
                 result.Add(await message.GetEncryptedContent());
             }

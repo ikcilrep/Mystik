@@ -54,7 +54,7 @@ namespace Mystik.Controllers
 
             if (model.Since != null)
             {
-                messages = messages.Where(m => m.SentTime > model.Since);
+                messages = messages.Where(m => m.CreatedDate > model.Since);
             }
 
             return new
