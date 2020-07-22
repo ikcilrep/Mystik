@@ -36,7 +36,12 @@ namespace Mystik.Services
         {
 
             var conversationId = Guid.NewGuid();
-            var managedConversation = new ManagedConversation { ManagerId = userId, ConversationId = conversationId };
+            var managedConversation = new ManagedConversation
+            {
+                ManagerId = userId,
+                ConversationId = conversationId,
+                CreatedDate = DateTime.UtcNow
+            };
             var conversation = new Conversation
             {
                 Id = conversationId,
