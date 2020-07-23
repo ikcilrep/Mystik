@@ -53,10 +53,10 @@ namespace Mystik.Entities
                 Nickname = Nickname,
                 Username = Username,
                 Friends = Friends1.Where(cof => cof.CreatedDate >= since).Select(cof => cof.Friend2Id),
-                ReceivedInvitations = ReceivedInvitations.Where(cof => cof.CreatedDate > since)
-                                                         .Select(cof => cof.InviterId),
-                SentInvitations = SentInvitations.Where(cof => cof.CreatedDate > since)
-                                                 .Select(cof => cof.InvitedId),
+                ReceivedInvitations = ReceivedInvitations.Where(i => i.CreatedDate > since)
+                                                         .Select(i => i.InviterId),
+                SentInvitations = SentInvitations.Where(i => i.CreatedDate > since)
+                                                 .Select(i => i.InvitedId),
                 Conversations = await UserConversations.Where(uc => uc.CreatedDate > since
                                                                     || uc.Conversation.HasBeenModifiedSince(since))
                                                        .GetJsonRepresentableConversations(since)

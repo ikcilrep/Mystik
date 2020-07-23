@@ -32,7 +32,7 @@ namespace Mystik.Services
                 return null;
             }
 
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.Username == username);
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Username == username);
 
             if (user == null)
             {
@@ -80,19 +80,19 @@ namespace Mystik.Services
         {
             var user = await _context.Users.Include(u => u.Friends1)
                                            .Include(u => u.ManagedConversations)
-                                           .ThenInclude(mc => mc.Conversation)
-                                           .ThenInclude(c => c.ManagedConversations)
+                                                .ThenInclude(mc => mc.Conversation)
+                                                .ThenInclude(c => c.ManagedConversations)
                                            .Include(u => u.UserConversations)
-                                           .ThenInclude(uc => uc.Conversation)
-                                           .ThenInclude(c => c.UserConversations)
+                                                .ThenInclude(uc => uc.Conversation)
+                                                .ThenInclude(c => c.UserConversations)
                                            .FirstAsync(u => u.Id == id);
             var usersToNotify = user.GetFriends();
 
             var abandonedManagedConversations = user.ManagedConversations.Where(mc => mc.Conversation.ManagedConversations.Count == 1)
                                                                          .Select(mc => mc.Conversation);
 
-            var abandonedConversations = user.UserConversations.Where(mc => mc.Conversation.UserConversations.Count == 1)
-                                                               .Select(mc => mc.Conversation);
+            var abandonedConversations = user.UserConversations.Where(uc => uc.Conversation.UserConversations.Count == 1)
+                                                               .Select(uc => uc.Conversation);
 
             _context.RemoveRange(abandonedManagedConversations);
             _context.RemoveRange(abandonedConversations);
@@ -217,7 +217,7 @@ namespace Mystik.Services
                 throw new AppException("Username mustn't be longer than sixty four characters.");
             }
 
-            if (await _context.Users.AnyAsync(user => user.Username == username))
+            if (await _context.Users.AnyAsync(u => u.Username == username))
             {
                 throw new AppException($"Username \"{username}\" has already been taken.");
             }
@@ -244,8 +244,8 @@ namespace Mystik.Services
 
         public async Task DeleteFriends(Guid id, List<Guid> usersIds)
         {
-            var existingFriends = _context.Friends.Where(f => (f.Friend1Id == id && usersIds.Contains(f.Friend2Id))
-                                                              || (f.Friend2Id == id && usersIds.Contains(f.Friend1Id)));
+            var existingFriends = _context.Friends.Where(cof => (cof.Friend1Id == id && usersIds.Contains(cof.Friend2Id))
+                                                              || (cof.Friend2Id == id && usersIds.Contains(cof.Friend1Id)));
             _context.RemoveRange(existingFriends);
 
             await _context.SaveChangesAsync();
@@ -258,8 +258,8 @@ namespace Mystik.Services
                                                         .Include(u => u.SentInvitations)
                                                         .Where(u => invitedIds.Contains(u.Id)
                                                                     && u.Friends1.All(cof => cof.Friend2Id != inviterId)
-                                                                    && u.ReceivedInvitations.All(iu => iu.InviterId != inviterId)
-                                                                    && u.SentInvitations.All(iu => iu.InvitedId != inviterId))
+                                                                    && u.ReceivedInvitations.All(i => i.InviterId != inviterId)
+                                                                    && u.SentInvitations.All(i => i.InvitedId != inviterId))
                                                         .Select(u => u.Id);
             _context.AddRange(existingNotInvitedUsers.Select(invitedId => new Invitation
             {

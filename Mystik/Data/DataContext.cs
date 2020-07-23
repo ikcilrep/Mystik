@@ -22,7 +22,7 @@ namespace Mystik.Data
 
             modelBuilder.Entity<ManagedConversation>()
                         .HasOne(mc => mc.Manager)
-                        .WithMany(a => a.ManagedConversations)
+                        .WithMany(u => u.ManagedConversations)
                         .HasForeignKey(mc => mc.ManagerId)
                         .OnDelete(DeleteBehavior.Cascade);
 
@@ -48,18 +48,18 @@ namespace Mystik.Data
                         .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Invitation>()
-                .HasKey(iu => new { iu.InvitedId, iu.InviterId });
+                .HasKey(i => new { i.InvitedId, i.InviterId });
 
             modelBuilder.Entity<Invitation>()
-                        .HasOne(iu => iu.Inviter)
+                        .HasOne(i => i.Inviter)
                         .WithMany(u => u.SentInvitations)
-                        .HasForeignKey(iu => iu.InviterId)
+                        .HasForeignKey(i => i.InviterId)
                         .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Invitation>()
-                        .HasOne(iu => iu.Invited)
+                        .HasOne(i => i.Invited)
                         .WithMany(u => u.ReceivedInvitations)
-                        .HasForeignKey(iu => iu.InvitedId)
+                        .HasForeignKey(i => i.InvitedId)
                         .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<CoupleOfFriends>()
