@@ -63,6 +63,15 @@ namespace Mystik.Entities
             };
         }
 
+        public object GetPublicData()
+        {
+            return new
+            {
+                Id = Id,
+                Nickname = Nickname,
+            };
+        }
+
         public override bool Equals(object obj)
         {
             return obj is User user
