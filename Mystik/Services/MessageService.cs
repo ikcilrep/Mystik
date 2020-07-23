@@ -23,7 +23,8 @@ namespace Mystik.Services
             {
                 SenderId = senderId,
                 ConversationId = conversationId,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.UtcNow,
+                ModifiedDate = DateTime.UtcNow,
             };
 
             _context.Add(message);
@@ -55,8 +56,12 @@ namespace Mystik.Services
 
         public async Task Edit(Guid id, byte[] newEncryptedContent)
         {
-            var message = new Message { Id = id };
+            var message = await _context.FindAsync<Message>(id);
+
             await message.SetEncryptedContent(newEncryptedContent);
+            message.ModifiedDate = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> IsTheConversationMember(Guid conversationId, Guid userId)

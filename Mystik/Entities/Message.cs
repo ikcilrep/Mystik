@@ -14,6 +14,7 @@ namespace Mystik.Entities
         public Guid ConversationId { get; set; }
         public Conversation Conversation { get; set; }
         public DateTime CreatedDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
 
         [NotMapped]
         public String EncryptedContentPath => Path.Combine(AppSettings.EncryptedMessagesPath, Id.ToString());
