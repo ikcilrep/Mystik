@@ -33,9 +33,15 @@ namespace Mystik.Controllers
         }
 
         [Authorize(Roles = Role.Admin)]
-        public async Task<IEnumerable<User>> Get()
+        public async Task<IEnumerable<object>> Get([FromBody] Get model)
         {
-            return await _userService.GetAll();
+            if (model.Since == null)
+            {
+                model.Since = DateTime.UnixEpoch;
+            }
+
+            var users = await _userService.GetAll();
+            return await users.GetJsonRepresentableUsers(model.Since);
         }
 
         [HttpGet("{id}")]

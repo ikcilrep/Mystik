@@ -105,7 +105,20 @@ namespace Mystik.Services
 
         public async Task<IEnumerable<User>> GetAll()
         {
-            return await _context.Users.AsNoTracking().ToListAsync();
+            return await _context.Users.Include(u => u.Friends1)
+                                        .Include(u => u.ManagedConversations)
+                                        .Include(u => u.UserConversations)
+                                             .ThenInclude(u => u.Conversation)
+                                             .ThenInclude(u => u.UserConversations)
+                                        .Include(u => u.UserConversations)
+                                            .ThenInclude(u => u.Conversation)
+                                            .ThenInclude(u => u.Messages)
+                                        .Include(u => u.UserConversations)
+                                            .ThenInclude(u => u.Conversation)
+                                            .ThenInclude(u => u.ManagedConversations)
+                                        .Include(u => u.ReceivedInvitations)
+                                        .Include(u => u.SentInvitations)
+                                        .ToListAsync();
         }
 
         public async Task<IReadOnlyList<string>> Update(Guid id, string newNickname, string newPassword)

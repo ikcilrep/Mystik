@@ -50,5 +50,15 @@ namespace Mystik.Helpers
             }
             return representableConversations;
         }
+
+        public static async Task<List<object>> GetJsonRepresentableUsers(this IEnumerable<User> users, DateTime since)
+        {
+            var representableUsers = new List<object>();
+            foreach (var user in users)
+            {
+                representableUsers.Add(await user.ToJsonRepresentableObject(since));
+            }
+            return representableUsers;
+        }
     }
 }
