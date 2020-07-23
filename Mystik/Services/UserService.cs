@@ -58,7 +58,9 @@ namespace Mystik.Services
             await _context.SaveChangesAsync();
             return user;
         }
-        public IIncludableQueryable<User, ICollection<Invitation>> UsersWithAllRepresentableData => _context.Users.Include(u => u.Friends1)
+        public IIncludableQueryable<User, User> UsersWithAllRepresentableData => _context.Users
+                                       .Include(u => u.Friends1)
+                                            .ThenInclude(u => u.Friend2)
                                        .Include(u => u.ManagedConversations)
                                        .Include(u => u.UserConversations)
                                             .ThenInclude(u => u.Conversation)
@@ -71,7 +73,9 @@ namespace Mystik.Services
                                            .ThenInclude(u => u.Conversation)
                                            .ThenInclude(u => u.ManagedConversations)
                                        .Include(u => u.ReceivedInvitations)
-                                       .Include(u => u.SentInvitations);
+                                            .ThenInclude(u => u.Inviter)
+                                       .Include(u => u.SentInvitations)
+                                            .ThenInclude(u => u.Invited);
 
         public async Task<User> Retrieve(Guid id)
         {

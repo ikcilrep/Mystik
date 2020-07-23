@@ -52,11 +52,11 @@ namespace Mystik.Entities
                 Id = Id,
                 Nickname = Nickname,
                 Username = Username,
-                Friends = Friends1.Where(cof => cof.CreatedDate >= since).Select(cof => cof.Friend2Id),
-                ReceivedInvitations = ReceivedInvitations.Where(i => i.CreatedDate > since)
-                                                         .Select(i => i.InviterId),
-                SentInvitations = SentInvitations.Where(i => i.CreatedDate > since)
-                                                 .Select(i => i.InvitedId),
+                Friends = Friends1.Where(cof => cof.CreatedDate > since).Select(cof => cof.Friend2.GetPublicData()),
+                Inviters = ReceivedInvitations.Where(i => i.CreatedDate > since)
+                                                         .Select(i => i.Inviter.GetPublicData()),
+                Invited = SentInvitations.Where(i => i.CreatedDate > since)
+                                                 .Select(i => i.Invited.GetPublicData()),
                 Conversations = await UserConversations.Where(uc => uc.CreatedDate > since
                                                                     || uc.Conversation.HasBeenModifiedSince(since))
                                                        .GetJsonRepresentableConversations(since)
