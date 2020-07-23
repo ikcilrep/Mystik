@@ -42,6 +42,20 @@ namespace Mystik.Entities
             PasswordHash = passwordHash;
         }
 
+        public object ToJsonRepresentableObject(DateTime since)
+        {
+            return new
+            {
+                Nickname = Nickname,
+                Username = Username,
+                Friends = Friends1.Where(cof => cof.CreatedDate >= since).Select(cof => cof.Friend2Id),
+                ReceivedInvitations = ReceivedInvitations.Where(cof => cof.CreatedDate > since).Select(cof => cof.InviterId),
+                SentInvitations = SentInvitations.Where(cof => cof.CreatedDate > since).Select(cof => cof.InvitedId),
+                Conversations = UserConversations.Where(uc => uc.CreatedDate > since || uc.Conversation.HasBeenModifiedSince(since))
+                                                 .Select(uc => uc.Conversation.ToJsonRepresentableObject(since))
+            };
+        }
+
         public override bool Equals(object obj)
         {
             return obj is User user
