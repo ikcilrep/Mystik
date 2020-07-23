@@ -22,8 +22,10 @@ namespace Mystik.Entities
         public ICollection<ManagedConversation> ManagedConversations { get; set; }
         public ICollection<Message> Messages { get; set; }
 
-        [NotMapped]
-        public IReadOnlyList<string> Friends => Friends1.Select(cof => cof.Friend2Id).ToStringList();
+        public IReadOnlyList<string> GetFriends()
+        {
+            return Friends1.Select(cof => cof.Friend2Id).ToStringList();
+        }
 
         public User(string nickname, string username, string password)
         {

@@ -86,7 +86,7 @@ namespace Mystik.Services
                                            .ThenInclude(uc => uc.Conversation)
                                            .ThenInclude(c => c.UserConversations)
                                            .FirstAsync(u => u.Id == id);
-            var usersToNotify = user.Friends;
+            var usersToNotify = user.GetFriends();
 
             var abandonedManagedConversations = user.ManagedConversations.Where(mc => mc.Conversation.ManagedConversations.Count == 1)
                                                                          .Select(mc => mc.Conversation);
@@ -111,7 +111,7 @@ namespace Mystik.Services
         public async Task<IReadOnlyList<string>> Update(Guid id, string newNickname, string newPassword)
         {
             var user = await _context.Users.Include(u => u.Friends1).FirstOrDefaultAsync(u => u.Id == id);
-            var usersToNotify = newNickname == user.Nickname ? new List<string>() : user.Friends;
+            var usersToNotify = newNickname == user.Nickname ? new List<string>() : user.GetFriends();
 
             if (newNickname != null)
             {
