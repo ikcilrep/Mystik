@@ -48,7 +48,8 @@ namespace Mystik.Services
                 Id = conversationId,
                 Name = name,
                 PasswordHashData = passwordHashData,
-                ManagedConversations = new HashSet<ManagedConversation> { managedConversation }
+                ManagedConversations = new HashSet<ManagedConversation> { managedConversation },
+                ModifiedDate = DateTime.UtcNow
             };
             _context.Add(conversation);
             _context.Add(managedConversation);
@@ -106,6 +107,7 @@ namespace Mystik.Services
             }
 
             conversation.Name = newName;
+            conversation.ModifiedDate = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 

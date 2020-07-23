@@ -21,6 +21,8 @@ namespace Mystik.Entities
 
         public byte[] PasswordHashData { get; set; }
 
+        public DateTime ModifiedDate { get; set; }
+
         public async Task<object> ToJsonRepresentableObject(DateTime since)
         {
             return new
