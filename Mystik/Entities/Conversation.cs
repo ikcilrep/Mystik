@@ -21,17 +21,22 @@ namespace Mystik.Entities
 
         public byte[] PasswordHashData { get; set; }
 
-        public async Task<object> ToJsonRepresentableObject()
+        public async Task<object> ToJsonRepresentableObject(DateTime since)
         {
             return new
             {
                 Id = Id,
                 Name = Name,
                 PasswordHashData = PasswordHashData,
-                Messages = await Messages.GetEncryptedContent(),
-                Users = UserConversations.Select(uc => uc.UserId),
-                Managers = ManagedConversations.Select(uc => uc.ManagerId),
+                Messages = await Messages.Where(m => m.CreatedDate > since).GetEncryptedContent(),
+                Users = UserConversations.Where(uc => uc.CreatedDate > since).Select(uc => uc.UserId),
+                Managers = ManagedConversations.Where(mc => mc.CreatedDate > since).Select(uc => uc.ManagerId),
             };
+        }
+
+        public async Task<object> ToJsonRepresentableObject()
+        {
+            return await ToJsonRepresentableObject(DateTime.UnixEpoch);
         }
 
         public bool IsMember(Guid userId) => UserConversations.Any(uc => uc.UserId == userId);
