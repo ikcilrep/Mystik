@@ -123,6 +123,7 @@ namespace Mystik.Services
             {
                 ValidateNickname(newNickname);
                 user.Nickname = newNickname;
+                user.ModifiedDate = DateTime.UtcNow;
             }
 
             if (newPassword != null)

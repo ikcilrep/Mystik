@@ -22,6 +22,7 @@ namespace Mystik.Entities
         public ICollection<CoupleOfFriends> Friends2 { get; set; }
         public ICollection<ManagedConversation> ManagedConversations { get; set; }
         public ICollection<Message> Messages { get; set; }
+        public DateTime ModifiedDate { get; set; }
 
         public IReadOnlyList<string> GetFriends()
         {
@@ -34,6 +35,7 @@ namespace Mystik.Entities
             Username = username;
             SetPassword(password);
             Role = Entities.Role.User;
+            ModifiedDate = DateTime.UtcNow;
         }
 
         public User() { }
