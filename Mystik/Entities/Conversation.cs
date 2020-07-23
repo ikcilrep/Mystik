@@ -41,6 +41,14 @@ namespace Mystik.Entities
             return await ToJsonRepresentableObject(DateTime.UnixEpoch);
         }
 
+        public bool HasBeenModifiedSince(DateTime since)
+        {
+            return ModifiedDate > since
+                   || Messages.Any(m => m.CreatedDate > since)
+                   || UserConversations.Any(uc => uc.CreatedDate > since)
+                   || ManagedConversations.Any(mc => mc.CreatedDate > since);
+        }
+
         public bool IsMember(Guid userId) => UserConversations.Any(uc => uc.UserId == userId);
 
         [NotMapped]
