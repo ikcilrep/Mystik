@@ -8,5 +8,6 @@ namespace Mystik.Entities
         public Guid UserId { get; set; }
         public Conversation Conversation { get; set; }
         public Guid ConversationId { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

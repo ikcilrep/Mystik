@@ -24,7 +24,8 @@ namespace Mystik.Services
                 var userConversations = usersIds.Select(userId => new UserConversation
                 {
                     ConversationId = id,
-                    UserId = userId
+                    UserId = userId,
+                    CreatedDate = DateTime.UtcNow
                 });
 
                 _context.UserConversations.AddRange(userConversations);
