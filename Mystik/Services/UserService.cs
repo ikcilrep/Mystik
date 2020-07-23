@@ -60,7 +60,20 @@ namespace Mystik.Services
 
         public async Task<User> Retrieve(Guid id)
         {
-            return await _context.FindAsync<User>(id);
+            return await _context.Users.Include(u => u.Friends1)
+                                       .Include(u => u.ManagedConversations)
+                                       .Include(u => u.UserConversations)
+                                            .ThenInclude(u => u.Conversation)
+                                            .ThenInclude(u => u.UserConversations)
+                                       .Include(u => u.UserConversations)
+                                           .ThenInclude(u => u.Conversation)
+                                           .ThenInclude(u => u.Messages)
+                                       .Include(u => u.UserConversations)
+                                           .ThenInclude(u => u.Conversation)
+                                           .ThenInclude(u => u.ManagedConversations)
+                                       .Include(u => u.ReceivedInvitations)
+                                       .Include(u => u.SentInvitations)
+                                       .FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<IReadOnlyList<string>> Delete(Guid id)
