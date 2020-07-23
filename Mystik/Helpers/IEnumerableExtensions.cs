@@ -9,16 +9,16 @@ namespace Mystik.Helpers
 {
     public static class IEnumerableExtensions
     {
-        public static async Task<List<byte[]>> GetEncryptedContent(this IEnumerable<Message> messages)
+        public static async Task<List<object>> GetJsonRepresentableMessages(this IEnumerable<Message> messages)
         {
-            var result = new List<byte[]>();
+            var representableMessages = new List<object>();
 
-            foreach (var message in messages.OrderBy(m => m.CreatedDate))
+            foreach (var message in messages)
             {
-                result.Add(await message.GetEncryptedContent());
+                representableMessages.Add(await message.ToJsonRepresentableObject());
             }
 
-            return result;
+            return representableMessages;
         }
 
         public static List<string> ToStringList<T>(this IEnumerable<T> enumerable)
