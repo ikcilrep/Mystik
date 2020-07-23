@@ -60,22 +60,22 @@ namespace Mystik.Services
         }
         public IIncludableQueryable<User, User> UsersWithAllRepresentableData => _context.Users
                                        .Include(u => u.Friends1)
-                                            .ThenInclude(u => u.Friend2)
+                                            .ThenInclude(cof => cof.Friend2)
                                        .Include(u => u.ManagedConversations)
                                        .Include(u => u.UserConversations)
-                                            .ThenInclude(u => u.Conversation)
-                                            .ThenInclude(u => u.UserConversations)
+                                            .ThenInclude(uc => uc.Conversation)
+                                            .ThenInclude(c => c.UserConversations)
                                        .Include(u => u.UserConversations)
-                                           .ThenInclude(u => u.Conversation)
-                                           .ThenInclude(u => u.Messages)
+                                           .ThenInclude(uc => uc.Conversation)
+                                           .ThenInclude(c => c.Messages)
                                            .ThenInclude(m => m.Sender)
                                        .Include(u => u.UserConversations)
-                                           .ThenInclude(u => u.Conversation)
-                                           .ThenInclude(u => u.ManagedConversations)
+                                           .ThenInclude(uc => uc.Conversation)
+                                           .ThenInclude(c => c.ManagedConversations)
                                        .Include(u => u.ReceivedInvitations)
-                                            .ThenInclude(u => u.Inviter)
+                                            .ThenInclude(i => i.Inviter)
                                        .Include(u => u.SentInvitations)
-                                            .ThenInclude(u => u.Invited);
+                                            .ThenInclude(i => i.Invited);
 
         public async Task<User> Retrieve(Guid id)
         {
