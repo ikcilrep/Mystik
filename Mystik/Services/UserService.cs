@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Mystik.Data;
 using Mystik.Entities;
 using Mystik.Helpers;
@@ -57,10 +58,7 @@ namespace Mystik.Services
             await _context.SaveChangesAsync();
             return user;
         }
-
-        public async Task<User> Retrieve(Guid id)
-        {
-            return await _context.Users.Include(u => u.Friends1)
+        public IIncludableQueryable<User, ICollection<Invitation>> UsersWithAllRepresentableData => _context.Users.Include(u => u.Friends1)
                                        .Include(u => u.ManagedConversations)
                                        .Include(u => u.UserConversations)
                                             .ThenInclude(u => u.Conversation)
@@ -68,12 +66,16 @@ namespace Mystik.Services
                                        .Include(u => u.UserConversations)
                                            .ThenInclude(u => u.Conversation)
                                            .ThenInclude(u => u.Messages)
+                                           .ThenInclude(m => m.Sender)
                                        .Include(u => u.UserConversations)
                                            .ThenInclude(u => u.Conversation)
                                            .ThenInclude(u => u.ManagedConversations)
                                        .Include(u => u.ReceivedInvitations)
-                                       .Include(u => u.SentInvitations)
-                                       .FirstOrDefaultAsync(u => u.Id == id);
+                                       .Include(u => u.SentInvitations);
+
+        public async Task<User> Retrieve(Guid id)
+        {
+            return await UsersWithAllRepresentableData.FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<IReadOnlyList<string>> Delete(Guid id)
@@ -105,20 +107,7 @@ namespace Mystik.Services
 
         public async Task<IEnumerable<User>> GetAll()
         {
-            return await _context.Users.Include(u => u.Friends1)
-                                        .Include(u => u.ManagedConversations)
-                                        .Include(u => u.UserConversations)
-                                             .ThenInclude(u => u.Conversation)
-                                             .ThenInclude(u => u.UserConversations)
-                                        .Include(u => u.UserConversations)
-                                            .ThenInclude(u => u.Conversation)
-                                            .ThenInclude(u => u.Messages)
-                                        .Include(u => u.UserConversations)
-                                            .ThenInclude(u => u.Conversation)
-                                            .ThenInclude(u => u.ManagedConversations)
-                                        .Include(u => u.ReceivedInvitations)
-                                        .Include(u => u.SentInvitations)
-                                        .ToListAsync();
+            return await UsersWithAllRepresentableData.ToListAsync();
         }
 
         public async Task<IReadOnlyList<string>> Update(Guid id, string newNickname, string newPassword)
