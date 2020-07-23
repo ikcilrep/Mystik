@@ -32,8 +32,7 @@ namespace Mystik.Entities
             return new
             {
                 Id = Id,
-                SenderId = SenderId,
-                ConversationId = ConversationId,
+                Sender = Sender.GetPublicData(),
                 CreatedDate = CreatedDate,
                 EncryptedContent = await GetEncryptedContent()
             };
