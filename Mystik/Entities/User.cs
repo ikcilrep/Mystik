@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Threading.Tasks;
 using Mystik.Helpers;
 
 namespace Mystik.Entities
@@ -44,17 +45,20 @@ namespace Mystik.Entities
             PasswordHash = passwordHash;
         }
 
-        public object ToJsonRepresentableObject(DateTime since)
+        public async Task<object> ToJsonRepresentableObject(DateTime since)
         {
             return new
             {
                 Nickname = Nickname,
                 Username = Username,
                 Friends = Friends1.Where(cof => cof.CreatedDate >= since).Select(cof => cof.Friend2Id),
-                ReceivedInvitations = ReceivedInvitations.Where(cof => cof.CreatedDate > since).Select(cof => cof.InviterId),
-                SentInvitations = SentInvitations.Where(cof => cof.CreatedDate > since).Select(cof => cof.InvitedId),
-                Conversations = UserConversations.Where(uc => uc.CreatedDate > since || uc.Conversation.HasBeenModifiedSince(since))
-                                                 .Select(uc => uc.Conversation.ToJsonRepresentableObject(since))
+                ReceivedInvitations = ReceivedInvitations.Where(cof => cof.CreatedDate > since)
+                                                         .Select(cof => cof.InviterId),
+                SentInvitations = SentInvitations.Where(cof => cof.CreatedDate > since)
+                                                 .Select(cof => cof.InvitedId),
+                Conversations = await UserConversations.Where(uc => uc.CreatedDate > since
+                                                                    || uc.Conversation.HasBeenModifiedSince(since))
+                                                       .GetJsonRepresentableConversations(since)
             };
         }
 
