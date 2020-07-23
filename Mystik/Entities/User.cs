@@ -49,6 +49,7 @@ namespace Mystik.Entities
         {
             return new
             {
+                Id = Id,
                 Nickname = Nickname,
                 Username = Username,
                 Friends = Friends1.Where(cof => cof.CreatedDate >= since).Select(cof => cof.Friend2Id),
