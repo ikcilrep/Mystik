@@ -54,10 +54,10 @@ namespace Mystik.Entities
                 Id = Id,
                 Nickname = Nickname,
                 Username = Username,
-                Friends = Friends1.Where(cof => cof.CreatedDate > since).Select(cof => cof.Friend2.GetPublicData()),
-                Inviters = ReceivedInvitations.Where(i => i.CreatedDate > since)
+                Friends = Friends1.Where(cof => cof.CreatedDate > since || cof.Friend2.ModifiedDate > since).Select(cof => cof.Friend2.GetPublicData()),
+                Inviters = ReceivedInvitations.Where(i => i.CreatedDate > since || i.Inviter.ModifiedDate > since)
                                                          .Select(i => i.Inviter.GetPublicData()),
-                Invited = SentInvitations.Where(i => i.CreatedDate > since)
+                Invited = SentInvitations.Where(i => i.CreatedDate > since || i.Invited.ModifiedDate > since)
                                                  .Select(i => i.Invited.GetPublicData()),
                 Conversations = await UserConversations.Where(uc => uc.CreatedDate > since
                                                                     || uc.Conversation.HasBeenModifiedSince(since))

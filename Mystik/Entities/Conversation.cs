@@ -44,9 +44,9 @@ namespace Mystik.Entities
         public bool HasBeenModifiedSince(DateTime since)
         {
             return ModifiedDate > since
-                   || Messages.Any(m => m.ModifiedDate > since)
-                   || UserConversations.Any(uc => uc.CreatedDate > since)
-                   || ManagedConversations.Any(mc => mc.CreatedDate > since);
+                   || UserConversations.Any(uc => uc.CreatedDate > since || uc.User.ModifiedDate > since)
+                   || ManagedConversations.Any(mc => mc.CreatedDate > since)
+                   || Messages.Any(m => m.ModifiedDate > since);
         }
 
         public bool IsMember(Guid userId) => UserConversations.Any(uc => uc.UserId == userId);

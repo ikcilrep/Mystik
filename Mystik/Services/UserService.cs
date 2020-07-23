@@ -65,6 +65,7 @@ namespace Mystik.Services
                                        .Include(u => u.UserConversations)
                                             .ThenInclude(uc => uc.Conversation)
                                             .ThenInclude(c => c.UserConversations)
+                                            .ThenInclude(uc => uc.User)
                                        .Include(u => u.UserConversations)
                                            .ThenInclude(uc => uc.Conversation)
                                            .ThenInclude(c => c.Messages)
