@@ -39,14 +39,20 @@ namespace Mystik.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
+        public async Task<IActionResult> Get(Guid id, Get model)
         {
+            if (model.Since == null)
+            {
+                model.Since = DateTime.UnixEpoch;
+            }
+
             var currentUserId = Guid.Parse(User.Identity.Name);
 
             if (id != currentUserId && !User.IsInRole(Role.Admin))
                 return Forbid();
 
-            return Ok(await _userService.Retrieve(id));
+            var user = await _userService.Retrieve(id);
+            return Ok(await user.ToJsonRepresentableObject(model.Since));
         }
 
         [HttpDelete("{id}")]
