@@ -30,7 +30,7 @@ namespace Mystik.Entities
                 Id = Id,
                 Name = Name,
                 PasswordHashData = PasswordHashData,
-                Messages = await Messages.Where(m => m.CreatedDate > since).GetJsonRepresentableMessages(),
+                Messages = await Messages.Where(m => m.ModifiedDate > since).GetJsonRepresentableMessages(),
                 Members = UserConversations.Where(uc => uc.CreatedDate > since).Select(uc => uc.UserId),
                 Managers = ManagedConversations.Where(mc => mc.CreatedDate > since).Select(uc => uc.ManagerId),
             };
@@ -44,7 +44,7 @@ namespace Mystik.Entities
         public bool HasBeenModifiedSince(DateTime since)
         {
             return ModifiedDate > since
-                   || Messages.Any(m => m.CreatedDate > since)
+                   || Messages.Any(m => m.ModifiedDate > since)
                    || UserConversations.Any(uc => uc.CreatedDate > since)
                    || ManagedConversations.Any(mc => mc.CreatedDate > since);
         }
