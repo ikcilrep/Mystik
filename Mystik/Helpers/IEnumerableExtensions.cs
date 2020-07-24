@@ -9,9 +9,9 @@ namespace Mystik.Helpers
 {
     public static class IEnumerableExtensions
     {
-        public static async Task<List<object>> GetJsonRepresentableMessages(this IEnumerable<Message> messages)
+        public static async Task<List<JsonRepresentableMessage>> GetJsonRepresentableMessages(this IEnumerable<Message> messages)
         {
-            var representableMessages = new List<object>();
+            var representableMessages = new List<JsonRepresentableMessage>();
 
             foreach (var message in messages)
             {

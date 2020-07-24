@@ -28,9 +28,9 @@ namespace Mystik.Entities
 
         public void DeleteEncryptedContent() => File.Delete(EncryptedContentPath);
 
-        public async Task<object> ToJsonRepresentableObject()
+        public async Task<JsonRepresentableMessage> ToJsonRepresentableObject()
         {
-            return new
+            return new JsonRepresentableMessage
             {
                 Id = Id,
                 Sender = Sender.GetPublicData(),
