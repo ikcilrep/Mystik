@@ -80,7 +80,8 @@ namespace Mystik.Hubs
 
             await _conversationService.AddMembers(conversation.Id, membersIds);
 
-            await Clients.Users(membersIds.ToStringList()).JoinConversation(conversation.Id);
+            var representableConversation = await conversation.ToJsonRepresentableObject();
+            await Clients.Users(membersIds.ToStringList()).JoinConversation(representableConversation);
         }
 
         public async Task DeleteConversation(Guid conversationId)
@@ -149,7 +150,10 @@ namespace Mystik.Hubs
             {
                 await _conversationService.AddMembers(conversationId, usersIds);
 
-                await Clients.Users(usersIds.ToStringList()).JoinConversation(conversationId);
+                var conversation = await _conversationService.Retrieve(conversationId);
+                var representableConversation = await conversation.ToJsonRepresentableObject();
+
+                await Clients.Users(usersIds.ToStringList()).JoinConversation(representableConversation);
             }
         }
 

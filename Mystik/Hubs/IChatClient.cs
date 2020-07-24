@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Mystik.Entities;
 
 namespace Mystik.Hubs
 {
@@ -8,7 +9,7 @@ namespace Mystik.Hubs
         Task ReceiveMessage(Guid messageId, byte[] encryptedContent, DateTime createdDate, string senderNickname);
         Task EditMessage(Guid messageId, byte[] newEncryptedContent);
         Task DeleteMessage(Guid messageId);
-        Task JoinConversation(Guid conversationId);
+        Task JoinConversation(JsonRepresentableConversation conversation);
         Task LeaveConversation(Guid conversationId);
         Task ChangeConversationName(Guid conversationId, string newName);
         Task ReceiveInvitation(Guid inviterId);
