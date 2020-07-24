@@ -65,9 +65,9 @@ namespace Mystik.Entities
             };
         }
 
-        public object GetPublicData()
+        public UserPublicData GetPublicData()
         {
-            return new
+            return new UserPublicData
             {
                 Id = Id,
                 Nickname = Nickname,
