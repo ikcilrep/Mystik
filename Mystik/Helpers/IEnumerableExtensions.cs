@@ -51,9 +51,9 @@ namespace Mystik.Helpers
             return representableConversations;
         }
 
-        public static async Task<List<object>> GetJsonRepresentableUsers(this IEnumerable<User> users, DateTime since)
+        public static async Task<List<JsonRepresentableUser>> GetJsonRepresentableUsers(this IEnumerable<User> users, DateTime since)
         {
-            var representableUsers = new List<object>();
+            var representableUsers = new List<JsonRepresentableUser>();
             foreach (var user in users)
             {
                 representableUsers.Add(await user.ToJsonRepresentableObject(since));

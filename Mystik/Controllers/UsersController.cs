@@ -33,7 +33,7 @@ namespace Mystik.Controllers
         }
 
         [Authorize(Roles = Role.Admin)]
-        public async Task<IEnumerable<object>> Get([FromBody] Get model)
+        public async Task<IEnumerable<JsonRepresentableUser>> Get(Get model)
         {
             if (model.Since == null)
             {

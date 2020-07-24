@@ -47,9 +47,9 @@ namespace Mystik.Entities
             PasswordHash = passwordHash;
         }
 
-        public async Task<object> ToJsonRepresentableObject(DateTime since)
+        public async Task<JsonRepresentableUser> ToJsonRepresentableObject(DateTime since)
         {
-            return new
+            return new JsonRepresentableUser
             {
                 Id = Id,
                 Nickname = Nickname,
