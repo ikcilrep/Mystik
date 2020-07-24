@@ -31,8 +31,8 @@ namespace Mystik.Entities
                 Name = Name,
                 PasswordHashData = PasswordHashData,
                 Messages = await Messages.Where(m => m.ModifiedDate > since).GetJsonRepresentableMessages(),
-                Members = UserConversations.Where(uc => uc.CreatedDate > since).Select(uc => uc.UserId),
-                Managers = ManagedConversations.Where(mc => mc.CreatedDate > since).Select(uc => uc.ManagerId),
+                Members = UserConversations.Where(uc => uc.CreatedDate > since).Select(uc => uc.User.GetPublicData()),
+                Managers = ManagedConversations.Where(mc => mc.CreatedDate > since).Select(uc => uc.Manager.GetPublicData()),
             };
         }
 
