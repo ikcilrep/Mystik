@@ -23,9 +23,9 @@ namespace Mystik.Entities
 
         public DateTime ModifiedDate { get; set; }
 
-        public async Task<object> ToJsonRepresentableObject(DateTime since)
+        public async Task<JsonRepresentableConversation> ToJsonRepresentableObject(DateTime since)
         {
-            return new
+            return new JsonRepresentableConversation
             {
                 Id = Id,
                 Name = Name,
@@ -36,7 +36,7 @@ namespace Mystik.Entities
             };
         }
 
-        public async Task<object> ToJsonRepresentableObject()
+        public async Task<JsonRepresentableConversation> ToJsonRepresentableObject()
         {
             return await ToJsonRepresentableObject(DateTime.UnixEpoch);
         }

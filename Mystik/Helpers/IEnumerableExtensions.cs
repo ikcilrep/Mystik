@@ -38,11 +38,11 @@ namespace Mystik.Helpers
             return notManagingMembersIds.Intersect(usersIds).ToList();
         }
 
-        public static async Task<List<object>> GetJsonRepresentableConversations(
+        public static async Task<List<JsonRepresentableConversation>> GetJsonRepresentableConversations(
             this IEnumerable<UserConversation> userConversations,
             DateTime since)
         {
-            var representableConversations = new List<object>();
+            var representableConversations = new List<JsonRepresentableConversation>();
             foreach (var userConversation in userConversations)
             {
                 var representableConversation = await userConversation.Conversation.ToJsonRepresentableObject(since);

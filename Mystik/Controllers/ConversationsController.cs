@@ -29,10 +29,10 @@ namespace Mystik.Controllers
 
         [Authorize(Roles = Role.Admin)]
         [HttpGet]
-        public async Task<IEnumerable<object>> Get()
+        public async Task<IEnumerable<JsonRepresentableConversation>> Get()
         {
             var conversations = await _conversationService.GetAll();
-            var result = new List<object>();
+            var result = new List<JsonRepresentableConversation>();
 
             foreach (var conversation in conversations)
             {
