@@ -66,7 +66,7 @@ namespace Tests.Helpers
         {
             var user = Users.First(u => u.Id == id);
             Users.Remove(user);
-            return Task.Run(() => user.Friends);
+            return Task.Run(() => user.GetFriends());
         }
 
         public void Dispose()
@@ -88,7 +88,7 @@ namespace Tests.Helpers
         public Task<IReadOnlyList<string>> Update(Guid id, string newNickname, string newPassword)
         {
             var user = Users.FirstOrDefault(user => user.Id == id);
-            var usersToNotify = newNickname == user.Nickname ? new List<string>() : user.Friends;
+            var usersToNotify = newNickname == user.Nickname ? new List<string>() : user.GetFriends();
 
             user.Nickname = newNickname;
             user.SetPassword(newPassword);

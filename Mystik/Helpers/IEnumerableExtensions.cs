@@ -60,5 +60,11 @@ namespace Mystik.Helpers
             }
             return representableUsers;
         }
+
+
+        public static async Task<List<JsonRepresentableUser>> GetJsonRepresentableUsers(this IEnumerable<User> users)
+        {
+            return await users.GetJsonRepresentableUsers(DateTime.UnixEpoch);
+        }
     }
 }

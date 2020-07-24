@@ -16,8 +16,12 @@ namespace Tests
         {
             var service = new MockUserService();
             var controller = new UsersController(service);
-            var result = await controller.Get();
-            Assert.True(service.Users.SetEquals(result.ToHashSet()));
+
+            var model = new Get { };
+            var result = await controller.Get(model);
+
+            var representableUsers = await service.Users.GetJsonRepresentableUsers();
+            Assert.True(representableUsers.ToHashSet().SetEquals(result.ToHashSet()));
         }
 
         [Fact]
@@ -28,8 +32,9 @@ namespace Tests
 
             var id = MockUserService.User1.Id;
 
+            var model = new Get { };
             var expectedUser = await service.Retrieve(id);
-            var response = await controller.Get(id);
+            var response = await controller.Get(id, model);
 
             Assert.IsType<OkObjectResult>(response);
             var ok = response as OkObjectResult;
@@ -44,8 +49,9 @@ namespace Tests
 
             var id = MockUserService.User1.Id;
 
+            var model = new Get { };
             var expectedUser = await service.Retrieve(id);
-            var response = await controller.Get(id);
+            var response = await controller.Get(id, model);
 
             Assert.IsType<OkObjectResult>(response);
             var ok = response as OkObjectResult;
@@ -60,7 +66,8 @@ namespace Tests
 
             var id = MockUserService.User2.Id;
 
-            var response = await controller.Get(id);
+            var model = new Get { };
+            var response = await controller.Get(id, model);
 
             Assert.IsType<ForbidResult>(response);
         }
