@@ -32,6 +32,7 @@ namespace Tests.Helpers
             Context.Database.EnsureDeleted();
             Context.Database.EnsureCreated();
 
+            Context.Add(MockUserService.Admin);
             Context.Add(MockUserService.User2);
 
             Context.SaveChanges();
