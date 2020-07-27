@@ -39,7 +39,7 @@ namespace Mystik.Helpers
         }
 
         public static async Task<List<JsonRepresentableConversation>> GetJsonRepresentableConversations(
-            this IEnumerable<UserConversation> userConversations,
+            this IEnumerable<ConversationMember> userConversations,
             DateTime since)
         {
             var representableConversations = new List<JsonRepresentableConversation>();

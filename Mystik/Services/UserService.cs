@@ -62,15 +62,15 @@ namespace Mystik.Services
                                        .Include(u => u.Friends1)
                                             .ThenInclude(cof => cof.Friend2)
                                        .Include(u => u.ManagedConversations)
-                                       .Include(u => u.UserConversations)
+                                       .Include(u => u.ParticipatedConversations)
                                             .ThenInclude(uc => uc.Conversation)
                                             .ThenInclude(c => c.UserConversations)
                                             .ThenInclude(uc => uc.User)
-                                       .Include(u => u.UserConversations)
+                                       .Include(u => u.ParticipatedConversations)
                                            .ThenInclude(uc => uc.Conversation)
                                            .ThenInclude(c => c.Messages)
                                            .ThenInclude(m => m.Sender)
-                                       .Include(u => u.UserConversations)
+                                       .Include(u => u.ParticipatedConversations)
                                            .ThenInclude(uc => uc.Conversation)
                                            .ThenInclude(c => c.ManagedConversations)
                                        .Include(u => u.ReceivedInvitations)
@@ -89,7 +89,7 @@ namespace Mystik.Services
                                            .Include(u => u.ManagedConversations)
                                                 .ThenInclude(mc => mc.Conversation)
                                                 .ThenInclude(c => c.ManagedConversations)
-                                           .Include(u => u.UserConversations)
+                                           .Include(u => u.ParticipatedConversations)
                                                 .ThenInclude(uc => uc.Conversation)
                                                 .ThenInclude(c => c.UserConversations)
                                            .FirstAsync(u => u.Id == id);
@@ -98,7 +98,7 @@ namespace Mystik.Services
             var abandonedManagedConversations = user.ManagedConversations.Where(mc => mc.Conversation.ManagedConversations.Count == 1)
                                                                          .Select(mc => mc.Conversation);
 
-            var abandonedConversations = user.UserConversations.Where(uc => uc.Conversation.UserConversations.Count == 1)
+            var abandonedConversations = user.ParticipatedConversations.Where(uc => uc.Conversation.UserConversations.Count == 1)
                                                                .Select(uc => uc.Conversation);
 
             _context.RemoveRange(abandonedManagedConversations);
@@ -287,7 +287,7 @@ namespace Mystik.Services
             var user = await _context.Users.Include(u => u.Friends1)
                                            .Include(u => u.SentInvitations)
                                            .Include(u => u.ReceivedInvitations)
-                                           .Include(u => u.UserConversations)
+                                           .Include(u => u.ParticipatedConversations)
                                            .Include(u => u.ManagedConversations)
                                            .FirstOrDefaultAsync(u => u.Id == id);
             return new UserRelatedEntities
@@ -295,8 +295,8 @@ namespace Mystik.Services
                 FriendsIds = entities.FriendsIds.Where(id => user.Friends1.All(cof => id != cof.Friend2Id)),
                 InvitedIds = entities.InvitedIds.Where(id => user.SentInvitations.All(i => id != i.InvitedId)),
                 InvitersIds = entities.InvitersIds.Where(id => user.ReceivedInvitations.All(i => id != i.InviterId)),
-                ConversationIds = entities.ConversationIds.Where(id => user.UserConversations.All(i => id != i.ConversationId)),
-                ConversationMembersIds = entities.ConversationMembersIds.Where(id => user.UserConversations.All(i => id != i.UserId)),
+                ConversationIds = entities.ConversationIds.Where(id => user.ParticipatedConversations.All(i => id != i.ConversationId)),
+                ConversationMembersIds = entities.ConversationMembersIds.Where(id => user.ParticipatedConversations.All(i => id != i.UserId)),
                 ConversationManagersIds = entities.ConversationManagersIds.Where(id => user.ManagedConversations.All(i => id != i.ManagerId)),
             };
         }

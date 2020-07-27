@@ -2,7 +2,7 @@ using System;
 
 namespace Mystik.Entities
 {
-    public class ManagedConversation
+    public class ConversationManager
     {
         public User Manager { get; set; }
         public Guid ManagerId { get; set; }

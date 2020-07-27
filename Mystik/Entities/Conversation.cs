@@ -13,9 +13,9 @@ namespace Mystik.Entities
 
         public string Name { get; set; }
 
-        public ICollection<ManagedConversation> ManagedConversations { get; set; }
+        public ICollection<ConversationManager> ManagedConversations { get; set; }
 
-        public ICollection<UserConversation> UserConversations { get; set; }
+        public ICollection<ConversationMember> UserConversations { get; set; }
 
         public ICollection<Message> Messages { get; set; }
 

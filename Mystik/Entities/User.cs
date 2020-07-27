@@ -15,12 +15,12 @@ namespace Mystik.Entities
         public string Role { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
-        public ICollection<UserConversation> UserConversations { get; set; }
+        public ICollection<ConversationMember> ParticipatedConversations { get; set; }
         public ICollection<Invitation> SentInvitations { get; set; }
         public ICollection<Invitation> ReceivedInvitations { get; set; }
         public ICollection<CoupleOfFriends> Friends1 { get; set; }
         public ICollection<CoupleOfFriends> Friends2 { get; set; }
-        public ICollection<ManagedConversation> ManagedConversations { get; set; }
+        public ICollection<ConversationManager> ManagedConversations { get; set; }
         public ICollection<Message> Messages { get; set; }
         public DateTime ModifiedDate { get; set; }
 
@@ -59,7 +59,7 @@ namespace Mystik.Entities
                                                          .Select(i => i.Inviter.GetPublicData()),
                 Invited = SentInvitations.Where(i => i.CreatedDate > since || i.Invited.ModifiedDate > since)
                                                  .Select(i => i.Invited.GetPublicData()),
-                Conversations = await UserConversations.Where(uc => uc.CreatedDate > since
+                Conversations = await ParticipatedConversations.Where(uc => uc.CreatedDate > since
                                                                     || uc.Conversation.HasBeenModifiedSince(since))
                                                        .GetJsonRepresentableConversations(since)
             };

@@ -21,7 +21,7 @@ namespace Mystik.Services
         {
             if (usersIds.All(userId => _context.Users.Any(user => user.Id == userId)))
             {
-                var userConversations = usersIds.Select(userId => new UserConversation
+                var userConversations = usersIds.Select(userId => new ConversationMember
                 {
                     ConversationId = id,
                     UserId = userId,
@@ -37,7 +37,7 @@ namespace Mystik.Services
         {
 
             var conversationId = Guid.NewGuid();
-            var managedConversation = new ManagedConversation
+            var managedConversation = new ConversationManager
             {
                 ManagerId = userId,
                 ConversationId = conversationId,
@@ -48,7 +48,7 @@ namespace Mystik.Services
                 Id = conversationId,
                 Name = name,
                 PasswordHashData = passwordHashData,
-                ManagedConversations = new HashSet<ManagedConversation> { managedConversation },
+                ManagedConversations = new HashSet<ConversationManager> { managedConversation },
                 ModifiedDate = DateTime.UtcNow
             };
             _context.Add(conversation);

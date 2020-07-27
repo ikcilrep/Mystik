@@ -9,39 +9,39 @@ namespace Mystik.Data
         public DbSet<CoupleOfFriends> Friends { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
-        public DbSet<UserConversation> UserConversations { get; set; }
-        public DbSet<ManagedConversation> ManagedConversations { get; set; }
+        public DbSet<ConversationMember> UserConversations { get; set; }
+        public DbSet<ConversationManager> ManagedConversations { get; set; }
         public DbSet<Invitation> Invitations { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ManagedConversation>()
+            modelBuilder.Entity<ConversationManager>()
                 .HasKey(mc => new { mc.ManagerId, mc.ConversationId });
 
-            modelBuilder.Entity<ManagedConversation>()
+            modelBuilder.Entity<ConversationManager>()
                         .HasOne(mc => mc.Manager)
                         .WithMany(u => u.ManagedConversations)
                         .HasForeignKey(mc => mc.ManagerId)
                         .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<ManagedConversation>()
+            modelBuilder.Entity<ConversationManager>()
                         .HasOne(mc => mc.Conversation)
                         .WithMany(c => c.ManagedConversations)
                         .HasForeignKey(mc => mc.ConversationId)
                         .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<UserConversation>()
+            modelBuilder.Entity<ConversationMember>()
                 .HasKey(uc => new { uc.UserId, uc.ConversationId });
 
-            modelBuilder.Entity<UserConversation>()
+            modelBuilder.Entity<ConversationMember>()
                         .HasOne(uc => uc.User)
-                        .WithMany(u => u.UserConversations)
+                        .WithMany(u => u.ParticipatedConversations)
                         .HasForeignKey(uc => uc.UserId)
                         .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<UserConversation>()
+            modelBuilder.Entity<ConversationMember>()
                         .HasOne(uc => uc.Conversation)
                         .WithMany(c => c.UserConversations)
                         .HasForeignKey(uc => uc.ConversationId)
