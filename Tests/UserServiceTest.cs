@@ -118,6 +118,17 @@ namespace Tests
             Assert.Equal(_numberOfFriends + 2, _provider.Context.Friends.Count());
         }
 
+        [Fact]
+        public async Task AddFriend_AddsCorrectEntities()
+        {
+            await _provider.UserService.AddFriend(MockUserService.Admin.Id, MockUserService.User2.Id);
+
+            Assert.True(_provider.Context.Friends.Any(cof => cof.Friend1Id == MockUserService.Admin.Id
+                                                             && cof.Friend2Id == MockUserService.User2.Id));
+            Assert.True(_provider.Context.Friends.Any(cof => cof.Friend2Id == MockUserService.Admin.Id
+                                                             && cof.Friend1Id == MockUserService.User2.Id));
+        }
+
         public void Dispose()
         {
             _provider.Dispose();
