@@ -11,11 +11,13 @@ namespace Tests
         private UserServiceProvider _provider;
 
         private int _numberOfUsers;
+        private int _numberOfFriends;
 
         public UserServiceTest()
         {
             _provider = new UserServiceProvider();
             _numberOfUsers = _provider.Context.Users.Count();
+            _numberOfFriends = _provider.Context.Friends.Count();
         }
 
         [Fact]
@@ -106,6 +108,14 @@ namespace Tests
                 MockUserService.NotExistingUser.Password);
 
             Assert.Null(user);
+        }
+
+        [Fact]
+        public async Task AddFriend_AddsExactlyTwoEntities()
+        {
+            await _provider.UserService.AddFriend(MockUserService.Admin.Id, MockUserService.User2.Id);
+
+            Assert.Equal(_numberOfFriends + 2, _provider.Context.Friends.Count());
         }
 
         public void Dispose()
