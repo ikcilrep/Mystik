@@ -32,6 +32,18 @@ namespace Mystik.Controllers
             _userService = userService;
         }
 
+        [HttpGet("removed/{id}")]
+        public async Task<IActionResult> GetRemoved(Guid id, UserRelatedEntities model)
+        {
+            var currentUserId = Guid.Parse(User.Identity.Name);
+            if (currentUserId == id)
+            {
+                var removedEntities = await _userService.GetNotExisting(id, model);
+                return Ok(removedEntities);
+            }
+            return Forbid();
+        }
+
         [Authorize(Roles = Role.Admin)]
         public async Task<IEnumerable<JsonRepresentableUser>> Get(Get model)
         {
