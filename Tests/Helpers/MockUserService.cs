@@ -12,6 +12,7 @@ namespace Tests.Helpers
     public class MockUserService : IUserService
     {
         public HashSet<User> Users { get; set; }
+        public HashSet<CoupleOfFriends> Friends { get; set; }
 
         private static User _admin = new User("Adamek", "Adam", "Kaczka1%3")
         {
@@ -100,7 +101,19 @@ namespace Tests.Helpers
 
         public Task AddFriend(Guid inviterId, Guid invitedId)
         {
-            throw new NotImplementedException();
+            Friends.Add(new CoupleOfFriends
+            {
+                Friend1Id = inviterId,
+                Friend2Id = invitedId,
+            });
+
+            Friends.Add(new CoupleOfFriends
+            {
+                Friend1Id = invitedId,
+                Friend2Id = inviterId,
+            });
+
+            return Task.CompletedTask;
         }
 
         public Task DeleteFriends(Guid id, List<Guid> usersIds)
