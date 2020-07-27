@@ -281,5 +281,24 @@ namespace Mystik.Services
         {
             return await _context.Invitations.AnyAsync(i => i.InviterId == inviterId && i.InvitedId == invitedId);
         }
+
+        public async Task<UserRelatedEntities> GetNotExisting(Guid id, UserRelatedEntities entities)
+        {
+            var user = await _context.Users.Include(u => u.Friends1)
+                                           .Include(u => u.SentInvitations)
+                                           .Include(u => u.ReceivedInvitations)
+                                           .Include(u => u.UserConversations)
+                                           .Include(u => u.ManagedConversations)
+                                           .FirstOrDefaultAsync(u => u.Id == id);
+            return new UserRelatedEntities
+            {
+                FriendsIds = entities.FriendsIds.Where(id => user.Friends1.All(cof => id != cof.Friend2Id)),
+                InvitedIds = entities.InvitedIds.Where(id => user.SentInvitations.All(i => id != i.InvitedId)),
+                InvitersIds = entities.InvitersIds.Where(id => user.ReceivedInvitations.All(i => id != i.InviterId)),
+                ConversationIds = entities.ConversationIds.Where(id => user.UserConversations.All(i => id != i.ConversationId)),
+                ConversationMembersIds = entities.ConversationMembersIds.Where(id => user.UserConversations.All(i => id != i.UserId)),
+                ConversationManagersIds = entities.ConversationManagersIds.Where(id => user.ManagedConversations.All(i => id != i.ManagerId)),
+            };
+        }
     }
 }

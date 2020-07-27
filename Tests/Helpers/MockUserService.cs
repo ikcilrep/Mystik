@@ -122,5 +122,10 @@ namespace Tests.Helpers
         {
             throw new NotImplementedException();
         }
+
+        public Task<UserRelatedEntities> GetNotExisting(Guid id, UserRelatedEntities model)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
