@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Mystik.Models.User;
 using Tests.Helpers;
 using Xunit;
 
@@ -11,9 +10,12 @@ namespace Tests
     {
         private UserServiceProvider _provider;
 
+        private int _numberOfUsers;
+
         public UserServiceTest()
         {
             _provider = new UserServiceProvider();
+            _numberOfUsers = _provider.Context.Users.Count();
         }
 
         [Fact]
@@ -52,7 +54,7 @@ namespace Tests
                 MockUserService.User1.Username,
                 MockUserService.User1.Password);
 
-            Assert.Equal(2, _provider.Context.Users.Count());
+            Assert.Equal(_numberOfUsers + 1, _provider.Context.Users.Count());
         }
 
         [Fact]
@@ -69,12 +71,11 @@ namespace Tests
             await _provider.UserService.Update(
                 MockUserService.User2.Id,
                 MockUserService.NotExistingUser.Nickname,
-                MockUserService.NotExistingUser.Username);
+                null);
 
             var actualUser = _provider.Context.Users.Single();
 
             Assert.Equal(MockUserService.NotExistingUser.Nickname, actualUser.Nickname);
-            Assert.Equal(MockUserService.NotExistingUser.Username, actualUser.Username);
         }
 
         [Fact]
@@ -83,7 +84,7 @@ namespace Tests
             var id = MockUserService.User2.Id;
             await _provider.UserService.Delete(id);
 
-            Assert.Equal(0, _provider.Context.Users.Count());
+            Assert.Equal(_numberOfUsers - 1, _provider.Context.Users.Count());
         }
 
         [Fact]
