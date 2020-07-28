@@ -19,6 +19,7 @@ namespace Tests.Helpers
         public int InitialNumberOfUsers { get; set; }
         public int InitialNumberOfFriends { get; set; }
         public int InitialNumberOfInvitations { get; set; }
+        public Guid ConversationId { get; set; }
 
 
         public UserServiceProvider()
@@ -79,6 +80,40 @@ namespace Tests.Helpers
             Context.SaveChanges();
 
             InitialNumberOfInvitations = Context.Friends.Count();
+        }
+
+        public void AddConversation()
+        {
+            ConversationId = Guid.NewGuid();
+            Context.Add(new Conversation
+            {
+                Id = ConversationId,
+                Name = "Conversation",
+                PasswordHashData = new byte[] { },
+                ModifiedDate = DateTime.UtcNow
+            });
+
+            Context.Add(new ConversationManager
+            {
+                ManagerId = MockUserService.Admin.Id,
+                ConversationId = ConversationId,
+            });
+
+            Context.Add(new ConversationMember
+            {
+                UserId = MockUserService.Admin.Id,
+                ConversationId = ConversationId
+            });
+
+            Context.Add(new ConversationMember
+            {
+                UserId = MockUserService.User2.Id,
+                ConversationId = ConversationId
+            });
+
+            Context.SaveChanges();
+
+
         }
 
         private static DbConnection CreateInMemoryDatabase()
