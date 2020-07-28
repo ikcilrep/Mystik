@@ -175,6 +175,45 @@ namespace Tests
             Assert.True(_provider.Context.Invitations.Any(i => i.InviterId == inviterId && i.InvitedId == MockUserService.User2.Id));
         }
 
+        [Fact]
+        public async Task GetNotExisting_ReturnsCorrectIds()
+        {
+            _provider.AddFriend();
+            _provider.AddInvitation();
+            _provider.AddConversation();
+
+            var userRelatedEntities = new UserRelatedEntities
+            {
+                FriendsIds = new List<Guid> { MockUserService.Admin.Id, MockUserService.User1.Id },
+                InvitedIds = new List<Guid> { MockUserService.Admin.Id, MockUserService.User1.Id },
+                InvitersIds = new List<Guid> { MockUserService.Admin.Id, MockUserService.User1.Id },
+                ConversationIds = new List<Guid> { _provider.ConversationId, MockUserService.User2.Id },
+                ConversationMembersIds = new List<Guid> { MockUserService.Admin.Id,
+                                                          MockUserService.User2.Id,
+                                                          MockUserService.User1.Id },
+                ConversationManagersIds = new List<Guid> { MockUserService.Admin.Id,
+                                                           MockUserService.User2.Id,
+                                                           MockUserService.User1.Id }
+            };
+
+            var expectedNotExistingUserRelatedEntities = new UserRelatedEntities
+            {
+                FriendsIds = new List<Guid> { MockUserService.User1.Id },
+                InvitedIds = new List<Guid> { MockUserService.Admin.Id, MockUserService.User1.Id },
+                InvitersIds = new List<Guid> { MockUserService.User1.Id },
+                ConversationIds = new List<Guid> { MockUserService.User2.Id },
+                ConversationMembersIds = new List<Guid> { MockUserService.User1.Id },
+                ConversationManagersIds = new List<Guid> { MockUserService.User2.Id,
+                                                           MockUserService.User1.Id }
+            };
+
+            var actualNotExistingUserRelatedEntities = await _provider.UserService.GetNotExisting(MockUserService.User2.Id,
+                                                                                            userRelatedEntities);
+
+            Assert.Equal(expectedNotExistingUserRelatedEntities, actualNotExistingUserRelatedEntities);
+        }
+
+
         public void Dispose()
         {
             _provider.Dispose();
