@@ -165,6 +165,18 @@ namespace Tests
         }
 
         [Fact]
+        public async Task InviteFriends_FriendAlreadyAdded_DoesNotAddAnyEntity()
+        {
+            _provider.AddFriend();
+            var inviterId = MockUserService.Admin.Id;
+            var invitedIds = new List<Guid> { MockUserService.User2.Id };
+
+            await _provider.UserService.InviteFriends(inviterId, invitedIds);
+
+            Assert.Equal(_provider.InitialNumberOfInvitations, _provider.Context.Invitations.Count());
+        }
+
+        [Fact]
         public async Task InviteFriends_AddsCorrectEntity()
         {
             var inviterId = MockUserService.Admin.Id;
