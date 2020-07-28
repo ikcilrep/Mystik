@@ -137,6 +137,7 @@ namespace Tests
 
             Assert.Equal(_provider.InitialNumberOfFriends - 2, _provider.Context.Friends.Count());
         }
+
         [Fact]
         public async Task DeleteFriends_RemovesCorrectEntities()
         {
@@ -150,6 +151,17 @@ namespace Tests
                                                              && cof.Friend2Id == MockUserService.User2.Id));
             Assert.False(_provider.Context.Friends.Any(cof => cof.Friend2Id == MockUserService.Admin.Id
                                                              && cof.Friend1Id == MockUserService.User2.Id));
+        }
+
+        [Fact]
+        public async Task InviteFriends_AddsExactlyOneEntity()
+        {
+            var inviterId = MockUserService.Admin.Id;
+            var invitedIds = new List<Guid> { MockUserService.User2.Id };
+
+            await _provider.UserService.InviteFriends(inviterId, invitedIds);
+
+            Assert.Equal(_provider.InitialNumberOfInvitations + 1, _provider.Context.Invitations.Count());
         }
 
         public void Dispose()
