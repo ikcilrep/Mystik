@@ -63,9 +63,6 @@ namespace Mystik.Data
                         .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<CoupleOfFriends>()
-                .HasKey(cof => new { cof.Friend1Id, cof.Friend2Id });
-
-            modelBuilder.Entity<CoupleOfFriends>()
                         .HasOne(cof => cof.Friend1)
                         .WithMany(u => u.Friends2)
                         .HasForeignKey(cof => cof.Friend1Id)
