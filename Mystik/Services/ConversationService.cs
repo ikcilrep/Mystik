@@ -66,7 +66,7 @@ namespace Mystik.Services
             _context.Remove(conversation);
 
             await _context.SaveChangesAsync();
-            return conversation.Members;
+            return conversation.GetMembers();
         }
 
         public void Dispose()
@@ -111,7 +111,7 @@ namespace Mystik.Services
 
             await _context.SaveChangesAsync();
 
-            return conversation.Members;
+            return conversation.GetMembers();
         }
 
         public async Task DeleteMembers(Guid conversationId, List<Guid> usersIds)

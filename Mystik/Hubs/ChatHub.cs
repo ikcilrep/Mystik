@@ -35,7 +35,7 @@ namespace Mystik.Hubs
             {
                 var message = await _messageService.Create(encryptedContent, currentUserId, conversationId);
                 var sender = await _userService.Retrieve(currentUserId);
-                await Clients.Users(conversation.Members)
+                await Clients.Users(conversation.GetMembers())
                              .ReceiveMessage(message.Id, encryptedContent, message.CreatedDate, sender.Nickname);
             }
         }
@@ -51,7 +51,7 @@ namespace Mystik.Hubs
 
                 var conversation = await _conversationService.Retrieve(message.ConversationId);
 
-                await Clients.Users(conversation.Members).EditMessage(messageId, newEncryptedContent);
+                await Clients.Users(conversation.GetMembers()).EditMessage(messageId, newEncryptedContent);
             }
         }
 
@@ -66,7 +66,7 @@ namespace Mystik.Hubs
 
                 var conversation = await _conversationService.Retrieve(message.ConversationId);
 
-                await Clients.Users(conversation.Members).DeleteMessage(messageId);
+                await Clients.Users(conversation.GetMembers()).DeleteMessage(messageId);
             }
         }
 

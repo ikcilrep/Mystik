@@ -51,7 +51,9 @@ namespace Mystik.Entities
 
         public bool IsMember(Guid userId) => UserConversations.Any(uc => uc.UserId == userId);
 
-        [NotMapped]
-        public IReadOnlyList<string> Members => UserConversations.ToStringList();
+        public IReadOnlyList<string> GetMembers()
+        {
+            return UserConversations.ToStringList();
+        }
     }
 }
