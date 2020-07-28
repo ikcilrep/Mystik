@@ -225,6 +225,17 @@ namespace Tests
             Assert.Equal(expectedNotExistingUserRelatedEntities, actualNotExistingUserRelatedEntities);
         }
 
+        [Fact]
+        public async Task DeleteInvitations_RemovesExactlyOneEntity()
+        {
+            _provider.AddInvitation();
+            var inviterId = MockUserService.Admin.Id;
+            var invitedIds = new List<Guid> { MockUserService.User2.Id };
+
+            await _provider.UserService.DeleteInvitations(inviterId, invitedIds);
+
+            Assert.Equal(_provider.InitialNumberOfInvitations - 1, _provider.Context.Invitations.Count());
+        }
 
         public void Dispose()
         {
