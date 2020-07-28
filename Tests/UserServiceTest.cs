@@ -46,7 +46,7 @@ namespace Tests
         }
 
         [Fact]
-        public async Task Create_AddsExactlyOneUserToTheDatabase()
+        public async Task Create_AddsExactlyOneEntity()
         {
             var user = await _provider.UserService.Create(
                 MockUserService.User1.Nickname,
@@ -78,7 +78,7 @@ namespace Tests
         }
 
         [Fact]
-        public async Task Delete_RemovesExactlyOneUserFromTheDatabase()
+        public async Task Delete_RemovesExactlyOneEntity()
         {
             var id = MockUserService.User2.Id;
             await _provider.UserService.Delete(id);
