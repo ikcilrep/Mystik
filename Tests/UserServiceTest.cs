@@ -10,14 +10,9 @@ namespace Tests
     {
         private UserServiceProvider _provider;
 
-        private int _numberOfUsers;
-        private int _numberOfFriends;
-
         public UserServiceTest()
         {
             _provider = new UserServiceProvider();
-            _numberOfUsers = _provider.Context.Users.Count();
-            _numberOfFriends = _provider.Context.Friends.Count();
         }
 
         [Fact]
@@ -56,7 +51,7 @@ namespace Tests
                 MockUserService.User1.Username,
                 MockUserService.User1.Password);
 
-            Assert.Equal(_numberOfUsers + 1, _provider.Context.Users.Count());
+            Assert.Equal(_provider.InitialNumberOfUsers + 1, _provider.Context.Users.Count());
         }
 
         [Fact]
@@ -86,7 +81,7 @@ namespace Tests
             var id = MockUserService.User2.Id;
             await _provider.UserService.Delete(id);
 
-            Assert.Equal(_numberOfUsers - 1, _provider.Context.Users.Count());
+            Assert.Equal(_provider.InitialNumberOfUsers - 1, _provider.Context.Users.Count());
         }
 
         [Fact]
@@ -115,7 +110,7 @@ namespace Tests
         {
             await _provider.UserService.AddFriend(MockUserService.Admin.Id, MockUserService.User2.Id);
 
-            Assert.Equal(_numberOfFriends + 2, _provider.Context.Friends.Count());
+            Assert.Equal(_provider.InitialNumberOfFriends + 2, _provider.Context.Friends.Count());
         }
 
         [Fact]

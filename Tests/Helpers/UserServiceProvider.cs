@@ -1,5 +1,6 @@
 using System;
 using System.Data.Common;
+using System.Linq;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -15,6 +16,9 @@ namespace Tests.Helpers
         public UserService UserService { get; }
 
         public DataContext Context { get; set; }
+        public int InitialNumberOfUsers { get; set; }
+        public int InitialNumberOfFriends { get; set; }
+
 
         public UserServiceProvider()
         {
@@ -37,6 +41,8 @@ namespace Tests.Helpers
             Context.Add(MockUserService.User2);
 
             Context.SaveChanges();
+
+            InitialNumberOfUsers = Context.Users.Count();
         }
 
         public void AddFriend()
@@ -56,6 +62,8 @@ namespace Tests.Helpers
             });
 
             Context.SaveChanges();
+
+            InitialNumberOfFriends = Context.Friends.Count();
         }
 
         private static DbConnection CreateInMemoryDatabase()
