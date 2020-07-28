@@ -34,7 +34,7 @@ namespace Mystik
             services.AddControllers();
             services.AddDbContext<DataContext>(options =>
             {
-                string connectionString = Configuration["DEFAULT_CONNECTION"];
+                string connectionString = Configuration["MYSTIK_DEFAULT_CONNECTION"];
                 options.UseNpgsql(connectionString);
             });
 
