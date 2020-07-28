@@ -237,6 +237,19 @@ namespace Tests
             Assert.Equal(_provider.InitialNumberOfInvitations - 1, _provider.Context.Invitations.Count());
         }
 
+        [Fact]
+        public async Task DeleteInvitations_RemovesCorrectEntity()
+        {
+            _provider.AddInvitation();
+            var inviterId = MockUserService.Admin.Id;
+            var invitedIds = new List<Guid> { MockUserService.User2.Id };
+
+            await _provider.UserService.DeleteInvitations(inviterId, invitedIds);
+
+            Assert.False(_provider.Context.Invitations.Any(cof => cof.InviterId == inviterId
+                                                             && cof.InvitedId == MockUserService.User2.Id));
+        }
+
         public void Dispose()
         {
             _provider.Dispose();
