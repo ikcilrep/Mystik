@@ -97,18 +97,21 @@ namespace Tests.Helpers
             {
                 ManagerId = MockUserService.Admin.Id,
                 ConversationId = ConversationId,
+                CreatedDate = DateTime.UtcNow
             });
 
             Context.Add(new ConversationMember
             {
                 UserId = MockUserService.Admin.Id,
-                ConversationId = ConversationId
+                ConversationId = ConversationId,
+                CreatedDate = DateTime.UtcNow
             });
 
             Context.Add(new ConversationMember
             {
                 UserId = MockUserService.User2.Id,
-                ConversationId = ConversationId
+                ConversationId = ConversationId,
+                CreatedDate = DateTime.UtcNow
             });
 
             Context.SaveChanges();
