@@ -137,6 +137,20 @@ namespace Tests
 
             Assert.Equal(_provider.InitialNumberOfFriends - 2, _provider.Context.Friends.Count());
         }
+        [Fact]
+        public async Task DeleteFriends_RemovesCorrectEntities()
+        {
+            _provider.AddFriend();
+            var userId = MockUserService.Admin.Id;
+            var friendsIds = new List<Guid> { MockUserService.User2.Id };
+
+            await _provider.UserService.DeleteFriends(userId, friendsIds);
+
+            Assert.False(_provider.Context.Friends.Any(cof => cof.Friend1Id == MockUserService.Admin.Id
+                                                             && cof.Friend2Id == MockUserService.User2.Id));
+            Assert.False(_provider.Context.Friends.Any(cof => cof.Friend2Id == MockUserService.Admin.Id
+                                                             && cof.Friend1Id == MockUserService.User2.Id));
+        }
 
         public void Dispose()
         {
