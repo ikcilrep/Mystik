@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Mystik.Entities;
@@ -123,6 +124,18 @@ namespace Tests
                                                              && cof.Friend2Id == MockUserService.User2.Id));
             Assert.True(_provider.Context.Friends.Any(cof => cof.Friend2Id == MockUserService.Admin.Id
                                                              && cof.Friend1Id == MockUserService.User2.Id));
+        }
+
+        [Fact]
+        public async Task DeleteFriends_RemovesExactlyTwoEntities()
+        {
+            _provider.AddFriend();
+            var userId = MockUserService.Admin.Id;
+            var friendsIds = new List<Guid> { MockUserService.User2.Id };
+
+            await _provider.UserService.DeleteFriends(userId, friendsIds);
+
+            Assert.Equal(_provider.InitialNumberOfFriends - 2, _provider.Context.Friends.Count());
         }
 
         public void Dispose()
