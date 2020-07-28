@@ -68,6 +68,19 @@ namespace Tests.Helpers
             InitialNumberOfFriends = Context.Friends.Count();
         }
 
+        public void AddInvitation()
+        {
+            Context.Add(new Invitation
+            {
+                InviterId = MockUserService.Admin.Id,
+                InvitedId = MockUserService.User2.Id,
+                CreatedDate = DateTime.UtcNow
+            });
+            Context.SaveChanges();
+
+            InitialNumberOfInvitations = Context.Friends.Count();
+        }
+
         private static DbConnection CreateInMemoryDatabase()
         {
             var connection = new SqliteConnection("Filename=:memory:");
