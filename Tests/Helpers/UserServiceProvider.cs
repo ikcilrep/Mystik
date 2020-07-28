@@ -18,6 +18,7 @@ namespace Tests.Helpers
         public DataContext Context { get; set; }
         public int InitialNumberOfUsers { get; set; }
         public int InitialNumberOfFriends { get; set; }
+        public int InitialNumberOfInvitations { get; set; }
 
 
         public UserServiceProvider()
@@ -43,6 +44,7 @@ namespace Tests.Helpers
             Context.SaveChanges();
 
             InitialNumberOfUsers = Context.Users.Count();
+            InitialNumberOfInvitations = Context.Invitations.Count();
         }
 
         public void AddFriend()
