@@ -60,7 +60,7 @@ namespace Mystik.Services
         }
         public IIncludableQueryable<User, User> UsersWithAllRepresentableData => _context.Users
                                        .Include(u => u.Friends1)
-                                            .ThenInclude(cof => cof.Friend2)
+                                            .ThenInclude(cof => cof.Friend1)
                                        .Include(u => u.ManagedConversations)
                                        .Include(u => u.ParticipatedConversations)
                                             .ThenInclude(uc => uc.Conversation)
@@ -252,7 +252,7 @@ namespace Mystik.Services
                                                         .Include(u => u.ReceivedInvitations)
                                                         .Include(u => u.SentInvitations)
                                                         .Where(u => invitedIds.Contains(u.Id)
-                                                                    && u.Friends1.All(cof => cof.Friend2Id != inviterId)
+                                                                    && u.Friends1.All(cof => cof.Friend1Id != inviterId)
                                                                     && u.ReceivedInvitations.All(i => i.InviterId != inviterId)
                                                                     && u.SentInvitations.All(i => i.InvitedId != inviterId))
                                                         .Select(u => u.Id);
@@ -292,7 +292,7 @@ namespace Mystik.Services
                                            .FirstOrDefaultAsync(u => u.Id == id);
             return new UserRelatedEntities
             {
-                FriendsIds = entities.FriendsIds.Where(id => user.Friends1.All(cof => id != cof.Friend2Id)),
+                FriendsIds = entities.FriendsIds.Where(id => user.Friends1.All(cof => id != cof.Friend1Id)),
                 InvitedIds = entities.InvitedIds.Where(id => user.SentInvitations.All(i => id != i.InvitedId)),
                 InvitersIds = entities.InvitersIds.Where(id => user.ReceivedInvitations.All(i => id != i.InviterId)),
                 ConversationIds = entities.ConversationIds.Where(id => user.ParticipatedConversations.All(i => id != i.ConversationId)),

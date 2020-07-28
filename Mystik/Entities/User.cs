@@ -26,7 +26,7 @@ namespace Mystik.Entities
 
         public IReadOnlyList<string> GetFriends()
         {
-            return Friends1.Select(cof => cof.Friend2Id).ToStringList();
+            return Friends1.Select(cof => cof.Friend1Id).ToStringList();
         }
 
         public User(string nickname, string username, string password)
@@ -54,7 +54,7 @@ namespace Mystik.Entities
                 Id = Id,
                 Nickname = Nickname,
                 Username = Username,
-                Friends = Friends1.Where(cof => cof.CreatedDate > since || cof.Friend2.ModifiedDate > since).Select(cof => cof.Friend2.GetPublicData()),
+                Friends = Friends1.Where(cof => cof.CreatedDate > since || cof.Friend1.ModifiedDate > since).Select(cof => cof.Friend1.GetPublicData()),
                 Inviters = ReceivedInvitations.Where(i => i.CreatedDate > since || i.Inviter.ModifiedDate > since)
                                                          .Select(i => i.Inviter.GetPublicData()),
                 Invited = SentInvitations.Where(i => i.CreatedDate > since || i.Invited.ModifiedDate > since)
