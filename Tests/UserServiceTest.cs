@@ -164,6 +164,17 @@ namespace Tests
             Assert.Equal(_provider.InitialNumberOfInvitations + 1, _provider.Context.Invitations.Count());
         }
 
+        [Fact]
+        public async Task InviteFriends_AddsCorrectEntity()
+        {
+            var inviterId = MockUserService.Admin.Id;
+            var invitedIds = new List<Guid> { MockUserService.User2.Id };
+
+            await _provider.UserService.InviteFriends(inviterId, invitedIds);
+
+            Assert.True(_provider.Context.Invitations.Any(i => i.InviterId == inviterId && i.InvitedId == MockUserService.User2.Id));
+        }
+
         public void Dispose()
         {
             _provider.Dispose();
