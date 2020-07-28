@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Mystik.Entities;
 using Tests.Helpers;
 using Xunit;
 
@@ -70,7 +71,7 @@ namespace Tests
                 MockUserService.NotExistingUser.Nickname,
                 null);
 
-            var actualUser = _provider.Context.Users.Single();
+            var actualUser = _provider.Context.Find<User>(MockUserService.User2.Id);
 
             Assert.Equal(MockUserService.NotExistingUser.Nickname, actualUser.Nickname);
         }
