@@ -288,16 +288,22 @@ namespace Mystik.Services
                                            .Include(u => u.SentInvitations)
                                            .Include(u => u.ReceivedInvitations)
                                            .Include(u => u.ParticipatedConversations)
-                                           .Include(u => u.ManagedConversations)
+                                                .ThenInclude(c => c.Conversation)
+                                                    .ThenInclude(c => c.UserConversations)
+                                           .Include(u => u.ParticipatedConversations)
+                                                .ThenInclude(c => c.Conversation)
+                                                    .ThenInclude(c => c.ManagedConversations)
                                            .FirstOrDefaultAsync(u => u.Id == id);
             return new UserRelatedEntities
             {
                 FriendsIds = entities.FriendsIds.Where(id => user.Friends1.All(cof => id != cof.Friend1Id)),
                 InvitedIds = entities.InvitedIds.Where(id => user.SentInvitations.All(i => id != i.InvitedId)),
                 InvitersIds = entities.InvitersIds.Where(id => user.ReceivedInvitations.All(i => id != i.InviterId)),
-                ConversationIds = entities.ConversationIds.Where(id => user.ParticipatedConversations.All(i => id != i.ConversationId)),
-                ConversationMembersIds = entities.ConversationMembersIds.Where(id => user.ParticipatedConversations.All(i => id != i.UserId)),
-                ConversationManagersIds = entities.ConversationManagersIds.Where(id => user.ManagedConversations.All(i => id != i.ManagerId)),
+                ConversationIds = entities.ConversationIds.Where(id => user.ParticipatedConversations.All(cm => id != cm.ConversationId)),
+                ConversationMembersIds = entities.ConversationMembersIds.Where(id => user.ParticipatedConversations.SelectMany(cm => cm.Conversation.UserConversations)
+                                                                                                                   .All(cm => id != cm.UserId)),
+                ConversationManagersIds = entities.ConversationManagersIds.Where(id => user.ParticipatedConversations.SelectMany(cm => cm.Conversation.ManagedConversations)
+                                                                                                                     .All(cm => id != cm.ManagerId)),
             };
         }
     }
