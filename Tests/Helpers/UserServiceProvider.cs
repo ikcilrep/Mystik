@@ -79,7 +79,7 @@ namespace Tests.Helpers
             });
             Context.SaveChanges();
 
-            InitialNumberOfInvitations = Context.Friends.Count();
+            InitialNumberOfInvitations = Context.Invitations.Count();
         }
 
         public void AddConversation()
