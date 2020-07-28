@@ -28,7 +28,7 @@ namespace Mystik.Data
 
             modelBuilder.Entity<ConversationManager>()
                         .HasOne(mc => mc.Conversation)
-                        .WithMany(c => c.ManagedConversations)
+                        .WithMany(c => c.Managers)
                         .HasForeignKey(mc => mc.ConversationId)
                         .OnDelete(DeleteBehavior.Cascade);
 
@@ -43,7 +43,7 @@ namespace Mystik.Data
 
             modelBuilder.Entity<ConversationMember>()
                         .HasOne(uc => uc.Conversation)
-                        .WithMany(c => c.UserConversations)
+                        .WithMany(c => c.Members)
                         .HasForeignKey(uc => uc.ConversationId)
                         .OnDelete(DeleteBehavior.Cascade);
 

@@ -64,7 +64,7 @@ namespace Mystik.Services
                                        .Include(u => u.ManagedConversations)
                                        .Include(u => u.ParticipatedConversations)
                                             .ThenInclude(uc => uc.Conversation)
-                                            .ThenInclude(c => c.UserConversations)
+                                            .ThenInclude(c => c.Members)
                                             .ThenInclude(uc => uc.User)
                                        .Include(u => u.ParticipatedConversations)
                                            .ThenInclude(uc => uc.Conversation)
@@ -72,7 +72,7 @@ namespace Mystik.Services
                                            .ThenInclude(m => m.Sender)
                                        .Include(u => u.ParticipatedConversations)
                                            .ThenInclude(uc => uc.Conversation)
-                                           .ThenInclude(c => c.ManagedConversations)
+                                           .ThenInclude(c => c.Managers)
                                        .Include(u => u.ReceivedInvitations)
                                             .ThenInclude(i => i.Inviter)
                                        .Include(u => u.SentInvitations)
@@ -88,17 +88,17 @@ namespace Mystik.Services
             var user = await _context.Users.Include(u => u.Friends1)
                                            .Include(u => u.ManagedConversations)
                                                 .ThenInclude(mc => mc.Conversation)
-                                                .ThenInclude(c => c.ManagedConversations)
+                                                .ThenInclude(c => c.Managers)
                                            .Include(u => u.ParticipatedConversations)
                                                 .ThenInclude(uc => uc.Conversation)
-                                                .ThenInclude(c => c.UserConversations)
+                                                .ThenInclude(c => c.Members)
                                            .FirstAsync(u => u.Id == id);
             var usersToNotify = user.GetFriends();
 
-            var abandonedManagedConversations = user.ManagedConversations.Where(mc => mc.Conversation.ManagedConversations.Count == 1)
+            var abandonedManagedConversations = user.ManagedConversations.Where(mc => mc.Conversation.Managers.Count == 1)
                                                                          .Select(mc => mc.Conversation);
 
-            var abandonedConversations = user.ParticipatedConversations.Where(uc => uc.Conversation.UserConversations.Count == 1)
+            var abandonedConversations = user.ParticipatedConversations.Where(uc => uc.Conversation.Members.Count == 1)
                                                                .Select(uc => uc.Conversation);
 
             _context.RemoveRange(abandonedManagedConversations);
@@ -289,10 +289,10 @@ namespace Mystik.Services
                                            .Include(u => u.ReceivedInvitations)
                                            .Include(u => u.ParticipatedConversations)
                                                 .ThenInclude(c => c.Conversation)
-                                                    .ThenInclude(c => c.UserConversations)
+                                                    .ThenInclude(c => c.Members)
                                            .Include(u => u.ParticipatedConversations)
                                                 .ThenInclude(c => c.Conversation)
-                                                    .ThenInclude(c => c.ManagedConversations)
+                                                    .ThenInclude(c => c.Managers)
                                            .FirstOrDefaultAsync(u => u.Id == id);
             return new UserRelatedEntities
             {
@@ -300,9 +300,9 @@ namespace Mystik.Services
                 InvitedIds = entities.InvitedIds.Where(id => user.SentInvitations.All(i => id != i.InvitedId)),
                 InvitersIds = entities.InvitersIds.Where(id => user.ReceivedInvitations.All(i => id != i.InviterId)),
                 ConversationIds = entities.ConversationIds.Where(id => user.ParticipatedConversations.All(cm => id != cm.ConversationId)),
-                ConversationMembersIds = entities.ConversationMembersIds.Where(id => user.ParticipatedConversations.SelectMany(cm => cm.Conversation.UserConversations)
+                ConversationMembersIds = entities.ConversationMembersIds.Where(id => user.ParticipatedConversations.SelectMany(cm => cm.Conversation.Members)
                                                                                                                    .All(cm => id != cm.UserId)),
-                ConversationManagersIds = entities.ConversationManagersIds.Where(id => user.ParticipatedConversations.SelectMany(cm => cm.Conversation.ManagedConversations)
+                ConversationManagersIds = entities.ConversationManagersIds.Where(id => user.ParticipatedConversations.SelectMany(cm => cm.Conversation.Managers)
                                                                                                                      .All(cm => id != cm.ManagerId)),
             };
         }

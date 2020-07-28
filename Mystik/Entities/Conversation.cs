@@ -13,9 +13,9 @@ namespace Mystik.Entities
 
         public string Name { get; set; }
 
-        public ICollection<ConversationManager> ManagedConversations { get; set; }
+        public ICollection<ConversationManager> Managers { get; set; }
 
-        public ICollection<ConversationMember> UserConversations { get; set; }
+        public ICollection<ConversationMember> Members { get; set; }
 
         public ICollection<Message> Messages { get; set; }
 
@@ -31,8 +31,8 @@ namespace Mystik.Entities
                 Name = Name,
                 PasswordHashData = PasswordHashData,
                 Messages = await Messages.Where(m => m.ModifiedDate > since).GetJsonRepresentableMessages(),
-                Members = UserConversations.Where(uc => uc.CreatedDate > since).Select(uc => uc.User.GetPublicData()),
-                Managers = ManagedConversations.Where(mc => mc.CreatedDate > since).Select(uc => uc.Manager.GetPublicData()),
+                Members = Members.Where(uc => uc.CreatedDate > since).Select(uc => uc.User.GetPublicData()),
+                Managers = Managers.Where(mc => mc.CreatedDate > since).Select(uc => uc.Manager.GetPublicData()),
             };
         }
 
@@ -44,16 +44,16 @@ namespace Mystik.Entities
         public bool HasBeenModifiedSince(DateTime since)
         {
             return ModifiedDate > since
-                   || UserConversations.Any(uc => uc.CreatedDate > since || uc.User.ModifiedDate > since)
-                   || ManagedConversations.Any(mc => mc.CreatedDate > since)
+                   || Members.Any(uc => uc.CreatedDate > since || uc.User.ModifiedDate > since)
+                   || Managers.Any(mc => mc.CreatedDate > since)
                    || Messages.Any(m => m.ModifiedDate > since);
         }
 
-        public bool IsMember(Guid userId) => UserConversations.Any(uc => uc.UserId == userId);
+        public bool IsMember(Guid userId) => Members.Any(uc => uc.UserId == userId);
 
         public IReadOnlyList<string> GetMembers()
         {
-            return UserConversations.ToStringList();
+            return Members.ToStringList();
         }
     }
 }

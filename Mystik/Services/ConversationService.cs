@@ -48,7 +48,7 @@ namespace Mystik.Services
                 Id = conversationId,
                 Name = name,
                 PasswordHashData = passwordHashData,
-                ManagedConversations = new HashSet<ConversationManager> { managedConversation },
+                Managers = new HashSet<ConversationManager> { managedConversation },
                 ModifiedDate = DateTime.UtcNow
             };
             _context.Add(conversation);
@@ -60,7 +60,7 @@ namespace Mystik.Services
 
         public async Task<IReadOnlyList<string>> Delete(Guid id)
         {
-            var conversation = await _context.Conversations.Include(c => c.UserConversations)
+            var conversation = await _context.Conversations.Include(c => c.Members)
                                                            .FirstOrDefaultAsync(c => c.Id == id);
 
             _context.Remove(conversation);
@@ -78,8 +78,8 @@ namespace Mystik.Services
         {
             return await _context.Conversations.AsNoTracking()
                                                .Include(c => c.Messages)
-                                               .Include(c => c.ManagedConversations)
-                                               .Include(c => c.UserConversations)
+                                               .Include(c => c.Managers)
+                                               .Include(c => c.Members)
                                                .ToListAsync();
         }
 
@@ -92,14 +92,14 @@ namespace Mystik.Services
         {
             return await _context.Conversations.AsNoTracking()
                                                .Include(c => c.Messages)
-                                               .Include(c => c.ManagedConversations)
-                                               .Include(c => c.UserConversations)
+                                               .Include(c => c.Managers)
+                                               .Include(c => c.Members)
                                                .FirstAsync(c => c.Id == id);
         }
 
         public async Task<IReadOnlyList<string>> ChangeName(Guid id, string newName)
         {
-            var conversation = await _context.Conversations.Include(c => c.UserConversations)
+            var conversation = await _context.Conversations.Include(c => c.Members)
                                                            .FirstOrDefaultAsync(c => c.Id == id);
             if (conversation == null)
             {
@@ -126,12 +126,12 @@ namespace Mystik.Services
 
         public async Task<IEnumerable<Guid>> GetNotManagingMembersIds(Guid conversationId)
         {
-            var conversation = await _context.Conversations.Include(c => c.UserConversations)
-                                                           .Include(c => c.ManagedConversations)
+            var conversation = await _context.Conversations.Include(c => c.Members)
+                                                           .Include(c => c.Managers)
                                                            .FirstAsync(c => c.Id == conversationId);
 
-            return conversation.UserConversations.Select(uc => uc.UserId)
-                                                 .Where(userId => conversation.ManagedConversations.All(mc => mc.ManagerId != userId));
+            return conversation.Members.Select(uc => uc.UserId)
+                                                 .Where(userId => conversation.Managers.All(mc => mc.ManagerId != userId));
         }
 
     }
