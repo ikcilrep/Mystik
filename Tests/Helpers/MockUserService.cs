@@ -140,5 +140,33 @@ namespace Tests.Helpers
         {
             throw new NotImplementedException();
         }
+
+        public static void ReloadUsers()
+        {
+            _admin = new User("Adamek", "Adam", "Kaczka1%3")
+            {
+                Id = Guid.Parse("6c554aa4-3fd8-48d4-a0d8-13164f172d0c"),
+                Role = Role.Admin
+            };
+
+            _user1 = new UserWithPassword(
+               "Kacperek",
+               "Kacper",
+               "#Myszka456",
+               "4192105b-3256-40e2-9efb-eef265e5eaa6");
+
+
+            _user2 = new UserWithPassword(
+               "Oliwierek",
+               "Oliwier",
+               "Gruszka!789",
+               "60398e2a-4439-46bf-9101-e26ea63d5326");
+
+            _notExistingUser = new UserWithPassword(
+               "Lukaszek",
+               "Lukasz",
+               "Jablko&101112",
+               "68fa61ae-8c9b-4470-8fd7-a36e1e14c035");
+        }
     }
 }

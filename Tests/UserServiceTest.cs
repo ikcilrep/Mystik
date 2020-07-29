@@ -14,6 +14,7 @@ namespace Tests
 
         public UserServiceTest()
         {
+            MockUserService.ReloadUsers();
             _provider = new UserServiceProvider();
         }
 
