@@ -1,5 +1,6 @@
 using System;
 using System.Data.Common;
+using System.Linq;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -14,8 +15,8 @@ namespace Tests
     {
         private readonly DbConnection _connection;
         protected ConversationService ConversationService { get; }
+        protected int InitialNumberOfConversationsMembers { get; set; }
         protected DataContext Context { get; set; }
-
         protected Conversation Conversation { get; set; }
 
         protected ConversationServiceProvider()
@@ -31,7 +32,6 @@ namespace Tests
             Seed();
 
             ConversationService = new ConversationService(Context);
-
         }
 
         private void Seed()
@@ -49,6 +49,7 @@ namespace Tests
 
             Context.Add(MockUserService.Admin);
             Context.Add(MockUserService.User1);
+            Context.Add(MockUserService.User2);
 
             Context.Add(Conversation);
 
@@ -74,6 +75,8 @@ namespace Tests
             });
 
             Context.SaveChanges();
+
+            InitialNumberOfConversationsMembers = Context.UserConversations.Count();
         }
 
         private DbConnection CreateInMemoryDatabase()
