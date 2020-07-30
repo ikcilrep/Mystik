@@ -4,6 +4,7 @@ using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Mystik.Data;
+using Mystik.Entities;
 using Mystik.Services;
 using Tests.Helpers;
 
@@ -14,6 +15,8 @@ namespace Tests
         private readonly DbConnection _connection;
         protected ConversationService ConversationService { get; }
         protected DataContext Context { get; set; }
+
+        protected Conversation Conversation { get; set; }
 
         protected ConversationServiceProvider()
         {
@@ -34,6 +37,32 @@ namespace Tests
         {
             Context.Database.EnsureDeleted();
             Context.Database.EnsureCreated();
+
+            Conversation = new Conversation
+            {
+                Id = Guid.NewGuid(),
+                Name = "Conversation",
+                PasswordHashData = new byte[] { },
+                ModifiedDate = DateTime.UtcNow
+            };
+
+            Context.Add(Conversation);
+
+            Context.Add(new ConversationMember
+            {
+                ConversationId = Conversation.Id,
+                UserId = MockUserService.Admin.Id,
+                CreatedDate = DateTime.UtcNow
+            });
+
+            Context.Add(new ConversationManager
+            {
+                ConversationId = Conversation.Id,
+                ManagerId = MockUserService.Admin.Id,
+                CreatedDate = DateTime.UtcNow
+            });
+
+            Context.SaveChanges();
         }
 
         private DbConnection CreateInMemoryDatabase()
