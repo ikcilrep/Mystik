@@ -20,6 +20,7 @@ namespace Tests
 
         protected ConversationServiceProvider()
         {
+            MockUserService.ReloadUsers();
             var options = new DbContextOptionsBuilder<DataContext>()
                        .UseSqlite(CreateInMemoryDatabase())
                        .Options;
@@ -45,6 +46,8 @@ namespace Tests
                 PasswordHashData = new byte[] { },
                 ModifiedDate = DateTime.UtcNow
             };
+
+            Context.Add(MockUserService.Admin);
 
             Context.Add(Conversation);
 
