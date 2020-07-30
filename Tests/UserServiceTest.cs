@@ -269,6 +269,15 @@ namespace Tests
             Assert.False(userIsInvited);
         }
 
+        [Fact]
+        public async Task GetAll_ReturnsAllUsers()
+        {
+            var expectedUsers = _provider.Context.Users.ToHashSet();
+            var actualUsers = await _provider.UserService.GetAll();
+
+            Assert.True(expectedUsers.SetEquals(actualUsers));
+        }
+
         public void Dispose()
         {
             _provider.Dispose();
