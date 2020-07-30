@@ -13,5 +13,13 @@ namespace Tests
 
             Assert.True(userIsManager);
         }
+
+        [Fact]
+        public async Task IsTheConversationManager_UserIsNotManager_ReturnsFalse()
+        {
+            var userIsManager = await ConversationService.IsTheConversationManager(Conversation.Id, MockUserService.User1.Id);
+
+            Assert.False(userIsManager);
+        }
     }
 }
