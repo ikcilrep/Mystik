@@ -261,6 +261,14 @@ namespace Tests
             Assert.True(userIsInvited);
         }
 
+        [Fact]
+        public async Task IsUserInvited_UserIsNotInvited_ReturnsFalse()
+        {
+            var userIsInvited = await _provider.UserService.IsUserInvited(MockUserService.Admin.Id, MockUserService.User2.Id);
+
+            Assert.False(userIsInvited);
+        }
+
         public void Dispose()
         {
             _provider.Dispose();
