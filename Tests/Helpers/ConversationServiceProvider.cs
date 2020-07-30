@@ -76,7 +76,7 @@ namespace Tests
 
             Context.SaveChanges();
 
-            InitialNumberOfConversationsMembers = Context.UserConversations.Count();
+            InitialNumberOfConversationsMembers = Context.ConversationMembers.Count();
         }
 
         private DbConnection CreateInMemoryDatabase()

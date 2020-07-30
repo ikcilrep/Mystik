@@ -66,7 +66,7 @@ namespace Mystik.Services
 
         public async Task<bool> IsTheConversationMember(Guid conversationId, Guid userId)
         {
-            return await _context.UserConversations.AnyAsync(mc => mc.ConversationId == conversationId && mc.UserId == userId);
+            return await _context.ConversationMembers.AnyAsync(mc => mc.ConversationId == conversationId && mc.UserId == userId);
         }
 
         public IEnumerable<Message> GetMessagesFromConversation(Guid conversationId)

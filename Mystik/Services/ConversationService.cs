@@ -28,7 +28,7 @@ namespace Mystik.Services
                     CreatedDate = DateTime.UtcNow
                 });
 
-                _context.UserConversations.AddRange(userConversations);
+                _context.ConversationMembers.AddRange(userConversations);
                 await _context.SaveChangesAsync();
             }
         }
@@ -85,7 +85,7 @@ namespace Mystik.Services
 
         public async Task<bool> IsTheConversationManager(Guid conversationId, Guid userId)
         {
-            return await _context.ManagedConversations.AnyAsync(mc => mc.ConversationId == conversationId && mc.ManagerId == userId);
+            return await _context.ConversationManagers.AnyAsync(mc => mc.ConversationId == conversationId && mc.ManagerId == userId);
         }
 
         public async Task<Conversation> Retrieve(Guid id)
@@ -116,7 +116,7 @@ namespace Mystik.Services
 
         public async Task DeleteMembers(Guid conversationId, List<Guid> usersIds)
         {
-            var existingMembers = _context.UserConversations.Where(uc => uc.ConversationId == conversationId
+            var existingMembers = _context.ConversationMembers.Where(uc => uc.ConversationId == conversationId
                                                                          && usersIds.Contains(uc.UserId));
 
             _context.RemoveRange(existingMembers);

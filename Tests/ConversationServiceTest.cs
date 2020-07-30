@@ -40,7 +40,7 @@ namespace Tests
             var usersIds = new List<Guid> { MockUserService.User2.Id };
             await ConversationService.AddMembers(Conversation.Id, usersIds);
 
-            Assert.Equal(InitialNumberOfConversationsMembers + 1, Context.UserConversations.Count());
+            Assert.Equal(InitialNumberOfConversationsMembers + 1, Context.ConversationMembers.Count());
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace Tests
             var usersIds = new List<Guid> { MockUserService.User2.Id };
             await ConversationService.AddMembers(Conversation.Id, usersIds);
 
-            Assert.True(Context.UserConversations.Any(cm => cm.Conversation.Id == Conversation.Id
+            Assert.True(Context.ConversationMembers.Any(cm => cm.Conversation.Id == Conversation.Id
                                                             && cm.UserId == MockUserService.User2.Id));
         }
     }

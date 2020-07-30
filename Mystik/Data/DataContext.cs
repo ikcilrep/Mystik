@@ -9,8 +9,8 @@ namespace Mystik.Data
         public DbSet<CoupleOfFriends> Friends { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
-        public DbSet<ConversationMember> UserConversations { get; set; }
-        public DbSet<ConversationManager> ManagedConversations { get; set; }
+        public DbSet<ConversationMember> ConversationMembers { get; set; }
+        public DbSet<ConversationManager> ConversationManagers { get; set; }
         public DbSet<Invitation> Invitations { get; set; }
 
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
