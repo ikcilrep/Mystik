@@ -251,6 +251,16 @@ namespace Tests
                                                              && cof.InvitedId == MockUserService.User2.Id));
         }
 
+        [Fact]
+        public async Task IsUserInvited_UserIsInvited_ReturnsTrue()
+        {
+            _provider.AddInvitation();
+
+            var userIsInvited = await _provider.UserService.IsUserInvited(MockUserService.Admin.Id, MockUserService.User2.Id);
+
+            Assert.True(userIsInvited);
+        }
+
         public void Dispose()
         {
             _provider.Dispose();
