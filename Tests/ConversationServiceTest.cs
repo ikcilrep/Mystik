@@ -42,5 +42,15 @@ namespace Tests
 
             Assert.Equal(InitialNumberOfConversationsMembers + 1, Context.UserConversations.Count());
         }
+
+        [Fact]
+        public async Task AddMembers_AddsCorrectEntity()
+        {
+            var usersIds = new List<Guid> { MockUserService.User2.Id };
+            await ConversationService.AddMembers(Conversation.Id, usersIds);
+
+            Assert.True(Context.UserConversations.Any(cm => cm.Conversation.Id == Conversation.Id
+                                                            && cm.UserId == MockUserService.User2.Id));
+        }
     }
 }
