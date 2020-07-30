@@ -48,6 +48,7 @@ namespace Tests
             };
 
             Context.Add(MockUserService.Admin);
+            Context.Add(MockUserService.User1);
 
             Context.Add(Conversation);
 
@@ -55,6 +56,13 @@ namespace Tests
             {
                 ConversationId = Conversation.Id,
                 UserId = MockUserService.Admin.Id,
+                CreatedDate = DateTime.UtcNow
+            });
+
+            Context.Add(new ConversationMember
+            {
+                ConversationId = Conversation.Id,
+                UserId = MockUserService.User1.Id,
                 CreatedDate = DateTime.UtcNow
             });
 
