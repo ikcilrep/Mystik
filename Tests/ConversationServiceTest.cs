@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Tests.Helpers;
 using Xunit;
@@ -31,6 +32,15 @@ namespace Tests
             var actualIds = await ConversationService.GetNotManagingMembersIds(Conversation.Id);
 
             Assert.Equal(expectedIds, actualIds);
+        }
+
+        [Fact]
+        public async Task AddMembers_AddsExactlyOneEntity()
+        {
+            var usersIds = new List<Guid> { MockUserService.User2.Id };
+            await ConversationService.AddMembers(Conversation.Id, usersIds);
+
+            Assert.Equal(InitialNumberOfConversationsMembers + 1, Context.UserConversations.Count());
         }
     }
 }
