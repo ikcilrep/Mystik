@@ -13,17 +13,18 @@ namespace Tests.Helpers
     public class UserServiceProvider : IDisposable
     {
         private readonly DbConnection _connection;
-        public UserService UserService { get; }
+        protected UserService UserService { get; }
 
-        public DataContext Context { get; set; }
-        public int InitialNumberOfUsers { get; set; }
-        public int InitialNumberOfFriends { get; set; }
-        public int InitialNumberOfInvitations { get; set; }
-        public Guid ConversationId { get; set; }
+        protected DataContext Context { get; set; }
+        protected int InitialNumberOfUsers { get; set; }
+        protected int InitialNumberOfFriends { get; set; }
+        protected int InitialNumberOfInvitations { get; set; }
+        protected Guid ConversationId { get; set; }
 
 
-        public UserServiceProvider()
+        protected UserServiceProvider()
         {
+            MockUserService.ReloadUsers();
             var options = new DbContextOptionsBuilder<DataContext>()
                        .UseSqlite(CreateInMemoryDatabase())
                        .Options;
@@ -48,7 +49,7 @@ namespace Tests.Helpers
             InitialNumberOfInvitations = Context.Invitations.Count();
         }
 
-        public void AddFriend()
+        protected void AddFriend()
         {
             Context.Add(new CoupleOfFriends
             {
@@ -69,7 +70,7 @@ namespace Tests.Helpers
             InitialNumberOfFriends = Context.Friends.Count();
         }
 
-        public void AddInvitation()
+        protected void AddInvitation()
         {
             Context.Add(new Invitation
             {
@@ -82,7 +83,7 @@ namespace Tests.Helpers
             InitialNumberOfInvitations = Context.Invitations.Count();
         }
 
-        public void AddConversation()
+        protected void AddConversation()
         {
             ConversationId = Guid.NewGuid();
             Context.Add(new Conversation
