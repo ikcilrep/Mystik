@@ -16,6 +16,7 @@ namespace Tests
         private readonly DbConnection _connection;
         protected ConversationService ConversationService { get; }
         protected int InitialNumberOfConversationsMembers { get; set; }
+        protected int InitialNumberOfConversations { get; set; }
         protected DataContext Context { get; set; }
         protected Conversation Conversation { get; set; }
 
@@ -77,6 +78,7 @@ namespace Tests
             Context.SaveChanges();
 
             InitialNumberOfConversationsMembers = Context.ConversationMembers.Count();
+            InitialNumberOfConversations = Context.Conversations.Count();
         }
 
         private DbConnection CreateInMemoryDatabase()
