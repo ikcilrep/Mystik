@@ -81,6 +81,7 @@ namespace Mystik.Hubs
             await _conversationService.AddMembers(conversation.Id, membersIds);
 
             var representableConversation = await conversation.ToJsonRepresentableObject();
+
             await Clients.Users(membersIds.ToStringList()).JoinConversation(representableConversation);
         }
 
@@ -89,6 +90,9 @@ namespace Mystik.Hubs
             if (await CanTheCurrentUserModifyTheConversation(conversationId))
             {
                 var members = await _conversationService.Delete(conversationId);
+
+                members = members.Where(id => id != Context.User.Identity.Name).ToStringList();
+
                 await Clients.Users(members).LeaveConversation(conversationId);
             }
         }
@@ -98,6 +102,9 @@ namespace Mystik.Hubs
             if (await CanTheCurrentUserModifyTheConversation(conversationId))
             {
                 var members = await _conversationService.ChangeName(conversationId, newName);
+
+                members = members.Where(id => id != Context.User.Identity.Name).ToStringList();
+
                 await Clients.Users(members).ChangeConversationName(conversationId, newName);
             }
         }
