@@ -121,5 +121,13 @@ namespace Tests
 
             Assert.Equal(usersToNotify, Conversation.GetMembers());
         }
+
+        [Fact]
+        public async Task Delete_RemovesExactlyOneEntity()
+        {
+            await ConversationService.Delete(Conversation.Id);
+
+            Assert.Equal(InitialNumberOfConversations - 1, Context.Conversations.Count());
+        }
     }
 }
