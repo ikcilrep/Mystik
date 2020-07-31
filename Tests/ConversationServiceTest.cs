@@ -72,7 +72,17 @@ namespace Tests
 
             Assert.False(Context.ConversationMembers.Any(cm => cm.Conversation.Id == Conversation.Id
                                                             && cm.UserId == MockUserService.User1.Id));
+        }
 
+        [Fact]
+        public async Task Create_AddsExactlyOneEntity()
+        {
+            await ConversationService.Create(
+                "Conversation1",
+                new byte[] { },
+                MockUserService.User2.Id);
+
+            Assert.Equal(InitialNumberOfConversations + 1, Context.Conversations.Count());
         }
     }
 }
