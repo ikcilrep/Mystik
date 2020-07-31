@@ -62,5 +62,17 @@ namespace Tests
 
             Assert.Equal(InitialNumberOfConversationsMembers - 1, Context.ConversationMembers.Count());
         }
+
+        [Fact]
+        public async Task DeleteMembers_RemovesCorrectEntity()
+        {
+            var usersIds = new List<Guid> { MockUserService.User1.Id };
+
+            await ConversationService.DeleteMembers(Conversation.Id, usersIds);
+
+            Assert.False(Context.ConversationMembers.Any(cm => cm.Conversation.Id == Conversation.Id
+                                                            && cm.UserId == MockUserService.User1.Id));
+
+        }
     }
 }
