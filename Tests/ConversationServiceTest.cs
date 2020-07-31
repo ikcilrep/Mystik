@@ -84,5 +84,16 @@ namespace Tests
 
             Assert.Equal(InitialNumberOfConversations + 1, Context.Conversations.Count());
         }
+
+        [Fact]
+        public async Task Create_AddsCorrectEntity()
+        {
+            var conversation = await ConversationService.Create(
+                "Conversation1",
+                new byte[] { },
+                MockUserService.User2.Id);
+
+            Assert.True(Context.Conversations.Any(c => c.Id == conversation.Id));
+        }
     }
 }
