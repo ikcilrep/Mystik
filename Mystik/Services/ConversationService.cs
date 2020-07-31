@@ -101,7 +101,7 @@ namespace Mystik.Services
         {
             var conversation = await _context.Conversations.Include(c => c.Members)
                                                            .FirstOrDefaultAsync(c => c.Id == id);
-            if (conversation == null)
+            if (conversation == null || conversation.Name == newName)
             {
                 return new List<string>();
             }
