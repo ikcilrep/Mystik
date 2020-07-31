@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Mystik.Entities;
+using Mystik.Helpers;
 using Tests.Helpers;
 using Xunit;
 
@@ -136,6 +138,16 @@ namespace Tests
             await ConversationService.Delete(Conversation.Id);
 
             Assert.False(Context.Conversations.Any(c => c.Id == Conversation.Id));
+        }
+
+        [Fact]
+        public async Task GetAll_ReturnsTheCorrectEntities()
+        {
+            var actualEntities = await ConversationService.GetAll();
+
+            var expectedEntities = new List<Conversation> { Conversation };
+
+            Assert.True(expectedEntities.CollectionEqual(actualEntities, c => c.Id));
         }
     }
 }
