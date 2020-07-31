@@ -103,5 +103,15 @@ namespace Tests
 
             Assert.Equal(Conversation, conversation);
         }
-   }
+
+        [Fact]
+        public async Task ChangeName_ChangesTheCorrectEntity()
+        {
+            var newName = "NewConversationName";
+            await ConversationService.ChangeName(Conversation.Id, newName);
+
+            Assert.True(Context.Conversations.Any(c => c.Id == Conversation.Id && c.Name == newName));
+        }
+
+    }
 }
