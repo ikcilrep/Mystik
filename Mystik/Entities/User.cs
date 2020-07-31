@@ -59,8 +59,8 @@ namespace Mystik.Entities
                                                          .Select(i => i.Inviter.GetPublicData()),
                 Invited = SentInvitations.Where(i => i.CreatedDate > since || i.Invited.ModifiedDate > since)
                                                  .Select(i => i.Invited.GetPublicData()),
-                Conversations = await ParticipatedConversations.Where(uc => uc.CreatedDate > since
-                                                                    || uc.Conversation.HasBeenModifiedSince(since))
+                Conversations = await ParticipatedConversations.Where(cm => cm.CreatedDate > since
+                                                                    || cm.Conversation.HasBeenModifiedSince(since))
                                                        .GetJsonRepresentableConversations(since)
             };
         }

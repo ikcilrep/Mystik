@@ -18,33 +18,33 @@ namespace Mystik.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ConversationManager>()
-                .HasKey(mc => new { mc.ManagerId, mc.ConversationId });
+                .HasKey(cm => new { cm.ManagerId, cm.ConversationId });
 
             modelBuilder.Entity<ConversationManager>()
-                        .HasOne(mc => mc.Manager)
+                        .HasOne(cm => cm.Manager)
                         .WithMany(u => u.ManagedConversations)
-                        .HasForeignKey(mc => mc.ManagerId)
+                        .HasForeignKey(cm => cm.ManagerId)
                         .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ConversationManager>()
-                        .HasOne(mc => mc.Conversation)
+                        .HasOne(cm => cm.Conversation)
                         .WithMany(c => c.Managers)
-                        .HasForeignKey(mc => mc.ConversationId)
+                        .HasForeignKey(cm => cm.ConversationId)
                         .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ConversationMember>()
-                .HasKey(uc => new { uc.UserId, uc.ConversationId });
+                .HasKey(cm => new { cm.UserId, cm.ConversationId });
 
             modelBuilder.Entity<ConversationMember>()
-                        .HasOne(uc => uc.User)
+                        .HasOne(cm => cm.User)
                         .WithMany(u => u.ParticipatedConversations)
-                        .HasForeignKey(uc => uc.UserId)
+                        .HasForeignKey(cm => cm.UserId)
                         .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<ConversationMember>()
-                        .HasOne(uc => uc.Conversation)
+                        .HasOne(cm => cm.Conversation)
                         .WithMany(c => c.Members)
-                        .HasForeignKey(uc => uc.ConversationId)
+                        .HasForeignKey(cm => cm.ConversationId)
                         .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Invitation>()

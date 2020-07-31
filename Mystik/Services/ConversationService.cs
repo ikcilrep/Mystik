@@ -85,7 +85,7 @@ namespace Mystik.Services
 
         public async Task<bool> IsTheConversationManager(Guid conversationId, Guid userId)
         {
-            return await _context.ConversationManagers.AnyAsync(mc => mc.ConversationId == conversationId && mc.ManagerId == userId);
+            return await _context.ConversationManagers.AnyAsync(cm => cm.ConversationId == conversationId && cm.ManagerId == userId);
         }
 
         public async Task<Conversation> Retrieve(Guid id)
@@ -116,8 +116,8 @@ namespace Mystik.Services
 
         public async Task DeleteMembers(Guid conversationId, List<Guid> usersIds)
         {
-            var existingMembers = _context.ConversationMembers.Where(uc => uc.ConversationId == conversationId
-                                                                         && usersIds.Contains(uc.UserId));
+            var existingMembers = _context.ConversationMembers.Where(cm => cm.ConversationId == conversationId
+                                                                         && usersIds.Contains(cm.UserId));
 
             _context.RemoveRange(existingMembers);
 
@@ -130,8 +130,8 @@ namespace Mystik.Services
                                                            .Include(c => c.Managers)
                                                            .FirstAsync(c => c.Id == conversationId);
 
-            return conversation.Members.Select(uc => uc.UserId)
-                                                 .Where(userId => conversation.Managers.All(mc => mc.ManagerId != userId));
+            return conversation.Members.Select(cm => cm.UserId)
+                                                 .Where(userId => conversation.Managers.All(cm => cm.ManagerId != userId));
         }
 
     }

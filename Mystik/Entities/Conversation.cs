@@ -31,8 +31,8 @@ namespace Mystik.Entities
                 Name = Name,
                 PasswordHashData = PasswordHashData,
                 Messages = await Messages.Where(m => m.ModifiedDate > since).GetJsonRepresentableMessages(),
-                Members = Members.Where(uc => uc.CreatedDate > since).Select(uc => uc.User.GetPublicData()),
-                Managers = Managers.Where(mc => mc.CreatedDate > since).Select(uc => uc.Manager.GetPublicData()),
+                Members = Members.Where(cm => cm.CreatedDate > since).Select(cm => cm.User.GetPublicData()),
+                Managers = Managers.Where(cm => cm.CreatedDate > since).Select(cm => cm.Manager.GetPublicData()),
             };
         }
 
@@ -44,12 +44,12 @@ namespace Mystik.Entities
         public bool HasBeenModifiedSince(DateTime since)
         {
             return ModifiedDate > since
-                   || Members.Any(uc => uc.CreatedDate > since || uc.User.ModifiedDate > since)
-                   || Managers.Any(mc => mc.CreatedDate > since)
+                   || Members.Any(cm => cm.CreatedDate > since || cm.User.ModifiedDate > since)
+                   || Managers.Any(cm => cm.CreatedDate > since)
                    || Messages.Any(m => m.ModifiedDate > since);
         }
 
-        public bool IsMember(Guid userId) => Members.Any(uc => uc.UserId == userId);
+        public bool IsMember(Guid userId) => Members.Any(cm => cm.UserId == userId);
 
         public IReadOnlyList<string> GetMembers()
         {

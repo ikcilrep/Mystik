@@ -52,7 +52,7 @@ namespace Mystik.Controllers
             {
                 return NotFound();
             }
-            else if (conversation.Members.All(uc => uc.UserId != currentUserId))
+            else if (conversation.Members.All(cm => cm.UserId != currentUserId))
             {
                 return Forbid();
             }
