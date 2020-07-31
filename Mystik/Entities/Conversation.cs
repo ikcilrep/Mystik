@@ -55,5 +55,22 @@ namespace Mystik.Entities
         {
             return Members.ToStringList();
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Conversation conversation &&
+                   Id.Equals(conversation.Id) &&
+                   Name == conversation.Name &&
+                   Managers.CollectionEqual(conversation.Managers, cm => cm.ManagerId) &&
+                   Members.CollectionEqual(conversation.Members, cm => cm.UserId) &&
+                   Messages.CollectionEqual(conversation.Messages, m => m.Id) &&
+                   PasswordHashData.SequenceEqual(conversation.PasswordHashData) &&
+                   ModifiedDate == conversation.ModifiedDate;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Name, Managers, Members, Messages, PasswordHashData, ModifiedDate);
+        }
     }
 }
