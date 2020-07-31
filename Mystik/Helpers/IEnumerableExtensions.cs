@@ -66,5 +66,21 @@ namespace Mystik.Helpers
         {
             return await users.GetJsonRepresentableUsers(DateTime.UnixEpoch);
         }
+        public static bool CollectionEqual<T>(
+           this IEnumerable<T> collection1,
+           IEnumerable<T> collection2,
+           Func<T, Guid> selector)
+        {
+            var collection1IsEmpty = collection1 == null || !collection1.Any();
+            var collection2IsEmpty = collection2 == null || !collection2.Any();
+
+            if (collection1IsEmpty && collection2IsEmpty)
+            {
+                return true;
+            }
+
+            return collection1IsEmpty == collection2IsEmpty
+                   && collection1.Select(selector).ToHashSet().SetEquals(collection2.Select(selector));
+        }
     }
 }
