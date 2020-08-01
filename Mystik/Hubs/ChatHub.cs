@@ -155,12 +155,13 @@ namespace Mystik.Hubs
         {
             if (await CanTheCurrentUserModifyTheConversation(conversationId))
             {
-                await _conversationService.AddMembers(conversationId, usersIds);
+                var newMembers = await _conversationService.AddMembers(conversationId, usersIds);
 
                 var conversation = await _conversationService.Retrieve(conversationId);
                 var representableConversation = await conversation.ToJsonRepresentableObject();
 
                 await Clients.Users(usersIds.ToStringList()).JoinConversation(representableConversation);
+                await Clients.Users(conversation.GetMembers()).AddConversationMembers(conversationId, newMembers);
             }
         }
 
