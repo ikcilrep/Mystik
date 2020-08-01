@@ -19,9 +19,10 @@ namespace Mystik.Services
 
         public async Task AddMembers(Guid id, IEnumerable<Guid> usersIds)
         {
-            if (usersIds.All(userId => _context.Users.Any(user => user.Id == userId)))
+            var existingUsers = usersIds.Where(userId => _context.Users.Any(user => user.Id == userId));
+            if (existingUsers.Any())
             {
-                var userConversations = usersIds.Select(userId => new ConversationMember
+                var userConversations = existingUsers.Select(userId => new ConversationMember
                 {
                     ConversationId = id,
                     UserId = userId,
