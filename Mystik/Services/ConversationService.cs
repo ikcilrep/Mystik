@@ -17,7 +17,7 @@ namespace Mystik.Services
             _context = context;
         }
 
-        public async Task AddMembers(Guid id, IEnumerable<Guid> usersIds)
+        public async Task<List<Guid>> AddMembers(Guid id, IEnumerable<Guid> usersIds)
         {
             var existingUsers = usersIds.Where(userId => _context.Users.Any(user => user.Id == userId));
             if (existingUsers.Any())
@@ -32,6 +32,7 @@ namespace Mystik.Services
                 _context.ConversationMembers.AddRange(userConversations);
                 await _context.SaveChangesAsync();
             }
+            return existingUsers.ToList();
         }
 
         public async Task<Conversation> Create(string name, byte[] passwordHashData, Guid userId)
