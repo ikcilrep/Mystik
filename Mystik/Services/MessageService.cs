@@ -68,10 +68,5 @@ namespace Mystik.Services
         {
             return await _context.ConversationMembers.AnyAsync(cm => cm.ConversationId == conversationId && cm.UserId == userId);
         }
-
-        public IEnumerable<Message> GetMessagesFromConversation(Guid conversationId)
-        {
-            return _context.Messages.Where(m => m.ConversationId == conversationId);
-        }
     }
 }
