@@ -16,5 +16,15 @@ namespace Tests
 
             Assert.True(userIsTheConversationMember);
         }
+
+        [Fact]
+        public async Task IsTheConversationMember_UserIsNotTheConversationMember_ReturnsFalse()
+        {
+            var userIsTheConversationMember = await MessageService.IsTheConversationMember(
+                Conversation.Id,
+                MockUserService.User1.Id);
+
+            Assert.False(userIsTheConversationMember);
+        }
     }
 }
