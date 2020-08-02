@@ -118,7 +118,7 @@ namespace Tests
         }
 
         [Fact]
-        public async Task ChangeName_ChangesTheCorrectEntity()
+        public async Task ChangeName_ModifiesTheCorrectValues()
         {
             var newName = "NewConversationName";
             await ConversationService.ChangeName(Conversation.Id, newName);

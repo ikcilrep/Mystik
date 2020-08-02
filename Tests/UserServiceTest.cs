@@ -58,7 +58,7 @@ namespace Tests
         }
 
         [Fact]
-        public async Task Update_ChangesValues()
+        public async Task Update_ModifiesTheCorrectValues()
         {
             await UserService.Update(
                 MockUserService.User2.Id,
