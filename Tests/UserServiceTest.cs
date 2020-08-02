@@ -181,6 +181,30 @@ namespace Tests
         }
 
         [Fact]
+        public async Task InviteFriends_ReturnsExistingNotInvitedUsers()
+        {
+            AddInvitation();
+
+            var inviterId = MockUserService.Admin.Id;
+            var invitedIds = new List<Guid>
+            {
+                MockUserService.User2.Id,
+                MockUserService.User1.Id,
+                MockUserService.Admin.Id
+            };
+
+            var actualExistingNotInvitedUsers = await UserService.InviteFriends(inviterId, invitedIds);
+
+            var expectedExistingNotInvitedUsers = new HashSet<string>
+            {
+                MockUserService.User1.Id.ToString(),
+                MockUserService.Admin.Id.ToString(),
+            };
+
+            Assert.True(expectedExistingNotInvitedUsers.SetEquals(actualExistingNotInvitedUsers));
+        }
+
+        [Fact]
         public async Task GetNotExisting_ReturnsCorrectIds()
         {
             AddFriend();
