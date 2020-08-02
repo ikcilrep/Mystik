@@ -152,6 +152,15 @@ namespace Tests
         }
 
         [Fact]
+        public async Task Delete_ReturnsAllMembers()
+        {
+            var usersToNotify = await ConversationService.Delete(Conversation.Id);
+
+            var expectedUsersToNotify = Conversation.GetMembers().ToHashSet();
+            Assert.True(expectedUsersToNotify.SetEquals(usersToNotify));
+        }
+
+        [Fact]
         public async Task GetAll_ReturnsTheCorrectEntities()
         {
             var actualEntities = await ConversationService.GetAll();
