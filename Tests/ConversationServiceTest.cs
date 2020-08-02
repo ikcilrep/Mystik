@@ -56,6 +56,17 @@ namespace Tests
         }
 
         [Fact]
+        public async Task AddMembers_ReturnsNewMembers()
+        {
+            var usersIds = new List<Guid> { MockUserService.User2.Id, MockUserService.NotExistingUser.Id };
+            var members = await ConversationService.AddMembers(Conversation.Id, usersIds);
+
+            var expectedMembers = new HashSet<Guid> { MockUserService.User2.Id };
+
+            Assert.True(members.ToHashSet().SetEquals(expectedMembers));
+        }
+
+        [Fact]
         public async Task DeleteMembers_RemovesExactlyOneEntity()
         {
             var usersIds = new List<Guid> { MockUserService.User1.Id };
