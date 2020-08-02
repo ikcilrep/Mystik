@@ -24,9 +24,16 @@ namespace Mystik.Entities
         public ICollection<Message> Messages { get; set; }
         public DateTime ModifiedDate { get; set; }
 
-        public IReadOnlyList<string> GetFriends()
+        public IReadOnlyList<string> GetRelatedUsers()
         {
-            return Friends1.Select(cof => cof.Friend1Id).ToStringList();
+            var friendsIds = Friends1.Select(cof => cof.Friend1Id).ToStringList();
+            var conversationMembersIds = ParticipatedConversations.SelectMany(cm => cm.Conversation.GetMembers())
+                                                                  .Where(id => id != Id.ToString());
+
+            var relatedUsersIdsSet = conversationMembersIds.ToHashSet();
+            relatedUsersIdsSet.UnionWith(friendsIds);
+
+            return relatedUsersIdsSet.ToStringList();
         }
 
         public User(string nickname, string username, string password)
