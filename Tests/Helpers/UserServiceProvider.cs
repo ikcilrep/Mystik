@@ -41,6 +41,7 @@ namespace Tests.Helpers
             Context.Database.EnsureCreated();
 
             Context.Add(MockUserService.Admin);
+            Context.Add(MockUserService.User1);
             Context.Add(MockUserService.User2);
 
             Context.SaveChanges();
