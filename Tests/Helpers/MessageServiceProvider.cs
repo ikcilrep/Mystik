@@ -14,6 +14,7 @@ namespace Mystik.Helpers
     {
         private readonly DbConnection _connection;
         protected MessageService MessageService { get; set; }
+        protected Conversation Conversation { get; set; }
         protected DataContext Context { get; set; }
 
         protected Message Message { get; set; }
@@ -38,35 +39,35 @@ namespace Mystik.Helpers
             Context.Database.EnsureDeleted();
             Context.Database.EnsureCreated();
 
-            var conversationId = Guid.NewGuid();
-
-            Context.Add(MockUserService.Admin);
-
-            Context.Add(new Conversation
+            Conversation = new Conversation
             {
-                Id = conversationId,
+                Id = Guid.NewGuid(),
                 Name = "Conversation",
                 PasswordHashData = new byte[] { },
                 ModifiedDate = DateTime.UtcNow
-            });
+            };
+
+            Context.Add(MockUserService.Admin);
+
+            Context.Add(Conversation);
 
             Context.Add(new ConversationMember
             {
-                ConversationId = conversationId,
+                ConversationId = Conversation.Id,
                 UserId = MockUserService.Admin.Id,
                 CreatedDate = DateTime.UtcNow
             });
 
             Context.Add(new ConversationManager
             {
-                ConversationId = conversationId,
+                ConversationId = Conversation.Id,
                 ManagerId = MockUserService.Admin.Id,
                 CreatedDate = DateTime.UtcNow
             });
 
             Message = new Message
             {
-                ConversationId = conversationId,
+                ConversationId = Conversation.Id,
                 SenderId = MockUserService.Admin.Id,
                 CreatedDate = DateTime.UtcNow,
                 ModifiedDate = DateTime.UtcNow
