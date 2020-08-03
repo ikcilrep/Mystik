@@ -50,5 +50,13 @@ namespace Tests
 
             Assert.True(Context.Messages.Any(m => m.Id == message.Id));
         }
+
+        [Fact]
+        public async Task Retrieve_ReturnsCorrectEntity()
+        {
+            var message = await MessageService.Retrieve(Message.Id);
+
+            Assert.Equal(Message.Id, message.Id);
+        }
     }
 }
