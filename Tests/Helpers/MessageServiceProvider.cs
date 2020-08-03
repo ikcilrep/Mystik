@@ -1,5 +1,6 @@
 using System;
 using System.Data.Common;
+using System.Linq;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -16,6 +17,7 @@ namespace Mystik.Helpers
         protected MessageService MessageService { get; set; }
         protected Conversation Conversation { get; set; }
         protected DataContext Context { get; set; }
+        protected int InitialNumberOfMessages { get; set; }
 
         protected Message Message { get; set; }
 
@@ -76,6 +78,8 @@ namespace Mystik.Helpers
             Context.Add(Message);
 
             Context.SaveChanges();
+
+            InitialNumberOfMessages = Context.Messages.Count();
         }
 
         private static DbConnection CreateInMemoryDatabase()
