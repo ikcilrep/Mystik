@@ -82,5 +82,15 @@ namespace Tests
 
             Assert.Equal(InitialNumberOfMessages - 1, Context.Messages.Count());
         }
+
+        [Fact]
+        public async Task Delete_RemovesTheCorrectEntity()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+
+            await MessageService.Delete(Message.Id);
+
+            Assert.False(Context.Messages.Any(m => m.Id == Message.Id));
+        }
     }
 }
