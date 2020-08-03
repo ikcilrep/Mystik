@@ -32,9 +32,23 @@ namespace Tests
         public async Task Create_AddsExactlyOneEntity()
         {
             AppSettings.EncryptedMessagesPath = "/tmp";
+
             await MessageService.Create(new byte[] { }, MockUserService.Admin.Id, Conversation.Id);
 
             Assert.Equal(InitialNumberOfMessages + 1, Context.Messages.Count());
+        }
+
+        [Fact]
+        public async Task Create_AddsCorrectEntity()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+
+            var message = await MessageService.Create(
+                new byte[] { },
+                MockUserService.Admin.Id,
+                Conversation.Id);
+
+            Assert.True(Context.Messages.Any(m => m.Id == message.Id));
         }
     }
 }
