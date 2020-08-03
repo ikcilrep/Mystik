@@ -253,14 +253,14 @@ namespace Mystik.Services
 
         public async Task<IReadOnlyList<string>> InviteFriends(Guid inviterId, List<Guid> invitedIds)
         {
-            var existingNotInvitedUsers = _context.Users.Include(u => u.Friends1)
-                                                        .Include(u => u.ReceivedInvitations)
-                                                        .Include(u => u.SentInvitations)
-                                                        .Where(u => invitedIds.Contains(u.Id)
-                                                                    && u.Friends1.All(cof => cof.Friend1Id != inviterId)
-                                                                    && u.ReceivedInvitations.All(i => i.InviterId != inviterId)
-                                                                    && u.SentInvitations.All(i => i.InvitedId != inviterId))
-                                                        .Select(u => u.Id).ToList();
+            var existingNotInvitedUsers = await _context.Users.Include(u => u.Friends1)
+                                                              .Include(u => u.ReceivedInvitations)
+                                                              .Include(u => u.SentInvitations)
+                                                              .Where(u => invitedIds.Contains(u.Id)
+                                                                            && u.Friends1.All(cof => cof.Friend1Id != inviterId)
+                                                                            && u.ReceivedInvitations.All(i => i.InviterId != inviterId)
+                                                                            && u.SentInvitations.All(i => i.InvitedId != inviterId))
+                                                              .Select(u => u.Id).ToListAsync();
             _context.AddRange(existingNotInvitedUsers.Select(invitedId => new Invitation
             {
                 InviterId = inviterId,
