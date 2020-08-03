@@ -25,9 +25,9 @@ namespace Tests
         public async Task Create_AddsExactlyOneEntity()
         {
             var user = await UserService.Create(
-                MockUserService.User1.Nickname,
-                MockUserService.User1.Username,
-                MockUserService.User1.Password);
+                MockUserService.NotExistingUser.Nickname,
+                MockUserService.NotExistingUser.Username,
+                MockUserService.NotExistingUser.Password);
 
             Assert.Equal(InitialNumberOfUsers + 1, Context.Users.Count());
         }
