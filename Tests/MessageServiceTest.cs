@@ -64,12 +64,23 @@ namespace Tests
         public async Task Edit_ModifiesTheCorrectEntity()
         {
             AppSettings.EncryptedMessagesPath = "/tmp";
+
             var expectedMessageContent = Encoding.UTF8.GetBytes("New message content!");
             await MessageService.Edit(Message.Id, expectedMessageContent);
 
             var actualMessageContent = await Message.GetEncryptedContent();
 
             Assert.True(expectedMessageContent.SequenceEqual(actualMessageContent));
+        }
+
+        [Fact]
+        public async Task Delete_RemovesExactlyOneEntity()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+
+            await MessageService.Delete(Message.Id);
+
+            Assert.Equal(InitialNumberOfMessages - 1, Context.Messages.Count());
         }
     }
 }
