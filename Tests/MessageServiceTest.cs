@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Mystik.Helpers;
 using Tests.Helpers;
@@ -57,6 +58,18 @@ namespace Tests
             var message = await MessageService.Retrieve(Message.Id);
 
             Assert.Equal(Message.Id, message.Id);
+        }
+
+        [Fact]
+        public async Task Edit_ModifiesTheCorrectEntity()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+            var expectedMessageContent = Encoding.UTF8.GetBytes("New message content!");
+            await MessageService.Edit(Message.Id, expectedMessageContent);
+
+            var actualMessageContent = await Message.GetEncryptedContent();
+
+            Assert.True(expectedMessageContent.SequenceEqual(actualMessageContent));
         }
     }
 }
