@@ -11,31 +11,14 @@ namespace Tests
     public class UserServiceTest : UserServiceProvider
     {
         [Fact]
-        public async Task Create_ReturnsCorrectUser()
-        {
-            var expectedUser = MockUserService.User1;
-
-            var actualUser = await UserService.Create(
-                expectedUser.Nickname,
-                expectedUser.Username,
-                expectedUser.Password);
-
-            actualUser.Id = expectedUser.Id;
-            actualUser.PasswordHash = expectedUser.PasswordHash;
-            actualUser.PasswordSalt = expectedUser.PasswordSalt;
-
-            Assert.Equal(expectedUser, actualUser);
-        }
-
-        [Fact]
-        public async Task Create_ReturnedUserHasAnId()
+        public async Task Create_AddsCorrectEntity()
         {
             var user = await UserService.Create(
-                MockUserService.User1.Nickname,
-                MockUserService.User1.Username,
-                MockUserService.User1.Password);
+                MockUserService.NotExistingUser.Nickname,
+                MockUserService.NotExistingUser.Username,
+                MockUserService.NotExistingUser.Password);
 
-            Assert.True(user.Id != null && user.Id != Guid.Empty);
+            Assert.True(Context.Users.Any(u => u.Id == user.Id));
         }
 
         [Fact]
