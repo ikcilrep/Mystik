@@ -73,6 +73,19 @@ namespace Mystik.Controllers
             return Ok(await user.ToJsonRepresentableObject(model.Since));
         }
 
+        [HttpGet("public/{id}")]
+        public async Task<IActionResult> GetPublicData(Guid id)
+        {
+            var user = await _userService.Retrieve(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user.GetPublicData());
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
