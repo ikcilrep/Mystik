@@ -1,15 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Mystik.Entities;
-using Mystik.Helpers;
-using Mystik.Models.User;
-using Mystik.Services;
 
 namespace Tests.Helpers
 {
-    public class MockUserService : IUserService
+    public class MockUserService
     {
         public HashSet<User> Users { get; set; }
         public HashSet<CoupleOfFriends> Friends { get; set; }
@@ -44,102 +39,6 @@ namespace Tests.Helpers
         public static UserWithPassword User1 => _user1;
         public static UserWithPassword User2 => _user2;
         public static UserWithPassword NotExistingUser => _notExistingUser;
-
-        public MockUserService()
-        {
-            Users = new HashSet<User>() { Admin, User1, User2 };
-        }
-
-        public Task<User> Authenticate(string username, string password)
-        {
-            return Task.Run(() => Users.FirstOrDefault(user => user.Username == username
-            && Hashing.DoesPasswordMatch(password, user.PasswordSalt, user.PasswordHash)));
-        }
-
-        public Task<User> Create(string nickname, string username, string password)
-        {
-            var user = new User(nickname, username, password);
-            Users.Add(user);
-            return Task.Run(() => user);
-        }
-
-        public Task<IReadOnlyList<string>> Delete(Guid id)
-        {
-            var user = Users.First(u => u.Id == id);
-            Users.Remove(user);
-            return Task.Run(() => user.GetRelatedUsers());
-        }
-
-        public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<User>> GetAll()
-        {
-            IEnumerable<User> users = Users;
-            return Task.Run(() => users);
-        }
-
-        public Task<User> Retrieve(Guid id)
-        {
-            return Task.Run(() => Users.FirstOrDefault(user => user.Id == id));
-        }
-
-        public Task<IReadOnlyList<string>> Update(Guid id, string newNickname, string newPassword)
-        {
-            var user = Users.FirstOrDefault(user => user.Id == id);
-            var usersToNotify = newNickname == user.Nickname ? new List<string>() : user.GetRelatedUsers();
-
-            user.Nickname = newNickname;
-            user.SetPassword(newPassword);
-
-            Users.RemoveWhere(user => user.Id == id);
-            Users.Add(user);
-            return Task.Run(() => usersToNotify);
-        }
-
-        public Task AddFriend(Guid inviterId, Guid invitedId)
-        {
-            Friends.Add(new CoupleOfFriends
-            {
-                Friend1Id = inviterId,
-                Friend2Id = invitedId,
-            });
-
-            Friends.Add(new CoupleOfFriends
-            {
-                Friend1Id = invitedId,
-                Friend2Id = inviterId,
-            });
-
-            return Task.CompletedTask;
-        }
-
-        public Task DeleteFriends(Guid id, List<Guid> usersIds)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IReadOnlyList<string>> InviteFriends(Guid inviterId, List<Guid> invitedIds)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task DeleteInvitations(Guid inviterId, List<Guid> invitedIds)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<bool> IsUserInvited(Guid inviterId, Guid invitedId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<UserRelatedEntities> GetNotExisting(Guid id, UserRelatedEntities model)
-        {
-            throw new NotImplementedException();
-        }
 
         public static void ReloadUsers()
         {
