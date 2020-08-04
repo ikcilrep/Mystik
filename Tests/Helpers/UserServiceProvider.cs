@@ -19,7 +19,7 @@ namespace Tests.Helpers
         protected int InitialNumberOfUsers { get; set; }
         protected int InitialNumberOfFriends { get; set; }
         protected int InitialNumberOfInvitations { get; set; }
-        protected Guid ConversationId { get; set; }
+        protected Conversation Conversation { get; set; }
 
 
         protected UserServiceProvider()
@@ -86,33 +86,34 @@ namespace Tests.Helpers
 
         protected void AddConversation()
         {
-            ConversationId = Guid.NewGuid();
-            Context.Add(new Conversation
+            Conversation = new Conversation
             {
-                Id = ConversationId,
+                Id = Guid.NewGuid(),
                 Name = "Conversation",
                 PasswordHashData = new byte[] { },
                 ModifiedDate = DateTime.UtcNow
-            });
+            };
+
+            Context.Add(Conversation);
 
             Context.Add(new ConversationManager
             {
                 ManagerId = MockUserService.Admin.Id,
-                ConversationId = ConversationId,
+                ConversationId = Conversation.Id,
                 CreatedDate = DateTime.UtcNow
             });
 
             Context.Add(new ConversationMember
             {
                 UserId = MockUserService.Admin.Id,
-                ConversationId = ConversationId,
+                ConversationId = Conversation.Id,
                 CreatedDate = DateTime.UtcNow
             });
 
             Context.Add(new ConversationMember
             {
                 UserId = MockUserService.User2.Id,
-                ConversationId = ConversationId,
+                ConversationId = Conversation.Id,
                 CreatedDate = DateTime.UtcNow
             });
 

@@ -199,7 +199,7 @@ namespace Tests
                 FriendsIds = new List<Guid> { MockUserService.Admin.Id, MockUserService.User1.Id },
                 InvitedIds = new List<Guid> { MockUserService.Admin.Id, MockUserService.User1.Id },
                 InvitersIds = new List<Guid> { MockUserService.Admin.Id, MockUserService.User1.Id },
-                ConversationIds = new List<Guid> { ConversationId, MockUserService.User2.Id },
+                ConversationIds = new List<Guid> { Conversation.Id, MockUserService.User2.Id },
                 ConversationMembersIds = new List<Guid> { MockUserService.Admin.Id,
                                                           MockUserService.User2.Id,
                                                           MockUserService.User1.Id },
