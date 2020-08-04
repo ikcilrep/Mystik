@@ -34,9 +34,16 @@ namespace Mystik.Hubs
                 && await _messageService.IsTheConversationMember(conversationId, currentUserId))
             {
                 var message = await _messageService.Create(encryptedContent, currentUserId, conversationId);
-                var sender = await _userService.Retrieve(currentUserId);
+                var messageToSend = new JsonRepresentableMessage
+                {
+                    Id = message.Id,
+                    EncryptedContent = encryptedContent,
+                    CreatedDate = message.CreatedDate,
+                    Sender = new UserPublicData { Id = currentUserId }
+                };
+
                 await Clients.Users(conversation.GetMembers())
-                             .ReceiveMessage(message.Id, encryptedContent, message.CreatedDate, sender.Nickname);
+                             .ReceiveMessage(messageToSend);
             }
         }
 

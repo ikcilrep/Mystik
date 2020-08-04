@@ -7,7 +7,7 @@ namespace Mystik.Hubs
 {
     public interface IChatClient
     {
-        Task ReceiveMessage(Guid messageId, byte[] encryptedContent, DateTime createdDate, string senderNickname);
+        Task ReceiveMessage(JsonRepresentableMessage message);
         Task EditMessage(Guid messageId, byte[] newEncryptedContent);
         Task DeleteMessage(Guid messageId);
         Task JoinConversation(JsonRepresentableConversation conversation);
