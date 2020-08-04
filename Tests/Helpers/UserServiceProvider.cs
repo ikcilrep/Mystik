@@ -20,6 +20,8 @@ namespace Tests.Helpers
         protected int InitialNumberOfFriends { get; set; }
         protected int InitialNumberOfInvitations { get; set; }
         protected Conversation Conversation { get; set; }
+        protected CoupleOfFriends Friends1 { get; set; }
+        protected CoupleOfFriends Friends2 { get; set; }
 
 
         protected UserServiceProvider()
@@ -52,19 +54,23 @@ namespace Tests.Helpers
 
         protected void AddFriend()
         {
-            Context.Add(new CoupleOfFriends
+            Friends1 = new CoupleOfFriends
             {
                 Friend1Id = MockUserService.Admin.Id,
                 Friend2Id = MockUserService.User2.Id,
                 CreatedDate = DateTime.UtcNow
-            });
+            };
 
-            Context.Add(new CoupleOfFriends
+            Friends2 = new CoupleOfFriends
             {
                 Friend1Id = MockUserService.User2.Id,
                 Friend2Id = MockUserService.Admin.Id,
                 CreatedDate = DateTime.UtcNow
-            });
+            };
+
+            Context.Add(Friends1);
+
+            Context.Add(Friends2);
 
             Context.SaveChanges();
 
