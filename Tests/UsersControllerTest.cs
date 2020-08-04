@@ -57,5 +57,15 @@ namespace Tests
 
             Assert.Equal(expectedNotExistingUserRelatedEntities, actualNotExistingUserRelatedEntities);
         }
+
+        [Fact]
+        public async Task GetRemove_AsUnauthorizedUser_Forbids()
+        {
+            UsersController = UsersController.WithUser1Identity();
+
+            var result = await UsersController.GetRemoved(MockUserService.Admin.Id, new UserRelatedEntities { });
+
+            Assert.IsAssignableFrom<ForbidResult>(result);
+        }
     }
 }
