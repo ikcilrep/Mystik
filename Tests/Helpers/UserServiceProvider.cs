@@ -22,7 +22,7 @@ namespace Tests.Helpers
         protected Conversation Conversation { get; set; }
         protected CoupleOfFriends Friends1 { get; set; }
         protected CoupleOfFriends Friends2 { get; set; }
-
+        protected Invitation Invitation { get; set; }
 
         protected UserServiceProvider()
         {
@@ -79,12 +79,14 @@ namespace Tests.Helpers
 
         protected void AddInvitation()
         {
-            Context.Add(new Invitation
+            Invitation = new Invitation
             {
                 InviterId = MockUserService.Admin.Id,
                 InvitedId = MockUserService.User2.Id,
                 CreatedDate = DateTime.UtcNow
-            });
+            };
+
+            Context.Add(Invitation);
             Context.SaveChanges();
 
             InitialNumberOfInvitations = Context.Invitations.Count();
