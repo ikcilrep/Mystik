@@ -83,5 +83,20 @@ namespace Tests
 
             Assert.True(expectedUsersIds.SetEquals(actualUsersIds));
         }
+
+        [Fact]
+        public async Task GetById_AsAuthorizedUser_ReturnsCorrectEntity()
+        {
+            UsersController = UsersController.WithUser1Identity();
+
+            var model = new Get { };
+            var jsonRepresentableUserResult = await UsersController.Get(MockUserService.User1.Id, model);
+
+            Assert.IsAssignableFrom<OkObjectResult>(jsonRepresentableUserResult);
+
+            var jsonRepresentableUser = (jsonRepresentableUserResult as OkObjectResult).Value as JsonRepresentableUser;
+
+            Assert.Equal(jsonRepresentableUser.Id, MockUserService.User1.Id);
+        }
     }
 }
