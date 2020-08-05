@@ -41,23 +41,5 @@ namespace Mystik.Controllers
 
             return result;
         }
-
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
-        {
-            var currentUserId = Guid.Parse(User.Identity.Name);
-            var conversation = await _conversationService.Retrieve(id);
-
-            if (conversation == null)
-            {
-                return NotFound();
-            }
-            else if (conversation.Members.All(cm => cm.UserId != currentUserId))
-            {
-                return Forbid();
-            }
-
-            return Ok(await conversation.ToJsonRepresentableObject());
-        }
     }
 }
