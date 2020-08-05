@@ -296,7 +296,8 @@ namespace Tests
         [Fact]
         public async Task Search_WithGuid_ReturnsCorrectEntity()
         {
-            var actualUsersPublicData = await UserService.Search(MockUserService.User1.Id.ToString());
+            var query = MockUserService.User1.Id.ToString();
+            var actualUsersPublicData = await UserService.Search(query);
 
             var expectedUsersIds = new HashSet<Guid>
             {
