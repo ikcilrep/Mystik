@@ -184,5 +184,21 @@ namespace Tests
 
             Assert.Equal(resultValue.GetProperty("Id"), MockUserService.User1.Id);
         }
+
+        [Fact]
+        public async Task Authenticate_WithIncorrectCredentials_ReturnsBadRequest()
+        {
+            AppSettings.Secret = "12345678901234567890098765432";
+
+            var model = new Authentication
+            {
+                Username = MockUserService.User1.Username,
+                Password = MockUserService.User2.Password,
+            };
+
+            var result = await UsersController.Authenticate(model);
+
+            Assert.IsAssignableFrom<BadRequestObjectResult>(result);
+        }
     }
 }
