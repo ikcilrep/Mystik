@@ -143,5 +143,15 @@ namespace Tests
 
             Assert.IsAssignableFrom<OkResult>(result);
         }
+
+        [Fact]
+        public async Task Delete_AsUnauthorizedUser_Forbids()
+        {
+            UsersController = UsersController.WithUser1Identity();
+
+            var result = await UsersController.Delete(MockUserService.User2.Id);
+
+            Assert.IsAssignableFrom<ForbidResult>(result);
+        }
     }
 }
