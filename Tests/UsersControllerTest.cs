@@ -200,5 +200,20 @@ namespace Tests
 
             Assert.IsAssignableFrom<BadRequestObjectResult>(result);
         }
+
+        [Fact]
+        public async Task Register_WithValidCredentials_ReturnsOk()
+        {
+            var model = new Registration
+            {
+                Nickname = MockUserService.NotExistingUser.Nickname,
+                Username = MockUserService.NotExistingUser.Username,
+                Password = MockUserService.NotExistingUser.Password,
+            };
+
+            var result = await UsersController.Register(model);
+
+            Assert.IsAssignableFrom<OkResult>(result);
+        }
     }
 }
