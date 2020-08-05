@@ -123,5 +123,15 @@ namespace Tests
             var publicData = (publicDataResult as OkObjectResult).Value as UserPublicData;
             Assert.Equal(MockUserService.User2.Id, publicData.Id);
         }
+
+        [Fact]
+        public async Task GetPublicData_UserDoesNotExist_ReturnsNotFound()
+        {
+            UsersController = UsersController.WithUser1Identity();
+
+            var publicDataResult = await UsersController.GetPublicData(MockUserService.NotExistingUser.Id);
+
+            Assert.IsAssignableFrom<NotFoundResult>(publicDataResult);
+        }
     }
 }
