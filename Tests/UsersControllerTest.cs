@@ -96,7 +96,7 @@ namespace Tests
 
             var jsonRepresentableUser = (jsonRepresentableUserResult as OkObjectResult).Value as JsonRepresentableUser;
 
-            Assert.Equal(jsonRepresentableUser.Id, MockUserService.User1.Id);
+            Assert.Equal(MockUserService.User1.Id, jsonRepresentableUser.Id);
         }
 
         [Fact]
