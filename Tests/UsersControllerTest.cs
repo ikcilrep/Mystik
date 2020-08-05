@@ -109,5 +109,19 @@ namespace Tests
 
             Assert.IsAssignableFrom<ForbidResult>(jsonRepresentableUserResult);
         }
+
+        [Fact]
+        public async Task GetPublicData_UserExists_ReturnsCorrectEntity()
+        {
+            UsersController = UsersController.WithUser1Identity();
+
+            var publicDataResult = await UsersController.GetPublicData(MockUserService.User2.Id);
+
+
+            Assert.IsAssignableFrom<OkObjectResult>(publicDataResult);
+
+            var publicData = (publicDataResult as OkObjectResult).Value as UserPublicData;
+            Assert.Equal(MockUserService.User2.Id, publicData.Id);
+        }
     }
 }
