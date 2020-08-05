@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Mystik.Entities;
+using Mystik.Helpers;
 using Mystik.Models.User;
 using Tests.Helpers;
 using Xunit;
@@ -162,6 +163,26 @@ namespace Tests
             await UsersController.Delete(MockUserService.User2.Id);
 
             Assert.Equal(InitialNumberOfUsers, Context.Users.Count());
+        }
+
+        [Fact]
+        public async Task Authenticate_WithCorrectCredentials_ReturnsCorrectEntity()
+        {
+            AppSettings.Secret = "12345678901234567890098765432";
+
+            var model = new Authentication
+            {
+                Username = MockUserService.User1.Username,
+                Password = MockUserService.User1.Password,
+            };
+
+            var result = await UsersController.Authenticate(model);
+
+            Assert.IsAssignableFrom<OkObjectResult>(result);
+
+            var resultValue = (result as OkObjectResult).Value;
+
+            Assert.Equal(resultValue.GetProperty("Id"), MockUserService.User1.Id);
         }
     }
 }
