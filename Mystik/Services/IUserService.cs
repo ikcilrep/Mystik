@@ -19,5 +19,6 @@ namespace Mystik.Services
         Task DeleteInvitations(Guid inviterId, List<Guid> invitedIds);
         Task<bool> IsUserInvited(Guid inviterId, Guid invitedId);
         Task<IEnumerable<User>> GetAll();
+        Task<IEnumerable<UserPublicData>> Search(string query);
     }
 }

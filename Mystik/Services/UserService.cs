@@ -311,5 +311,21 @@ namespace Mystik.Services
                                                                                                                      .All(cm => id != cm.ManagerId)),
             };
         }
+
+        public async Task<IEnumerable<UserPublicData>> Search(string query)
+        {
+            var id = new Guid();
+            if (Guid.TryParse(query, out id))
+            {
+                var user = await _context.Users.FindAsync(id);
+                if (user != null)
+                {
+                    return new List<UserPublicData> { user.GetPublicData() };
+                }
+            }
+
+            return _context.Users.Where(u => u.Nickname.Contains(query))
+                                 .Select(u => u.GetPublicData());
+        }
     }
 }
