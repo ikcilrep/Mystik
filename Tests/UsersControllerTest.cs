@@ -98,5 +98,16 @@ namespace Tests
 
             Assert.Equal(jsonRepresentableUser.Id, MockUserService.User1.Id);
         }
+
+        [Fact]
+        public async Task GetById_AsUnauthorizedUser_Forbids()
+        {
+            UsersController = UsersController.WithUser1Identity();
+
+            var model = new Get { };
+            var jsonRepresentableUserResult = await UsersController.Get(MockUserService.User2.Id, model);
+
+            Assert.IsAssignableFrom<ForbidResult>(jsonRepresentableUserResult);
+        }
     }
 }
