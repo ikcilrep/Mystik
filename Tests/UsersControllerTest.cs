@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Mystik.Entities;
+using Mystik.Models.User;
 using Tests.Helpers;
 using Xunit;
 
@@ -66,6 +67,21 @@ namespace Tests
             var result = await UsersController.GetRemoved(MockUserService.Admin.Id, new UserRelatedEntities { });
 
             Assert.IsAssignableFrom<ForbidResult>(result);
+        }
+
+        [Fact]
+        public async Task Get_ReturnsCorrectEntities()
+        {
+            UsersController = UsersController.WithAdminIdentity();
+
+            var model = new Get { };
+
+            var jsonRepresentableUsers = await UsersController.Get(model);
+
+            var expectedUsersIds = Context.Users.Select(u => u.Id).ToHashSet();
+            var actualUsersIds = jsonRepresentableUsers.Select(jru => jru.Id);
+
+            Assert.True(expectedUsersIds.SetEquals(actualUsersIds));
         }
     }
 }
