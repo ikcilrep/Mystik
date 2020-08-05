@@ -133,5 +133,15 @@ namespace Tests
 
             Assert.IsAssignableFrom<NotFoundResult>(publicDataResult);
         }
+
+        [Fact]
+        public async Task Delete_AsAuthorizedUser_ReturnsOk()
+        {
+            UsersController = UsersController.WithUser1Identity();
+
+            var result = await UsersController.Delete(MockUserService.User1.Id);
+
+            Assert.IsAssignableFrom<OkResult>(result);
+        }
     }
 }
