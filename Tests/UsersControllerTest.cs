@@ -246,5 +246,21 @@ namespace Tests
 
             Assert.True(expectedUsersIds.SetEquals(actualUsersIds));
         }
+
+        [Fact]
+        public async Task Search_WithGuid_ReturnsCorrectEntity()
+        {
+            var query = MockUserService.User1.Id.ToString();
+            var actualUsersPublicData = await UsersController.Search(query);
+
+            var expectedUsersIds = new HashSet<Guid>
+            {
+                MockUserService.User1.Id,
+            };
+
+            var actualUsersIds = actualUsersPublicData.Select(upd => upd.Id);
+
+            Assert.True(expectedUsersIds.SetEquals(actualUsersIds));
+        }
     }
 }
