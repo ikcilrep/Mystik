@@ -124,8 +124,6 @@ namespace Mystik.Controllers
             return Ok(new
             {
                 Id = user.Id,
-                Nickname = user.Nickname,
-                Username = user.Username,
                 Token = tokenString
             });
         }
