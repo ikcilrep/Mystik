@@ -230,5 +230,21 @@ namespace Tests
 
             Assert.IsAssignableFrom<BadRequestObjectResult>(result);
         }
+
+        [Fact]
+        public async Task Search_WithNicknameFragment_ReturnsCorrectEntities()
+        {
+            var actualUsersPublicData = await UsersController.Search("er");
+
+            var expectedUsersIds = new HashSet<Guid>
+            {
+                MockUserService.User1.Id,
+                MockUserService.User2.Id,
+            };
+
+            var actualUsersIds = actualUsersPublicData.Select(upd => upd.Id);
+
+            Assert.True(expectedUsersIds.SetEquals(actualUsersIds));
+        }
     }
 }
