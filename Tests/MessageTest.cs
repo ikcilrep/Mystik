@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Mystik.Entities;
@@ -44,6 +45,14 @@ namespace Tests
             await Message.SetEncryptedContent(new byte[] { });
 
             Assert.NotEqual(modifiedDateBefore, Message.ModifiedDate);
+        }
+
+        [Fact]
+        public void DeleteEncryptedContent_DeletesData()
+        {
+            Message.DeleteEncryptedContent();
+
+            Assert.ThrowsAsync<DirectoryNotFoundException>(() => Message.GetEncryptedContent());
         }
     }
 }
