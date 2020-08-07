@@ -22,7 +22,6 @@ namespace Tests
                 CreatedDate = DateTime.UtcNow,
                 ModifiedDate = DateTime.UtcNow
             };
-
         }
 
         [Fact]
@@ -35,6 +34,17 @@ namespace Tests
 
             var actualData = await Message.GetEncryptedContent();
             Assert.Equal(expectedData, actualData);
+        }
+
+        [Fact]
+        public async Task SetEncryptedContent_ModifiesModifiedDate()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+            var modifiedDateBefore = Message.ModifiedDate;
+
+            await Message.SetEncryptedContent(new byte[] { });
+
+            Assert.NotEqual(modifiedDateBefore, Message.ModifiedDate);
         }
     }
 }
