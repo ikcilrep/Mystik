@@ -24,7 +24,6 @@ namespace Mystik.Services
                 SenderId = senderId,
                 ConversationId = conversationId,
                 CreatedDate = DateTime.UtcNow,
-                ModifiedDate = DateTime.UtcNow,
             };
 
             _context.Add(message);
@@ -59,7 +58,6 @@ namespace Mystik.Services
             var message = await _context.FindAsync<Message>(id);
 
             await message.SetEncryptedContent(newEncryptedContent);
-            message.ModifiedDate = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
         }

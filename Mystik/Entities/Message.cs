@@ -22,6 +22,7 @@ namespace Mystik.Entities
         public async Task SetEncryptedContent(byte[] encryptedContent)
         {
             await File.WriteAllBytesAsync(EncryptedContentPath, encryptedContent);
+            ModifiedDate = DateTime.UtcNow;
         }
 
         public async Task<byte[]> GetEncryptedContent() => await File.ReadAllBytesAsync(EncryptedContentPath);
