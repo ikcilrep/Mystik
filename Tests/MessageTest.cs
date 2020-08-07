@@ -10,12 +10,11 @@ namespace Tests
 {
     public class MessageTest
     {
-        [Fact]
-        public async Task GetEncryptedContent_ReturnsCorrectData()
-        {
-            AppSettings.EncryptedMessagesPath = "/tmp";
+        protected Message Message { get; set; }
 
-            var message = new Message
+        public MessageTest()
+        {
+            Message = new Message
             {
                 Id = Guid.NewGuid(),
                 SenderId = MockUserService.User1.Id,
@@ -24,10 +23,17 @@ namespace Tests
                 ModifiedDate = DateTime.UtcNow
             };
 
-            var expectedData = Encoding.UTF8.GetBytes("Miau.");
-            await message.SetEncryptedContent(expectedData);
+        }
 
-            var actualData = await message.GetEncryptedContent();
+        [Fact]
+        public async Task GetEncryptedContent_ReturnsCorrectData()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+
+            var expectedData = Encoding.UTF8.GetBytes("Miau.");
+            await Message.SetEncryptedContent(expectedData);
+
+            var actualData = await Message.GetEncryptedContent();
             Assert.Equal(expectedData, actualData);
         }
     }
