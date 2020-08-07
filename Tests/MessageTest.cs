@@ -14,6 +14,8 @@ namespace Tests
 
         public MessageTest()
         {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+
             Message = new Message
             {
                 Id = Guid.NewGuid(),
@@ -27,8 +29,6 @@ namespace Tests
         [Fact]
         public async Task GetEncryptedContent_ReturnsCorrectData()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
-
             var expectedData = Encoding.UTF8.GetBytes("Miau.");
             await Message.SetEncryptedContent(expectedData);
 
@@ -39,7 +39,6 @@ namespace Tests
         [Fact]
         public async Task SetEncryptedContent_ModifiesModifiedDate()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             var modifiedDateBefore = Message.ModifiedDate;
 
             await Message.SetEncryptedContent(new byte[] { });
