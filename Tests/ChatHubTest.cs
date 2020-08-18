@@ -155,5 +155,23 @@ namespace Tests
 
             all.VerifyAll();
         }
+
+        [Fact]
+        public async Task DeleteConversation_UserIsTheManager_ConversationIsDeleted()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+            ChatHub = ChatHub.WithAdminIdentity();
+
+            var mockClients = new Mock<IHubCallerClients<IChatClient>>();
+            var all = new Mock<IChatClient>();
+            ChatHub.Clients = mockClients.Object;
+
+            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            all.Setup(m => m.LeaveConversation(It.IsAny<Guid>()));
+
+            await ChatHub.DeleteConversation(Conversation.Id);
+
+            all.VerifyAll();
+        }
     }
 }
