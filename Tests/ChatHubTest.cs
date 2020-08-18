@@ -96,5 +96,26 @@ namespace Tests
 
             all.Verify(m => m.EditMessage(It.IsAny<Guid>(), It.IsAny<byte[]>()), Times.Never);
         }
+
+        [Fact]
+        public async Task DeleteMessage_UserIsTheSender_MessageIsDeleted()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+            ChatHub = ChatHub.WithUser1Identity();
+
+            var mockClients = new Mock<IHubCallerClients<IChatClient>>();
+            var all = new Mock<IChatClient>();
+            ChatHub.Clients = mockClients.Object;
+
+            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            all.Setup(m => m.DeleteMessage(It.IsAny<Guid>()));
+
+            var encryptedContent = Encoding.UTF7.GetBytes("Awfully old and ugly message.");
+            await Message.SetEncryptedContent(encryptedContent);
+
+            await ChatHub.DeleteMessage(Message.Id); 
+
+            all.VerifyAll();
+        }
     }
 }
