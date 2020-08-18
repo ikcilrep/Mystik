@@ -32,8 +32,27 @@ namespace Tests
 
             var message = Encoding.UTF8.GetBytes("Surprisingly encrypted message.");
             await ChatHub.SendMessage(message, Conversation.Id);
-            
+
             all.VerifyAll();
+        }
+
+        [Fact]
+        public async Task SendMessage_UserIsNotInConversation_MessageIsNotReceived()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+            ChatHub = ChatHub.WithUser2Identity();
+
+            var mockClients = new Mock<IHubCallerClients<IChatClient>>();
+            var all = new Mock<IChatClient>();
+            ChatHub.Clients = mockClients.Object;
+
+            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            mockClients.Setup(m => m.All).Returns(all.Object);
+
+            var message = Encoding.UTF8.GetBytes("Surprisingly encrypted message.");
+            await ChatHub.SendMessage(message, Conversation.Id);
+
+            all.Verify(m => m.ReceiveMessage(It.IsAny<JsonRepresentableMessage>()), Times.Never);
         }
     }
 }
