@@ -65,6 +65,8 @@ namespace Tests
             mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
             mockClients.Setup(m => m.All).Returns(all.Object);
 
+            all.Setup(m => m.EditMessage(It.IsAny<Guid>(), It.IsAny<byte[]>()));
+
             var oldEncryptedContent = Encoding.UTF8.GetBytes("Awfully old and ugly message.");
             await Message.SetEncryptedContent(oldEncryptedContent);
 
@@ -75,7 +77,7 @@ namespace Tests
         }
 
         [Fact]
-        public async Task EditMessage_UserIsNotTheSender_MessageIsEdited()
+        public async Task EditMessage_UserIsNotTheSender_MessageIsNotEdited()
         {
             AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithUser2Identity();
