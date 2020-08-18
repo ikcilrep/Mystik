@@ -51,7 +51,9 @@ namespace Mystik.Services
                 Name = name,
                 PasswordHashData = passwordHashData,
                 Managers = new HashSet<ConversationManager> { managedConversation },
-                ModifiedDate = DateTime.UtcNow
+                ModifiedDate = DateTime.UtcNow,
+                Messages = new HashSet<Message>{},
+                Members = new HashSet<ConversationMember> {}
             };
             _context.Add(conversation);
             _context.Add(managedConversation);
