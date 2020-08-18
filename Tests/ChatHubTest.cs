@@ -80,7 +80,7 @@ namespace Tests
         public async Task EditMessage_UserIsNotTheSender_MessageIsNotEdited()
         {
             AppSettings.EncryptedMessagesPath = "/tmp";
-            ChatHub = ChatHub.WithUser2Identity();
+            ChatHub = ChatHub.WithAdminIdentity();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -113,7 +113,7 @@ namespace Tests
             var encryptedContent = Encoding.UTF7.GetBytes("Awfully old and ugly message.");
             await Message.SetEncryptedContent(encryptedContent);
 
-            await ChatHub.DeleteMessage(Message.Id); 
+            await ChatHub.DeleteMessage(Message.Id);
 
             all.VerifyAll();
         }
@@ -122,7 +122,7 @@ namespace Tests
         public async Task DeleteMessage_UserIsNotTheSender_MessageIsNotDeleted()
         {
             AppSettings.EncryptedMessagesPath = "/tmp";
-            ChatHub = ChatHub.WithUser2Identity();
+            ChatHub = ChatHub.WithAdminIdentity();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -133,10 +133,9 @@ namespace Tests
             var encryptedContent = Encoding.UTF7.GetBytes("Awfully old and ugly message.");
             await Message.SetEncryptedContent(encryptedContent);
 
-            await ChatHub.DeleteMessage(Message.Id); 
+            await ChatHub.DeleteMessage(Message.Id);
 
             all.Verify(m => m.DeleteMessage(It.IsAny<Guid>()), Times.Never);
         }
-        
     }
 }
