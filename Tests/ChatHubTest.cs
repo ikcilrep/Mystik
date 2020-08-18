@@ -137,5 +137,23 @@ namespace Tests
 
             all.Verify(m => m.DeleteMessage(It.IsAny<Guid>()), Times.Never);
         }
+
+        [Fact]
+        public async Task CreateConversation_AddedUserJoinsTheConversation()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+            ChatHub = ChatHub.WithUser1Identity();
+
+            var mockClients = new Mock<IHubCallerClients<IChatClient>>();
+            var all = new Mock<IChatClient>();
+            ChatHub.Clients = mockClients.Object;
+
+            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            all.Setup(m => m.JoinConversation(It.IsAny<JsonRepresentableConversation>()));
+
+            await ChatHub.CreateConversation("Some Conversation", new byte[] { }, new List<Guid> { MockUserService.User1.Id });
+
+            all.VerifyAll();
+        }
     }
 }
