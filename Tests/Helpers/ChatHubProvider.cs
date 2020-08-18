@@ -19,6 +19,7 @@ namespace Tests.Helpers
         protected ChatHub ChatHub { get; set; }
         protected DataContext Context { get; set; }
         protected Conversation Conversation { get; set; }
+        protected Message Message { get; private set; }
 
         protected ChatHubProvider()
         {
@@ -29,7 +30,7 @@ namespace Tests.Helpers
             _connection = RelationalOptionsExtension.Extract(options).Connection;
 
             Context = new DataContext(options);
-
+            
             Seed();
 
             MessageService = new MessageService(Context);
@@ -78,6 +79,17 @@ namespace Tests.Helpers
                 ManagerId = MockUserService.Admin.Id,
                 CreatedDate = DateTime.UtcNow
             });
+
+            Message = new Message
+            {
+                Id = Guid.NewGuid(),
+                ConversationId = Conversation.Id,
+                SenderId = MockUserService.User1.Id,
+                CreatedDate = DateTime.UtcNow,
+                ModifiedDate = DateTime.UtcNow
+            };
+
+            Context.Add(Message);
 
             Context.SaveChanges();
         }
