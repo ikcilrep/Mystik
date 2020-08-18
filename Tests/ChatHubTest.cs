@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
@@ -27,7 +26,6 @@ namespace Tests
             ChatHub.Clients = mockClients.Object;
 
             mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
-            mockClients.Setup(m => m.All).Returns(all.Object);
             all.Setup(m => m.ReceiveMessage(It.IsAny<JsonRepresentableMessage>()));
 
             var message = Encoding.UTF8.GetBytes("Surprisingly encrypted message.");
@@ -47,7 +45,6 @@ namespace Tests
             ChatHub.Clients = mockClients.Object;
 
             mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
-            mockClients.Setup(m => m.All).Returns(all.Object);
 
             var message = Encoding.UTF8.GetBytes("Surprisingly encrypted message.");
             await ChatHub.SendMessage(message, Conversation.Id);
