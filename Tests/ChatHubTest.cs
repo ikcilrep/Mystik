@@ -71,10 +71,31 @@ namespace Tests
             var oldEncryptedContent = Encoding.UTF8.GetBytes("Awfully old and ugly message.");
             await Message.SetEncryptedContent(oldEncryptedContent);
 
-            var newEncryptedContent = Encoding.UTF8.GetBytes("Brand new messag.");
+            var newEncryptedContent = Encoding.UTF8.GetBytes("Brand new message.");
             await ChatHub.EditMessage(Message.Id, newEncryptedContent);
 
             all.VerifyAll();
+        }
+
+        [Fact]
+        public async Task EditMessage_UserIsNotTheAuthor_MessageIsEdited()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+            ChatHub = ChatHub.WithUser2Identity();
+
+            var mockClients = new Mock<IHubCallerClients<IChatClient>>();
+            var all = new Mock<IChatClient>();
+            ChatHub.Clients = mockClients.Object;
+
+            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+
+            var oldEncryptedContent = Encoding.UTF8.GetBytes("Awfully old and ugly message.");
+            await Message.SetEncryptedContent(oldEncryptedContent);
+
+            var newEncryptedContent = Encoding.UTF8.GetBytes("Brand new message.");
+            await ChatHub.EditMessage(Message.Id, newEncryptedContent);
+
+            all.Verify(m => m.EditMessage(It.IsAny<Guid>(), It.IsAny<byte[]>()), Times.Never);
         }
     }
 }
