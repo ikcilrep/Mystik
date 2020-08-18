@@ -54,5 +54,27 @@ namespace Tests
 
             all.Verify(m => m.ReceiveMessage(It.IsAny<JsonRepresentableMessage>()), Times.Never);
         }
+
+        [Fact]
+        public async Task EditMessage_UserIsTheAuthor_MessageIsEdited()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+            ChatHub = ChatHub.WithUser1Identity();
+
+            var mockClients = new Mock<IHubCallerClients<IChatClient>>();
+            var all = new Mock<IChatClient>();
+            ChatHub.Clients = mockClients.Object;
+
+            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            mockClients.Setup(m => m.All).Returns(all.Object);
+
+            var oldEncryptedContent = Encoding.UTF8.GetBytes("Awfully old and ugly message.");
+            await Message.SetEncryptedContent(oldEncryptedContent);
+
+            var newEncryptedContent = Encoding.UTF8.GetBytes("Brand new messag.");
+            await ChatHub.EditMessage(Message.Id, newEncryptedContent);
+
+            all.VerifyAll();
+        }
     }
 }
