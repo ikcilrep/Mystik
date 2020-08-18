@@ -56,7 +56,7 @@ namespace Tests
         }
 
         [Fact]
-        public async Task EditMessage_UserIsTheAuthor_MessageIsEdited()
+        public async Task EditMessage_UserIsTheSender_MessageIsEdited()
         {
             AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithUser1Identity();
@@ -78,7 +78,7 @@ namespace Tests
         }
 
         [Fact]
-        public async Task EditMessage_UserIsNotTheAuthor_MessageIsEdited()
+        public async Task EditMessage_UserIsNotTheSender_MessageIsEdited()
         {
             AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithUser2Identity();
