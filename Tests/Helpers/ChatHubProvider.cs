@@ -43,6 +43,7 @@ namespace Tests.Helpers
         {
             Context.Database.EnsureDeleted();
             Context.Database.EnsureCreated();
+
             Conversation = new Conversation
             {
                 Id = Guid.NewGuid(),
@@ -52,6 +53,8 @@ namespace Tests.Helpers
             };
 
             Context.Add(MockUserService.Admin);
+            Context.Add(MockUserService.User1);
+            Context.Add(MockUserService.User2);
 
             Context.Add(Conversation);
 
@@ -59,6 +62,13 @@ namespace Tests.Helpers
             {
                 ConversationId = Conversation.Id,
                 UserId = MockUserService.Admin.Id,
+                CreatedDate = DateTime.UtcNow
+            });
+
+            Context.Add(new ConversationMember
+            {
+                ConversationId = Conversation.Id,
+                UserId = MockUserService.User1.Id,
                 CreatedDate = DateTime.UtcNow
             });
 
