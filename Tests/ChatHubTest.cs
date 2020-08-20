@@ -67,8 +67,7 @@ namespace Tests
 
             all.Setup(m => m.EditMessage(It.IsAny<Guid>(), It.IsAny<byte[]>()));
 
-            var oldEncryptedContent = Encoding.UTF8.GetBytes("Awfully old and ugly message.");
-            await Message.SetEncryptedContent(oldEncryptedContent);
+            await SetMessageContent();
 
             var newEncryptedContent = Encoding.UTF8.GetBytes("Brand new message.");
             await ChatHub.EditMessage(Message.Id, newEncryptedContent);
@@ -88,8 +87,7 @@ namespace Tests
 
             mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
 
-            var oldEncryptedContent = Encoding.UTF8.GetBytes("Awfully old and ugly message.");
-            await Message.SetEncryptedContent(oldEncryptedContent);
+            await SetMessageContent();
 
             var newEncryptedContent = Encoding.UTF8.GetBytes("Brand new message.");
             await ChatHub.EditMessage(Message.Id, newEncryptedContent);
@@ -110,8 +108,7 @@ namespace Tests
             mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
             all.Setup(m => m.DeleteMessage(It.IsAny<Guid>()));
 
-            var encryptedContent = Encoding.UTF7.GetBytes("Awfully old and ugly message.");
-            await Message.SetEncryptedContent(encryptedContent);
+            await SetMessageContent();
 
             await ChatHub.DeleteMessage(Message.Id);
 
@@ -130,8 +127,7 @@ namespace Tests
 
             mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
 
-            var encryptedContent = Encoding.UTF7.GetBytes("Awfully old and ugly message.");
-            await Message.SetEncryptedContent(encryptedContent);
+            await SetMessageContent();
 
             await ChatHub.DeleteMessage(Message.Id);
 
@@ -305,8 +301,7 @@ namespace Tests
             AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithAdminIdentity();
 
-            var oldEncryptedContent = Encoding.UTF8.GetBytes("Awfully old and ugly message.");
-            await Message.SetEncryptedContent(oldEncryptedContent);
+            await SetMessageContent();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
