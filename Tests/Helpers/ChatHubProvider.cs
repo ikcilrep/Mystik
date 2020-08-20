@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Mystik.Data;
 using Mystik.Entities;
+using Mystik.Helpers;
 using Mystik.Hubs;
 using Mystik.Services;
 
@@ -27,6 +28,7 @@ namespace Tests.Helpers
 
         protected ChatHubProvider()
         {
+            AppSettings.EncryptedMessagesPath = "/tmp";
             MockUserService.ReloadUsers();
             var options = new DbContextOptionsBuilder<DataContext>()
                                    .UseSqlite(CreateInMemoryDatabase())
