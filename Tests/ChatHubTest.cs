@@ -377,5 +377,23 @@ namespace Tests
             all.Verify(m => m.LeaveConversation(It.IsAny<Guid>()), Times.Never);
             all.Verify(m => m.DeleteConversationMembers(It.IsAny<Guid>(), It.IsAny<IEnumerable<Guid>>()), Times.Never);
         }
+
+        [Fact]
+        public async Task UpdateUser_NicknameIsChanged_FriendsUpdateTheUser()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+            ChatHub = ChatHub.WithAdminIdentity();
+
+            var mockClients = new Mock<IHubCallerClients<IChatClient>>();
+            var all = new Mock<IChatClient>();
+            ChatHub.Clients = mockClients.Object;
+
+            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            all.Setup(m => m.UpdateFriend(It.IsAny<Guid>(), It.IsAny<string>()));
+
+            await ChatHub.UpdateUser("Brand new nickname", null);
+
+            all.VerifyAll();
+        }
     }
 }
