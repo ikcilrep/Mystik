@@ -173,9 +173,9 @@ namespace Mystik.Hubs
 
         public async Task DeleteConversationMembers(Guid conversationId, List<Guid> usersIds)
         {
-            if (await CanTheCurrentUserModifyTheConversation(conversationId))
+            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            if (await CanTheCurrentUserModifyTheConversation(conversationId) || (usersIds.Count == 1 && usersIds.Single() == currentUserId))
             {
-                var currentUserId = Guid.Parse(Context.User.Identity.Name);
                 var usersToDeleteIds = await usersIds.GetUsersToDelete(
                     conversationId,
                     currentUserId,
