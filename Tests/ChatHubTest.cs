@@ -420,5 +420,20 @@ namespace Tests
 
             all.Verify(m => m.DeleteFriend(It.IsAny<Guid>()), Times.Never);
         }
+
+        [Fact]
+        public async Task DeleteUser_UserIsDeleteByAnAdmin_FriendsDeleteUser()
+        {
+            ChatHub = ChatHub.WithAdminIdentity();
+
+            var mockClients = new Mock<IHubCallerClients<IChatClient>>();
+            var all = new Mock<IChatClient>();
+            ChatHub.Clients = mockClients.Object;
+            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+
+            all.Setup(m => m.DeleteFriend(It.IsAny<Guid>()));
+
+            await ChatHub.DeleteUser(MockUserService.User1.Id);
+        }
     }
 }
