@@ -356,5 +356,26 @@ namespace Tests
 
             all.VerifyAll();
         }
+
+        [Fact]
+        public async Task DeleteConversationMembers_UserIsNotTheManager_MembersAreNotDeleted()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+            ChatHub = ChatHub.WithUser1Identity();
+
+            AddUser2ToConversation();
+            await SetMessageContent();
+
+            var mockClients = new Mock<IHubCallerClients<IChatClient>>();
+            var all = new Mock<IChatClient>();
+            ChatHub.Clients = mockClients.Object;
+
+            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+
+            await ChatHub.DeleteConversationMembers(Conversation.Id, new List<Guid> { MockUserService.User2.Id });
+
+            all.Verify(m => m.LeaveConversation(It.IsAny<Guid>()), Times.Never);
+            all.Verify(m => m.DeleteConversationMembers(It.IsAny<Guid>(), It.IsAny<IEnumerable<Guid>>()), Times.Never);
+        }
     }
 }
