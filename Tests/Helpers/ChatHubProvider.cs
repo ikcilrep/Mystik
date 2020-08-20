@@ -49,7 +49,19 @@ namespace Tests.Helpers
             var encryptedContent = Encoding.UTF8.GetBytes("Awfully old and ugly message.");
             await Message.SetEncryptedContent(encryptedContent);
         }
-        
+
+        protected void AddUser2ToConversation()
+        {
+            Context.Add(new ConversationMember
+            {
+                ConversationId = Conversation.Id,
+                UserId = MockUserService.User2.Id,
+                CreatedDate = DateTime.UtcNow
+            });
+
+            Context.SaveChanges();
+        }
+
         private void Seed()
         {
             Context.Database.EnsureDeleted();
