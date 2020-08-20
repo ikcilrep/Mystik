@@ -388,5 +388,22 @@ namespace Tests
 
             all.Verify(m => m.UpdateFriend(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
         }
+
+        [Fact]
+        public async Task DeleteUser_UserIsTheUser_FriendsDeleteTheUser()
+        {
+            ChatHub = ChatHub.WithUser1Identity();
+
+            var mockClients = new Mock<IHubCallerClients<IChatClient>>();
+            var all = new Mock<IChatClient>();
+            ChatHub.Clients = mockClients.Object;
+            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+
+            all.Setup(m => m.DeleteFriend(It.IsAny<Guid>()));
+
+            await ChatHub.DeleteUser(MockUserService.User1.Id);
+
+            all.VerifyAll();
+        }
     }
 }
