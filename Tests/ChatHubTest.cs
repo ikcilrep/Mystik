@@ -240,7 +240,7 @@ namespace Tests
             mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
             all.Setup(m => m.ReceiveInvitation(It.IsAny<Guid>()));
 
-            await ChatHub.InviteFriends(new List<Guid> { MockUserService.User1.Id });
+            await ChatHub.InviteFriends(new List<Guid> { MockUserService.User2.Id });
 
             all.VerifyAll();
         }
@@ -276,10 +276,9 @@ namespace Tests
             mockClients.Setup(m => m.User(It.IsAny<string>())).Returns(all.Object);
             all.Setup(m => m.AddFriend(It.IsAny<Guid>()));
 
-            await ChatHub.AddFriend( Invitation.InviterId );
+            await ChatHub.AddFriend(Invitation.InviterId);
 
             all.VerifyAll();
-
         }
     }
 }
