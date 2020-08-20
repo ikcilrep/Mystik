@@ -195,7 +195,7 @@ namespace Mystik.Hubs
 
             var usersToNotify = await _userService.Update(currentUserId, newNickname, newPassword);
 
-            if (!usersToNotify.Any())
+            if (usersToNotify.Any())
             {
                 await Clients.Users(usersToNotify).UpdateFriend(currentUserId, newNickname);
             }
