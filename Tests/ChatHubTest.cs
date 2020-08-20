@@ -364,14 +364,12 @@ namespace Tests
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
-            {
-                mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
-                all.Setup(m => m.UpdateFriend(It.IsAny<Guid>(), It.IsAny<string>()));
+            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            all.Setup(m => m.UpdateFriend(It.IsAny<Guid>(), It.IsAny<string>()));
 
-                await ChatHub.UpdateUser("Brand new nickname", null);
+            await ChatHub.UpdateUser("Brand new nickname", null);
 
-                all.VerifyAll();
-            }
+            all.VerifyAll();
         }
 
         [Fact]
