@@ -315,5 +315,25 @@ namespace Tests
 
             all.VerifyAll();
         }
+
+        [Fact]
+        public async Task AddConversationMembers_UserIsNotTheManager_MembersAreNotAdded()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+            ChatHub = ChatHub.WithUser1Identity();
+
+            await SetMessageContent();
+
+            var mockClients = new Mock<IHubCallerClients<IChatClient>>();
+            var all = new Mock<IChatClient>();
+            ChatHub.Clients = mockClients.Object;
+
+            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+
+            await ChatHub.AddConversationMembers(Conversation.Id, new List<Guid> { MockUserService.User2.Id });
+
+            all.Verify(m => m.JoinConversation(It.IsAny<JsonRepresentableConversation>()), Times.Never);
+            all.Verify(m => m.AddConversationMembers(It.IsAny<Guid>(), It.IsAny<IEnumerable<Guid>>()), Times.Never);
+        }
     }
 }
