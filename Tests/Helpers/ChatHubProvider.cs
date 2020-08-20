@@ -21,6 +21,7 @@ namespace Tests.Helpers
         protected Conversation Conversation { get; set; }
         protected Message Message { get; private set; }
         protected Invitation Invitation { get; set; }
+        public CoupleOfFriends CoupleOfFriends { get; private set; }
 
         protected ChatHubProvider()
         {
@@ -87,6 +88,24 @@ namespace Tests.Helpers
                 InvitedId = MockUserService.Admin.Id,
                 CreatedDate = DateTime.UtcNow
             };
+
+            CoupleOfFriends = new CoupleOfFriends
+            {
+                Id = Guid.NewGuid(),
+                Friend1Id = MockUserService.User1.Id,
+                Friend2Id = MockUserService.Admin.Id,
+                CreatedDate = DateTime.UtcNow
+            };
+
+            Context.Add(CoupleOfFriends);
+
+            Context.Add(new CoupleOfFriends
+            {
+                Id = Guid.NewGuid(),
+                Friend1Id = MockUserService.Admin.Id,
+                Friend2Id = MockUserService.User1.Id,
+                CreatedDate = DateTime.UtcNow
+            });
 
             Context.Add(Invitation);
 
