@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Mystik.Data;
 using Mystik.Entities;
+using Mystik.Helpers;
 
 namespace Mystik.Services
 {
@@ -119,14 +120,16 @@ namespace Mystik.Services
             return conversation.GetMembers();
         }
 
-        public async Task DeleteMembers(Guid conversationId, List<Guid> usersIds)
+        public async Task<IEnumerable<Guid>> DeleteMembers(Guid conversationId, List<Guid> usersIds)
         {
-            var existingMembers = _context.ConversationMembers.Where(cm => cm.ConversationId == conversationId
-                                                                         && usersIds.Contains(cm.UserId));
+            var existingMembers = await _context.ConversationMembers.Where(cm => cm.ConversationId == conversationId
+                                                                         && usersIds.Contains(cm.UserId)).ToListAsync();
 
             _context.RemoveRange(existingMembers);
 
             await _context.SaveChangesAsync();
+
+            return existingMembers.Select(cm => cm.UserId);
         }
 
         public async Task<IEnumerable<Guid>> GetNotManagingMembersIds(Guid conversationId)

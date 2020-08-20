@@ -10,7 +10,7 @@ namespace Mystik.Services
         Task<bool> IsTheConversationManager(Guid conversationId, Guid userId);
         Task<IEnumerable<Guid>> GetNotManagingMembersIds(Guid conversationId);
         Task<List<Guid>> AddMembers(Guid id, IEnumerable<Guid> usersIds);
-        Task DeleteMembers(Guid conversationId, List<Guid> usersIds);
+        Task<IEnumerable<Guid>> DeleteMembers(Guid conversationId, List<Guid> usersIds);
         Task<Conversation> Create(string name, byte[] passwordHashData, Guid userId);
         Task<Conversation> Retrieve(Guid id);
         Task<IReadOnlyList<string>> ChangeName(Guid id, string newName);
