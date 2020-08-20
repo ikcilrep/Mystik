@@ -24,8 +24,8 @@ namespace Tests
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
 
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
-            all.Setup(m => m.ReceiveMessage(It.IsAny<JsonRepresentableMessage>()));
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            all.Setup(icc => icc.ReceiveMessage(It.IsAny<JsonRepresentableMessage>()));
 
             var message = Encoding.UTF8.GetBytes("Surprisingly encrypted message.");
             await ChatHub.SendMessage(message, Conversation.Id);
@@ -42,12 +42,12 @@ namespace Tests
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
 
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
 
             var message = Encoding.UTF8.GetBytes("Surprisingly encrypted message.");
             await ChatHub.SendMessage(message, Conversation.Id);
 
-            all.Verify(m => m.ReceiveMessage(It.IsAny<JsonRepresentableMessage>()), Times.Never);
+            all.Verify(icc => icc.ReceiveMessage(It.IsAny<JsonRepresentableMessage>()), Times.Never);
         }
 
         [Fact]
@@ -59,10 +59,10 @@ namespace Tests
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
 
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
-            mockClients.Setup(m => m.All).Returns(all.Object);
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            mockClients.Setup(ihcc => ihcc.All).Returns(all.Object);
 
-            all.Setup(m => m.EditMessage(It.IsAny<Guid>(), It.IsAny<byte[]>()));
+            all.Setup(icc => icc.EditMessage(It.IsAny<Guid>(), It.IsAny<byte[]>()));
 
             await SetMessageContent();
 
@@ -81,14 +81,14 @@ namespace Tests
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
 
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
 
             await SetMessageContent();
 
             var newEncryptedContent = Encoding.UTF8.GetBytes("Brand new message.");
             await ChatHub.EditMessage(Message.Id, newEncryptedContent);
 
-            all.Verify(m => m.EditMessage(It.IsAny<Guid>(), It.IsAny<byte[]>()), Times.Never);
+            all.Verify(icc => icc.EditMessage(It.IsAny<Guid>(), It.IsAny<byte[]>()), Times.Never);
         }
 
         [Fact]
@@ -100,8 +100,8 @@ namespace Tests
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
 
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
-            all.Setup(m => m.DeleteMessage(It.IsAny<Guid>()));
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            all.Setup(icc => icc.DeleteMessage(It.IsAny<Guid>()));
 
             await SetMessageContent();
 
@@ -119,13 +119,13 @@ namespace Tests
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
 
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
 
             await SetMessageContent();
 
             await ChatHub.DeleteMessage(Message.Id);
 
-            all.Verify(m => m.DeleteMessage(It.IsAny<Guid>()), Times.Never);
+            all.Verify(icc => icc.DeleteMessage(It.IsAny<Guid>()), Times.Never);
         }
 
         [Fact]
@@ -137,8 +137,8 @@ namespace Tests
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
 
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
-            all.Setup(m => m.JoinConversation(It.IsAny<JsonRepresentableConversation>()));
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            all.Setup(icc => icc.JoinConversation(It.IsAny<JsonRepresentableConversation>()));
 
             await ChatHub.CreateConversation("Some Conversation", new byte[] { }, new List<Guid> { MockUserService.User1.Id });
 
@@ -154,8 +154,8 @@ namespace Tests
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
 
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
-            all.Setup(m => m.LeaveConversation(It.IsAny<Guid>()));
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            all.Setup(icc => icc.LeaveConversation(It.IsAny<Guid>()));
 
             await ChatHub.DeleteConversation(Conversation.Id);
 
@@ -171,11 +171,11 @@ namespace Tests
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
 
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
 
             await ChatHub.DeleteConversation(Conversation.Id);
 
-            all.Verify(m => m.LeaveConversation(It.IsAny<Guid>()), Times.Never);
+            all.Verify(icc => icc.LeaveConversation(It.IsAny<Guid>()), Times.Never);
 
         }
 
@@ -188,8 +188,8 @@ namespace Tests
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
 
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
-            all.Setup(m => m.ChangeConversationName(It.IsAny<Guid>(), It.IsAny<String>()));
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            all.Setup(icc => icc.ChangeConversationName(It.IsAny<Guid>(), It.IsAny<String>()));
 
             await ChatHub.ChangeConversationName(Conversation.Id, "Brand new conversation name");
 
@@ -205,11 +205,11 @@ namespace Tests
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
 
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
 
             await ChatHub.ChangeConversationName(Conversation.Id, "Brand new conversation name");
 
-            all.Verify(m => m.ChangeConversationName(It.IsAny<Guid>(), It.IsAny<String>()), Times.Never);
+            all.Verify(icc => icc.ChangeConversationName(It.IsAny<Guid>(), It.IsAny<String>()), Times.Never);
         }
 
         [Fact]
@@ -221,8 +221,8 @@ namespace Tests
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
 
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
-            all.Setup(m => m.ReceiveInvitation(It.IsAny<Guid>()));
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            all.Setup(icc => icc.ReceiveInvitation(It.IsAny<Guid>()));
 
             await ChatHub.InviteFriends(new List<Guid> { MockUserService.User2.Id });
 
@@ -238,8 +238,8 @@ namespace Tests
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
 
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
-            all.Setup(m => m.DeleteInvitation(It.IsAny<Guid>()));
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            all.Setup(icc => icc.DeleteInvitation(It.IsAny<Guid>()));
 
             await ChatHub.DeleteInvitations(new List<Guid> { Invitation.InvitedId });
 
@@ -255,8 +255,8 @@ namespace Tests
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
 
-            mockClients.Setup(m => m.User(It.IsAny<string>())).Returns(all.Object);
-            all.Setup(m => m.AddFriend(It.IsAny<Guid>()));
+            mockClients.Setup(ihcc => ihcc.User(It.IsAny<string>())).Returns(all.Object);
+            all.Setup(icc => icc.AddFriend(It.IsAny<Guid>()));
 
             await ChatHub.AddFriend(Invitation.InviterId);
 
@@ -272,8 +272,8 @@ namespace Tests
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
 
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
-            all.Setup(m => m.DeleteFriend(It.IsAny<Guid>()));
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            all.Setup(icc => icc.DeleteFriend(It.IsAny<Guid>()));
 
             await ChatHub.DeleteFriends(new List<Guid> { CoupleOfFriends.Friend2Id });
 
@@ -291,9 +291,9 @@ namespace Tests
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
 
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
-            all.Setup(m => m.JoinConversation(It.IsAny<JsonRepresentableConversation>()));
-            all.Setup(m => m.AddConversationMembers(It.IsAny<Guid>(), It.IsAny<IEnumerable<Guid>>()));
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            all.Setup(icc => icc.JoinConversation(It.IsAny<JsonRepresentableConversation>()));
+            all.Setup(icc => icc.AddConversationMembers(It.IsAny<Guid>(), It.IsAny<IEnumerable<Guid>>()));
 
             await ChatHub.AddConversationMembers(Conversation.Id, new List<Guid> { MockUserService.User2.Id });
 
@@ -311,12 +311,12 @@ namespace Tests
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
 
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
 
             await ChatHub.AddConversationMembers(Conversation.Id, new List<Guid> { MockUserService.User2.Id });
 
-            all.Verify(m => m.JoinConversation(It.IsAny<JsonRepresentableConversation>()), Times.Never);
-            all.Verify(m => m.AddConversationMembers(It.IsAny<Guid>(), It.IsAny<IEnumerable<Guid>>()), Times.Never);
+            all.Verify(icc => icc.JoinConversation(It.IsAny<JsonRepresentableConversation>()), Times.Never);
+            all.Verify(icc => icc.AddConversationMembers(It.IsAny<Guid>(), It.IsAny<IEnumerable<Guid>>()), Times.Never);
         }
 
         [Fact]
@@ -328,9 +328,9 @@ namespace Tests
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
 
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
-            all.Setup(m => m.LeaveConversation(It.IsAny<Guid>()));
-            all.Setup(m => m.DeleteConversationMembers(It.IsAny<Guid>(), It.IsAny<IEnumerable<Guid>>()));
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            all.Setup(icc => icc.LeaveConversation(It.IsAny<Guid>()));
+            all.Setup(icc => icc.DeleteConversationMembers(It.IsAny<Guid>(), It.IsAny<IEnumerable<Guid>>()));
 
             await ChatHub.DeleteConversationMembers(Conversation.Id, new List<Guid> { MockUserService.User1.Id });
 
@@ -348,12 +348,12 @@ namespace Tests
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
 
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
 
             await ChatHub.DeleteConversationMembers(Conversation.Id, new List<Guid> { MockUserService.User2.Id });
 
-            all.Verify(m => m.LeaveConversation(It.IsAny<Guid>()), Times.Never);
-            all.Verify(m => m.DeleteConversationMembers(It.IsAny<Guid>(), It.IsAny<IEnumerable<Guid>>()), Times.Never);
+            all.Verify(icc => icc.LeaveConversation(It.IsAny<Guid>()), Times.Never);
+            all.Verify(icc => icc.DeleteConversationMembers(It.IsAny<Guid>(), It.IsAny<IEnumerable<Guid>>()), Times.Never);
         }
 
         [Fact]
@@ -364,8 +364,8 @@ namespace Tests
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
-            all.Setup(m => m.UpdateFriend(It.IsAny<Guid>(), It.IsAny<string>()));
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            all.Setup(icc => icc.UpdateFriend(It.IsAny<Guid>(), It.IsAny<string>()));
 
             await ChatHub.UpdateUser("Brand new nickname", null);
 
@@ -380,11 +380,11 @@ namespace Tests
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
 
             await ChatHub.UpdateUser(null, MockUserService.NotExistingUser.Password);
 
-            all.Verify(m => m.UpdateFriend(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
+            all.Verify(icc => icc.UpdateFriend(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
         }
 
         [Fact]
@@ -395,9 +395,9 @@ namespace Tests
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
 
-            all.Setup(m => m.DeleteFriend(It.IsAny<Guid>()));
+            all.Setup(icc => icc.DeleteFriend(It.IsAny<Guid>()));
 
             await ChatHub.DeleteUser(MockUserService.User1.Id);
 
@@ -412,11 +412,11 @@ namespace Tests
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
 
             await ChatHub.DeleteUser(MockUserService.User1.Id);
 
-            all.Verify(m => m.DeleteFriend(It.IsAny<Guid>()), Times.Never);
+            all.Verify(icc => icc.DeleteFriend(It.IsAny<Guid>()), Times.Never);
         }
 
         [Fact]
@@ -427,9 +427,9 @@ namespace Tests
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
 
-            all.Setup(m => m.DeleteFriend(It.IsAny<Guid>()));
+            all.Setup(icc => icc.DeleteFriend(It.IsAny<Guid>()));
 
             await ChatHub.DeleteUser(MockUserService.User1.Id);
         }
