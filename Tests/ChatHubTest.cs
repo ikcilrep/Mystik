@@ -18,7 +18,6 @@ namespace Tests
         [Fact]
         public async Task SendMessage_UserIsInConversation_MessageIsReceived()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithUser1Identity();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
@@ -37,7 +36,6 @@ namespace Tests
         [Fact]
         public async Task SendMessage_UserIsNotInConversation_MessageIsNotReceived()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithUser2Identity();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
@@ -55,7 +53,6 @@ namespace Tests
         [Fact]
         public async Task EditMessage_UserIsTheSender_MessageIsEdited()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithUser1Identity();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
@@ -78,7 +75,6 @@ namespace Tests
         [Fact]
         public async Task EditMessage_UserIsNotTheSender_MessageIsNotEdited()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithAdminIdentity();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
@@ -98,7 +94,6 @@ namespace Tests
         [Fact]
         public async Task DeleteMessage_UserIsTheSender_MessageIsDeleted()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithUser1Identity();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
@@ -118,7 +113,6 @@ namespace Tests
         [Fact]
         public async Task DeleteMessage_UserIsNotTheSender_MessageIsNotDeleted()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithAdminIdentity();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
@@ -137,7 +131,6 @@ namespace Tests
         [Fact]
         public async Task CreateConversation_AddedUsersJoinTheConversation()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithUser1Identity();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
@@ -155,7 +148,6 @@ namespace Tests
         [Fact]
         public async Task DeleteConversation_UserIsTheManager_ConversationIsDeleted()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithAdminIdentity();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
@@ -173,7 +165,6 @@ namespace Tests
         [Fact]
         public async Task DeleteConversation_UserIsNotTheManager_ConversationIsNotDeleted()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithUser1Identity();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
@@ -191,7 +182,6 @@ namespace Tests
         [Fact]
         public async Task ChangeConversationName_UserIsTheManager_NameIsChanged()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithAdminIdentity();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
@@ -209,7 +199,6 @@ namespace Tests
         [Fact]
         public async Task ChangeConversationName_UserIsNotTheManager_NameIsNotChanged()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithUser1Identity();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
@@ -226,7 +215,6 @@ namespace Tests
         [Fact]
         public async Task InviteFriends_InvitedUsersReceiveAnInvitation()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithUser1Identity();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
@@ -244,7 +232,6 @@ namespace Tests
         [Fact]
         public async Task DeleteInvitations_InvitationsAreDeleted()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithUser2Identity();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
@@ -262,7 +249,6 @@ namespace Tests
         [Fact]
         public async Task AddFriend_TheFriendIsAdded()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithAdminIdentity();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
@@ -280,7 +266,6 @@ namespace Tests
         [Fact]
         public async Task DeleteFriends_TheFriendIsDeleted()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithUser1Identity();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
@@ -298,7 +283,6 @@ namespace Tests
         [Fact]
         public async Task AddConversationMembers_UserIsTheManager_MembersAreAdded()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithAdminIdentity();
 
             await SetMessageContent();
@@ -319,7 +303,6 @@ namespace Tests
         [Fact]
         public async Task AddConversationMembers_UserIsNotTheManager_MembersAreNotAdded()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithUser1Identity();
 
             await SetMessageContent();
@@ -339,10 +322,7 @@ namespace Tests
         [Fact]
         public async Task DeleteConversationMembers_UserIsTheManager_MembersAreDeleted()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithAdminIdentity();
-
-            await SetMessageContent();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -360,11 +340,9 @@ namespace Tests
         [Fact]
         public async Task DeleteConversationMembers_UserIsNotTheManager_MembersAreNotDeleted()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithUser1Identity();
 
             AddUser2ToConversation();
-            await SetMessageContent();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -381,19 +359,19 @@ namespace Tests
         [Fact]
         public async Task UpdateUser_NicknameIsChanged_FriendsUpdateTheUser()
         {
-            AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithAdminIdentity();
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
+            {
+                mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+                all.Setup(m => m.UpdateFriend(It.IsAny<Guid>(), It.IsAny<string>()));
 
-            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
-            all.Setup(m => m.UpdateFriend(It.IsAny<Guid>(), It.IsAny<string>()));
+                await ChatHub.UpdateUser("Brand new nickname", null);
 
-            await ChatHub.UpdateUser("Brand new nickname", null);
-
-            all.VerifyAll();
+                all.VerifyAll();
+            }
         }
     }
 }
