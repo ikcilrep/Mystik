@@ -181,9 +181,11 @@ namespace Mystik.Hubs
                     currentUserId,
                     _conversationService);
 
-                await _conversationService.DeleteMembers(conversationId, usersToDeleteIds);
+                var deletedMembers = await _conversationService.DeleteMembers(conversationId, usersToDeleteIds);
+                var conversation = await _conversationService.Retrieve(conversationId);
 
                 await Clients.Users(usersToDeleteIds.ToStringList()).LeaveConversation(conversationId);
+                await Clients.Users(conversation.GetMembers()).DeleteConversationMembers(conversationId, deletedMembers);
             }
         }
 
