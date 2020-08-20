@@ -226,5 +226,23 @@ namespace Tests
 
             all.Verify(m => m.ChangeConversationName(It.IsAny<Guid>(), It.IsAny<String>()), Times.Never);
         }
+
+        [Fact]
+        public async Task InviteFriends_InvitedUserReceivesAnInvitation()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+            ChatHub = ChatHub.WithUser1Identity();
+
+            var mockClients = new Mock<IHubCallerClients<IChatClient>>();
+            var all = new Mock<IChatClient>();
+            ChatHub.Clients = mockClients.Object;
+
+            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            all.Setup(m => m.ReceiveInvitation(It.IsAny<Guid>()));
+
+            await ChatHub.InviteFriends(new List<Guid> { MockUserService.User1.Id });
+
+            all.VerifyAll();
+        }
     }
 }
