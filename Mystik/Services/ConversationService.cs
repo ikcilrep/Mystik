@@ -96,6 +96,7 @@ namespace Mystik.Services
         {
             return await _context.Conversations.AsNoTracking()
                                                .Include(c => c.Messages)
+                                                   .ThenInclude(m => m.Sender)
                                                .Include(c => c.Managers)
                                                .Include(c => c.Members)
                                                .FirstAsync(c => c.Id == id);
