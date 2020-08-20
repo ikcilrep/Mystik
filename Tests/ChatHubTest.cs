@@ -135,7 +135,7 @@ namespace Tests
         }
 
         [Fact]
-        public async Task CreateConversation_AddedUserJoinsTheConversation()
+        public async Task CreateConversation_AddedUsersJoinTheConversation()
         {
             AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithUser1Identity();
@@ -224,7 +224,7 @@ namespace Tests
         }
 
         [Fact]
-        public async Task InviteFriends_InvitedUserReceivesAnInvitation()
+        public async Task InviteFriends_InvitedUsersReceiveAnInvitation()
         {
             AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithUser1Identity();
@@ -242,7 +242,7 @@ namespace Tests
         }
 
         [Fact]
-        public async Task DeleteInvitations_InvitationIsDeleted()
+        public async Task DeleteInvitations_InvitationsAreDeleted()
         {
             AppSettings.EncryptedMessagesPath = "/tmp";
             ChatHub = ChatHub.WithUser2Identity();
