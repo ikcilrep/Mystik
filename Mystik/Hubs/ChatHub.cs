@@ -119,8 +119,7 @@ namespace Mystik.Hubs
         private async Task<bool> CanTheCurrentUserModifyTheConversation(Guid conversationId)
         {
             var currentUserId = Guid.Parse(Context.User.Identity.Name);
-            return Context.User.IsInRole(Role.Admin)
-                   || await _conversationService.IsTheConversationManager(conversationId, currentUserId);
+            return await _conversationService.IsTheConversationManager(conversationId, currentUserId);
         }
 
         public async Task InviteFriends(List<Guid> invitedIds)
