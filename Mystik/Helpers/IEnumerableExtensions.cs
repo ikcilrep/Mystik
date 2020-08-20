@@ -32,7 +32,6 @@ namespace Mystik.Helpers
             Guid currentUserId,
             IConversationService conversationService)
         {
-            var usersToDeleteIds = new List<Guid>();
             var notManagingMembersIds = await conversationService.GetNotManagingMembersIds(conversationId);
 
             return notManagingMembersIds.Intersect(usersIds).ToList();
