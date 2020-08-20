@@ -208,7 +208,23 @@ namespace Tests
             await ChatHub.ChangeConversationName(Conversation.Id, "Brand new conversation name");
 
             all.VerifyAll();
+        }
 
+        [Fact]
+        public async Task ChangeConversationName_UserIsNotTheManager_NameIsNotChanged()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+            ChatHub = ChatHub.WithUser1Identity();
+
+            var mockClients = new Mock<IHubCallerClients<IChatClient>>();
+            var all = new Mock<IChatClient>();
+            ChatHub.Clients = mockClients.Object;
+
+            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+
+            await ChatHub.ChangeConversationName(Conversation.Id, "Brand new conversation name");
+
+            all.Verify(m => m.ChangeConversationName(It.IsAny<Guid>(), It.IsAny<String>()), Times.Never);
         }
     }
 }
