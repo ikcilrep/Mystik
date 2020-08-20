@@ -298,5 +298,27 @@ namespace Tests
 
             all.VerifyAll();
         }
+
+        [Fact]
+        public async Task AddConversationMembers_UserIsTheManager_MembersAreAdded()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+            ChatHub = ChatHub.WithAdminIdentity();
+
+            var oldEncryptedContent = Encoding.UTF8.GetBytes("Awfully old and ugly message.");
+            await Message.SetEncryptedContent(oldEncryptedContent);
+
+            var mockClients = new Mock<IHubCallerClients<IChatClient>>();
+            var all = new Mock<IChatClient>();
+            ChatHub.Clients = mockClients.Object;
+
+            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            all.Setup(m => m.JoinConversation(It.IsAny<JsonRepresentableConversation>()));
+            all.Setup(m => m.AddConversationMembers(It.IsAny<Guid>(), It.IsAny<IEnumerable<Guid>>()));
+
+            await ChatHub.AddConversationMembers(Conversation.Id, new List<Guid> { MockUserService.User2.Id });
+
+            all.VerifyAll();
+        }
     }
 }
