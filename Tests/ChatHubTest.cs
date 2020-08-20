@@ -373,5 +373,20 @@ namespace Tests
                 all.VerifyAll();
             }
         }
+
+        [Fact]
+        public async Task UpdateUser_NicknameHasNotChanged_FriendsDoNotUpdateTheUser()
+        {
+            ChatHub = ChatHub.WithAdminIdentity();
+
+            var mockClients = new Mock<IHubCallerClients<IChatClient>>();
+            var all = new Mock<IChatClient>();
+            ChatHub.Clients = mockClients.Object;
+            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+
+            await ChatHub.UpdateUser(null, MockUserService.NotExistingUser.Password);
+
+            all.Verify(m => m.UpdateFriend(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
+        }
     }
 }
