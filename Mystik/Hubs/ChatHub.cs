@@ -195,7 +195,10 @@ namespace Mystik.Hubs
 
             var usersToNotify = await _userService.Update(currentUserId, newNickname, newPassword);
 
-            await Clients.Users(usersToNotify).UpdateFriend(currentUserId, newNickname);
+            if (!usersToNotify.Any())
+            {
+                await Clients.Users(usersToNotify).UpdateFriend(currentUserId, newNickname);
+            }
         }
 
         public async Task DeleteUser(Guid userId)
