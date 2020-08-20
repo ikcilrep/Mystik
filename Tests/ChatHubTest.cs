@@ -390,7 +390,7 @@ namespace Tests
         }
 
         [Fact]
-        public async Task DeleteUser_UserIsTheUser_FriendsDeleteTheUser()
+        public async Task DeleteUser_UserIsDeletedByHimself_FriendsDeleteTheUser()
         {
             ChatHub = ChatHub.WithUser1Identity();
 
@@ -407,7 +407,7 @@ namespace Tests
         }
 
         [Fact]
-        public async Task DeleteUser_UserIsNotTheUser_FriendsDoNotDeleteTheUser()
+        public async Task DeleteUser_UserIsDeletedByAnOtherUser_FriendsDoNotDeleteTheUser()
         {
             ChatHub = ChatHub.WithUser2Identity();
 
