@@ -1,5 +1,7 @@
 using System;
 using System.Data.Common;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -42,6 +44,12 @@ namespace Tests.Helpers
             ChatHub = new ChatHub(MessageService, ConversationService, UserService);
         }
 
+        protected async Task SetMessageContent()
+        {
+            var encryptedContent = Encoding.UTF8.GetBytes("Awfully old and ugly message.");
+            await Message.SetEncryptedContent(encryptedContent);
+        }
+        
         private void Seed()
         {
             Context.Database.EnsureDeleted();
