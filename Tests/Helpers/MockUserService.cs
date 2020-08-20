@@ -11,7 +11,7 @@ namespace Tests.Helpers
 
         private static User _admin = new User("Adamek", "Adam", "Kaczka1%3")
         {
-            Id = Guid.Parse("6c554aa4-3fd8-48d4-a0d8-13164f172d0c"),
+            Id = Guid.NewGuid(),
             Role = Role.Admin
         };
 
@@ -19,20 +19,20 @@ namespace Tests.Helpers
             "Kacperek",
             "Kacper",
             "#Myszka456",
-            "4192105b-3256-40e2-9efb-eef265e5eaa6");
+            Guid.NewGuid());
 
 
         private static UserWithPassword _user2 = new UserWithPassword(
             "Oliwierek",
             "Oliwier",
             "Gruszka!789",
-            "60398e2a-4439-46bf-9101-e26ea63d5326");
+            Guid.NewGuid());
 
         private static UserWithPassword _notExistingUser = new UserWithPassword(
             "Lukaszek",
             "Lukasz",
             "Jablko&101112",
-            "68fa61ae-8c9b-4470-8fd7-a36e1e14c035");
+            Guid.NewGuid());
 
 
         public static User Admin => _admin;
@@ -44,7 +44,7 @@ namespace Tests.Helpers
         {
             _admin = new User("Adamek", "Adam", "Kaczka1%3")
             {
-                Id = Guid.Parse("6c554aa4-3fd8-48d4-a0d8-13164f172d0c"),
+                Id = Guid.NewGuid(),
                 Role = Role.Admin
             };
 
@@ -52,20 +52,20 @@ namespace Tests.Helpers
                "Kacperek",
                "Kacper",
                "#Myszka456",
-               "4192105b-3256-40e2-9efb-eef265e5eaa6");
+               Guid.NewGuid());
 
 
             _user2 = new UserWithPassword(
                "Oliwierek",
                "Oliwier",
                "Gruszka!789",
-               "60398e2a-4439-46bf-9101-e26ea63d5326");
+               Guid.NewGuid());
 
             _notExistingUser = new UserWithPassword(
                "Lukaszek",
                "Lukasz",
                "Jablko&101112",
-               "68fa61ae-8c9b-4470-8fd7-a36e1e14c035");
+               Guid.NewGuid());
         }
     }
 }
