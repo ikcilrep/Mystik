@@ -280,5 +280,23 @@ namespace Tests
 
             all.VerifyAll();
         }
+
+        [Fact]
+        public async Task DeleteFriends_TheFriendIsDeleted()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+            ChatHub = ChatHub.WithUser1Identity();
+
+            var mockClients = new Mock<IHubCallerClients<IChatClient>>();
+            var all = new Mock<IChatClient>();
+            ChatHub.Clients = mockClients.Object;
+
+            mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
+            all.Setup(m => m.DeleteFriend(It.IsAny<Guid>()));
+
+            await ChatHub.DeleteFriends(new List<Guid> { CoupleOfFriends.Friend2Id });
+
+            all.VerifyAll();
+        }
     }
 }
