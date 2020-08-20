@@ -258,9 +258,28 @@ namespace Tests
             mockClients.Setup(m => m.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
             all.Setup(m => m.DeleteInvitation(It.IsAny<Guid>()));
 
-            await ChatHub.DeleteInvitations(new List<Guid> { Invitation.Invited.Id });
+            await ChatHub.DeleteInvitations(new List<Guid> { Invitation.InvitedId });
 
             all.VerifyAll();
+        }
+
+        [Fact]
+        public async Task AddFriend_TheFriendIsAdded()
+        {
+            AppSettings.EncryptedMessagesPath = "/tmp";
+            ChatHub = ChatHub.WithAdminIdentity();
+
+            var mockClients = new Mock<IHubCallerClients<IChatClient>>();
+            var all = new Mock<IChatClient>();
+            ChatHub.Clients = mockClients.Object;
+
+            mockClients.Setup(m => m.User(It.IsAny<string>())).Returns(all.Object);
+            all.Setup(m => m.AddFriend(It.IsAny<Guid>()));
+
+            await ChatHub.AddFriend( Invitation.InviterId );
+
+            all.VerifyAll();
+
         }
     }
 }
