@@ -18,12 +18,21 @@ namespace Mystik.Helpers
         protected Conversation Conversation { get; set; }
         protected DataContext Context { get; set; }
         protected int InitialNumberOfMessages { get; set; }
-
         protected Message Message { get; set; }
+        public UserWithPassword User1 { get; }
+        public UserWithPassword User2 { get; }
+        public UserWithPassword NotExisitngUser { get; }
+        public User Admin { get; }
+
 
         protected MessageServiceProvider()
         {
-            MockUserService.ReloadUsers();
+            User1 = MockUserService.User1;
+            User2 = MockUserService.User2;
+            Admin = MockUserService.Admin;
+            NotExisitngUser = MockUserService.NotExistingUser;
+
+
             var options = new DbContextOptionsBuilder<DataContext>()
                                    .UseSqlite(CreateInMemoryDatabase())
                                    .Options;
@@ -49,28 +58,28 @@ namespace Mystik.Helpers
                 ModifiedDate = DateTime.UtcNow
             };
 
-            Context.Add(MockUserService.Admin);
+            Context.Add(Admin);
 
             Context.Add(Conversation);
 
             Context.Add(new ConversationMember
             {
                 ConversationId = Conversation.Id,
-                UserId = MockUserService.Admin.Id,
+                UserId = Admin.Id,
                 CreatedDate = DateTime.UtcNow
             });
 
             Context.Add(new ConversationManager
             {
                 ConversationId = Conversation.Id,
-                ManagerId = MockUserService.Admin.Id,
+                ManagerId = Admin.Id,
                 CreatedDate = DateTime.UtcNow
             });
 
             Message = new Message
             {
                 ConversationId = Conversation.Id,
-                SenderId = MockUserService.Admin.Id,
+                SenderId = Admin.Id,
                 CreatedDate = DateTime.UtcNow,
                 ModifiedDate = DateTime.UtcNow
             };

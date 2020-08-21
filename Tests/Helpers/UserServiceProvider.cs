@@ -23,10 +23,19 @@ namespace Tests.Helpers
         protected CoupleOfFriends Friends1 { get; set; }
         protected CoupleOfFriends Friends2 { get; set; }
         protected Invitation Invitation { get; set; }
+        protected UserWithPassword User1 { get; }
+        protected UserWithPassword User2 { get; }
+        protected UserWithPassword NotExistingUser { get; }
+        protected User Admin { get; }
 
         protected UserServiceProvider()
         {
-            MockUserService.ReloadUsers();
+            User1 = MockUserService.User1;
+            User2 = MockUserService.User2;
+            Admin = MockUserService.Admin;
+            NotExistingUser = MockUserService.NotExistingUser;
+
+
             var options = new DbContextOptionsBuilder<DataContext>()
                        .UseSqlite(CreateInMemoryDatabase())
                        .Options;
@@ -42,9 +51,9 @@ namespace Tests.Helpers
             Context.Database.EnsureDeleted();
             Context.Database.EnsureCreated();
 
-            Context.Add(MockUserService.Admin);
-            Context.Add(MockUserService.User1);
-            Context.Add(MockUserService.User2);
+            Context.Add(Admin);
+            Context.Add(User1);
+            Context.Add(User2);
 
             Context.SaveChanges();
 
@@ -56,15 +65,15 @@ namespace Tests.Helpers
         {
             Friends1 = new CoupleOfFriends
             {
-                Friend1Id = MockUserService.Admin.Id,
-                Friend2Id = MockUserService.User2.Id,
+                Friend1Id = Admin.Id,
+                Friend2Id = User2.Id,
                 CreatedDate = DateTime.UtcNow
             };
 
             Friends2 = new CoupleOfFriends
             {
-                Friend1Id = MockUserService.User2.Id,
-                Friend2Id = MockUserService.Admin.Id,
+                Friend1Id = User2.Id,
+                Friend2Id = Admin.Id,
                 CreatedDate = DateTime.UtcNow
             };
 
@@ -81,8 +90,8 @@ namespace Tests.Helpers
         {
             Invitation = new Invitation
             {
-                InviterId = MockUserService.Admin.Id,
-                InvitedId = MockUserService.User2.Id,
+                InviterId = Admin.Id,
+                InvitedId = User2.Id,
                 CreatedDate = DateTime.UtcNow
             };
 
@@ -106,21 +115,21 @@ namespace Tests.Helpers
 
             Context.Add(new ConversationManager
             {
-                ManagerId = MockUserService.Admin.Id,
+                ManagerId = Admin.Id,
                 ConversationId = Conversation.Id,
                 CreatedDate = DateTime.UtcNow
             });
 
             Context.Add(new ConversationMember
             {
-                UserId = MockUserService.Admin.Id,
+                UserId = Admin.Id,
                 ConversationId = Conversation.Id,
                 CreatedDate = DateTime.UtcNow
             });
 
             Context.Add(new ConversationMember
             {
-                UserId = MockUserService.User2.Id,
+                UserId = User2.Id,
                 ConversationId = Conversation.Id,
                 CreatedDate = DateTime.UtcNow
             });

@@ -25,11 +25,20 @@ namespace Tests.Helpers
         protected Message Message { get; private set; }
         protected Invitation Invitation { get; set; }
         public CoupleOfFriends CoupleOfFriends { get; private set; }
+        protected UserWithPassword User1 { get; }
+        protected UserWithPassword User2 { get; }
+        protected UserWithPassword NotExistingUser { get; }
+        protected User Admin { get; }
 
         protected ChatHubProvider()
         {
             AppSettings.EncryptedMessagesPath = "/tmp";
-            MockUserService.ReloadUsers();
+
+            User1 = MockUserService.User1;
+            User2 = MockUserService.User2;
+            Admin = MockUserService.Admin;
+            NotExistingUser = MockUserService.NotExistingUser;
+
             var options = new DbContextOptionsBuilder<DataContext>()
                                    .UseSqlite(CreateInMemoryDatabase())
                                    .Options;
@@ -57,7 +66,7 @@ namespace Tests.Helpers
             Context.Add(new ConversationMember
             {
                 ConversationId = Conversation.Id,
-                UserId = MockUserService.User2.Id,
+                UserId = User2.Id,
                 CreatedDate = DateTime.UtcNow
             });
 
@@ -77,45 +86,45 @@ namespace Tests.Helpers
                 ModifiedDate = DateTime.UtcNow
             };
 
-            Context.Add(MockUserService.Admin);
-            Context.Add(MockUserService.User1);
-            Context.Add(MockUserService.User2);
+            Context.Add(Admin);
+            Context.Add(User1);
+            Context.Add(User2);
 
             Context.Add(Conversation);
 
             Context.Add(new ConversationMember
             {
                 ConversationId = Conversation.Id,
-                UserId = MockUserService.Admin.Id,
+                UserId = Admin.Id,
                 CreatedDate = DateTime.UtcNow
             });
 
             Context.Add(new ConversationMember
             {
                 ConversationId = Conversation.Id,
-                UserId = MockUserService.User1.Id,
+                UserId = User1.Id,
                 CreatedDate = DateTime.UtcNow
             });
 
             Context.Add(new ConversationManager
             {
                 ConversationId = Conversation.Id,
-                ManagerId = MockUserService.Admin.Id,
+                ManagerId = Admin.Id,
                 CreatedDate = DateTime.UtcNow
             });
 
             Invitation = new Invitation
             {
-                InviterId = MockUserService.User2.Id,
-                InvitedId = MockUserService.Admin.Id,
+                InviterId = User2.Id,
+                InvitedId = Admin.Id,
                 CreatedDate = DateTime.UtcNow
             };
 
             CoupleOfFriends = new CoupleOfFriends
             {
                 Id = Guid.NewGuid(),
-                Friend1Id = MockUserService.User1.Id,
-                Friend2Id = MockUserService.Admin.Id,
+                Friend1Id = User1.Id,
+                Friend2Id = Admin.Id,
                 CreatedDate = DateTime.UtcNow
             };
 
@@ -124,8 +133,8 @@ namespace Tests.Helpers
             Context.Add(new CoupleOfFriends
             {
                 Id = Guid.NewGuid(),
-                Friend1Id = MockUserService.Admin.Id,
-                Friend2Id = MockUserService.User1.Id,
+                Friend1Id = Admin.Id,
+                Friend2Id = User1.Id,
                 CreatedDate = DateTime.UtcNow
             });
 
@@ -135,7 +144,7 @@ namespace Tests.Helpers
             {
                 Id = Guid.NewGuid(),
                 ConversationId = Conversation.Id,
-                SenderId = MockUserService.User1.Id,
+                SenderId = User1.Id,
                 CreatedDate = DateTime.UtcNow,
                 ModifiedDate = DateTime.UtcNow
             };

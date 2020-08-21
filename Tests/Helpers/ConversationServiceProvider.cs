@@ -19,10 +19,20 @@ namespace Tests
         protected int InitialNumberOfConversations { get; set; }
         protected DataContext Context { get; set; }
         protected Conversation Conversation { get; set; }
+        public UserWithPassword User1 { get; }
+        public UserWithPassword User2 { get; }
+        public UserWithPassword NotExistingUser { get; }
+        public User Admin { get; }
+
 
         protected ConversationServiceProvider()
         {
-            MockUserService.ReloadUsers();
+            User1 = MockUserService.User1;
+            User2 = MockUserService.User2;
+            Admin = MockUserService.Admin;
+            NotExistingUser = MockUserService.NotExistingUser;
+
+
             var options = new DbContextOptionsBuilder<DataContext>()
                        .UseSqlite(CreateInMemoryDatabase())
                        .Options;
@@ -48,30 +58,30 @@ namespace Tests
                 ModifiedDate = DateTime.UtcNow
             };
 
-            Context.Add(MockUserService.Admin);
-            Context.Add(MockUserService.User1);
-            Context.Add(MockUserService.User2);
+            Context.Add(Admin);
+            Context.Add(User1);
+            Context.Add(User2);
 
             Context.Add(Conversation);
 
             Context.Add(new ConversationMember
             {
                 ConversationId = Conversation.Id,
-                UserId = MockUserService.Admin.Id,
+                UserId = Admin.Id,
                 CreatedDate = DateTime.UtcNow
             });
 
             Context.Add(new ConversationMember
             {
                 ConversationId = Conversation.Id,
-                UserId = MockUserService.User1.Id,
+                UserId = User1.Id,
                 CreatedDate = DateTime.UtcNow
             });
 
             Context.Add(new ConversationManager
             {
                 ConversationId = Conversation.Id,
-                ManagerId = MockUserService.Admin.Id,
+                ManagerId = Admin.Id,
                 CreatedDate = DateTime.UtcNow
             });
 
