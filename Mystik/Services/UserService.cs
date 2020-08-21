@@ -232,7 +232,7 @@ namespace Mystik.Services
                 CreatedDate = DateTime.UtcNow
             });
 
-            _context.AddRange(new CoupleOfFriends
+            _context.Add(new CoupleOfFriends
             {
                 Friend1Id = invitedId,
                 Friend2Id = inviterId,
