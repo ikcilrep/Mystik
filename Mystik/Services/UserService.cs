@@ -123,7 +123,7 @@ namespace Mystik.Services
                                                     .ThenInclude(c => c.Members)
                                            .FirstOrDefaultAsync(u => u.Id == id);
 
-            var usersToNotify = newNickname == user.Nickname ? new List<string>() : user.GetRelatedUsers();
+            var usersToNotify = (newNickname == null || newNickname == user.Nickname) ? new List<string>() : user.GetRelatedUsers();
 
             if (newNickname != null)
             {
