@@ -420,7 +420,7 @@ namespace Tests
         }
 
         [Fact]
-        public async Task DeleteUser_UserIsDeleteByAnAdmin_FriendsDeleteUser()
+        public async Task DeleteUser_UserIsDeletedByAnAdmin_FriendsDeleteUser()
         {
             ChatHub = ChatHub.WithAdminIdentity();
 
