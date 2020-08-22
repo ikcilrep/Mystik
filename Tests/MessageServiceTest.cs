@@ -14,7 +14,7 @@ namespace Tests
         {
             var userIsTheConversationMember = await MessageService.IsTheConversationMember(
                 Conversation.Id,
-                MockUserService.Admin.Id);
+                Admin.Id);
 
             Assert.True(userIsTheConversationMember);
         }
@@ -24,7 +24,7 @@ namespace Tests
         {
             var userIsTheConversationMember = await MessageService.IsTheConversationMember(
                 Conversation.Id,
-                MockUserService.User1.Id);
+                User1.Id);
 
             Assert.False(userIsTheConversationMember);
         }
@@ -34,7 +34,7 @@ namespace Tests
         {
             AppSettings.EncryptedMessagesPath = "/tmp";
 
-            await MessageService.Create(new byte[] { }, MockUserService.Admin.Id, Conversation.Id);
+            await MessageService.Create(new byte[] { }, Admin.Id, Conversation.Id);
 
             Assert.Equal(InitialNumberOfMessages + 1, Context.Messages.Count());
         }
@@ -46,7 +46,7 @@ namespace Tests
 
             var message = await MessageService.Create(
                 new byte[] { },
-                MockUserService.Admin.Id,
+                Admin.Id,
                 Conversation.Id);
 
             Assert.True(Context.Messages.Any(m => m.Id == message.Id));

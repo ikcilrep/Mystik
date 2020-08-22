@@ -14,7 +14,7 @@ namespace Tests
         [Fact]
         public async Task IsTheConversationManager_UserIsManager_ReturnsTrue()
         {
-            var userIsManager = await ConversationService.IsTheConversationManager(Conversation.Id, MockUserService.Admin.Id);
+            var userIsManager = await ConversationService.IsTheConversationManager(Conversation.Id, Admin.Id);
 
             Assert.True(userIsManager);
         }
@@ -22,7 +22,7 @@ namespace Tests
         [Fact]
         public async Task IsTheConversationManager_UserIsNotManager_ReturnsFalse()
         {
-            var userIsManager = await ConversationService.IsTheConversationManager(Conversation.Id, MockUserService.User1.Id);
+            var userIsManager = await ConversationService.IsTheConversationManager(Conversation.Id, User1.Id);
 
             Assert.False(userIsManager);
         }
@@ -30,7 +30,7 @@ namespace Tests
         [Fact]
         public async Task GetNotManagingMembersIds_ReturnsCorrectIds()
         {
-            var expectedIds = new List<Guid> { MockUserService.User1.Id };
+            var expectedIds = new List<Guid> { User1.Id };
             var actualIds = await ConversationService.GetNotManagingMembersIds(Conversation.Id);
 
             Assert.Equal(expectedIds, actualIds);
@@ -39,7 +39,7 @@ namespace Tests
         [Fact]
         public async Task AddMembers_AddsExactlyOneEntity()
         {
-            var usersIds = new List<Guid> { MockUserService.User2.Id };
+            var usersIds = new List<Guid> { User2.Id };
             await ConversationService.AddMembers(Conversation.Id, usersIds);
 
             Assert.Equal(InitialNumberOfConversationsMembers + 1, Context.ConversationMembers.Count());
@@ -48,20 +48,20 @@ namespace Tests
         [Fact]
         public async Task AddMembers_AddsCorrectEntity()
         {
-            var usersIds = new List<Guid> { MockUserService.User2.Id };
+            var usersIds = new List<Guid> { User2.Id };
             await ConversationService.AddMembers(Conversation.Id, usersIds);
 
             Assert.True(Context.ConversationMembers.Any(cm => cm.Conversation.Id == Conversation.Id
-                                                            && cm.UserId == MockUserService.User2.Id));
+                                                            && cm.UserId == User2.Id));
         }
 
         [Fact]
         public async Task AddMembers_ReturnsNewMembers()
         {
-            var usersIds = new List<Guid> { MockUserService.User2.Id, MockUserService.NotExistingUser.Id };
+            var usersIds = new List<Guid> { User2.Id, NotExistingUser.Id };
             var members = await ConversationService.AddMembers(Conversation.Id, usersIds);
 
-            var expectedMembers = new HashSet<Guid> { MockUserService.User2.Id };
+            var expectedMembers = new HashSet<Guid> { User2.Id };
 
             Assert.True(members.ToHashSet().SetEquals(expectedMembers));
         }
@@ -69,7 +69,7 @@ namespace Tests
         [Fact]
         public async Task DeleteMembers_RemovesExactlyOneEntity()
         {
-            var usersIds = new List<Guid> { MockUserService.User1.Id };
+            var usersIds = new List<Guid> { User1.Id };
 
             await ConversationService.DeleteMembers(Conversation.Id, usersIds);
 
@@ -79,12 +79,12 @@ namespace Tests
         [Fact]
         public async Task DeleteMembers_RemovesCorrectEntity()
         {
-            var usersIds = new List<Guid> { MockUserService.User1.Id };
+            var usersIds = new List<Guid> { User1.Id };
 
             await ConversationService.DeleteMembers(Conversation.Id, usersIds);
 
             Assert.False(Context.ConversationMembers.Any(cm => cm.Conversation.Id == Conversation.Id
-                                                            && cm.UserId == MockUserService.User1.Id));
+                                                            && cm.UserId == User1.Id));
         }
 
         [Fact]
@@ -93,7 +93,7 @@ namespace Tests
             await ConversationService.Create(
                 "Conversation1",
                 new byte[] { },
-                MockUserService.User2.Id);
+                User2.Id);
 
             Assert.Equal(InitialNumberOfConversations + 1, Context.Conversations.Count());
         }
@@ -104,7 +104,7 @@ namespace Tests
             var conversation = await ConversationService.Create(
                 "Conversation1",
                 new byte[] { },
-                MockUserService.User2.Id);
+                User2.Id);
 
             Assert.True(Context.Conversations.Any(c => c.Id == conversation.Id));
         }

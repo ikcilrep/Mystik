@@ -14,9 +14,9 @@ namespace Tests
         public async Task Create_AddsCorrectEntity()
         {
             var user = await UserService.Create(
-                MockUserService.NotExistingUser.Nickname,
-                MockUserService.NotExistingUser.Username,
-                MockUserService.NotExistingUser.Password);
+                NotExistingUser.Nickname,
+                NotExistingUser.Username,
+                NotExistingUser.Password);
 
             Assert.True(Context.Users.Any(u => u.Id == user.Id));
         }
@@ -25,9 +25,9 @@ namespace Tests
         public async Task Create_AddsExactlyOneEntity()
         {
             var user = await UserService.Create(
-                MockUserService.NotExistingUser.Nickname,
-                MockUserService.NotExistingUser.Username,
-                MockUserService.NotExistingUser.Password);
+                NotExistingUser.Nickname,
+                NotExistingUser.Username,
+                NotExistingUser.Password);
 
             Assert.Equal(InitialNumberOfUsers + 1, Context.Users.Count());
         }
@@ -35,28 +35,28 @@ namespace Tests
         [Fact]
         public async Task Retrieve_ReturnsCorrectUser()
         {
-            var actualUser = await UserService.Retrieve(MockUserService.User2.Id);
+            var actualUser = await UserService.Retrieve(User2.Id);
 
-            Assert.Equal(MockUserService.User2, actualUser);
+            Assert.Equal(User2, actualUser);
         }
 
         [Fact]
         public async Task Update_ModifiesTheCorrectValues()
         {
             await UserService.Update(
-                MockUserService.User2.Id,
-                MockUserService.NotExistingUser.Nickname,
+                User2.Id,
+               NotExistingUser.Nickname,
                 null);
 
-            var actualUser = Context.Find<User>(MockUserService.User2.Id);
+            var actualUser = Context.Find<User>(User2.Id);
 
-            Assert.Equal(MockUserService.NotExistingUser.Nickname, actualUser.Nickname);
+            Assert.Equal(NotExistingUser.Nickname, actualUser.Nickname);
         }
 
         [Fact]
         public async Task Delete_RemovesExactlyOneEntity()
         {
-            var id = MockUserService.User2.Id;
+            var id = User2.Id;
             await UserService.Delete(id);
 
             Assert.Equal(InitialNumberOfUsers - 1, Context.Users.Count());
@@ -65,7 +65,7 @@ namespace Tests
         [Fact]
         public async Task Authenticate_WithValidCredentials_ReturnsCorrectUser()
         {
-            var expectedUser = MockUserService.User2;
+            var expectedUser = User2;
             var actualUser = await UserService.Authenticate(
                 expectedUser.Username,
                 expectedUser.Password);
@@ -77,8 +77,8 @@ namespace Tests
         public async Task Authenticate_WithInvalidCredentials_ReturnsNull()
         {
             var user = await UserService.Authenticate(
-                MockUserService.User2.Username,
-                MockUserService.NotExistingUser.Password);
+                User2.Username,
+                NotExistingUser.Password);
 
             Assert.Null(user);
         }
@@ -86,7 +86,7 @@ namespace Tests
         [Fact]
         public async Task AddFriend_AddsExactlyTwoEntities()
         {
-            await UserService.AddFriend(MockUserService.Admin.Id, MockUserService.User2.Id);
+            await UserService.AddFriend(Admin.Id, User2.Id);
 
             Assert.Equal(InitialNumberOfFriends + 2, Context.Friends.Count());
         }
@@ -94,20 +94,20 @@ namespace Tests
         [Fact]
         public async Task AddFriend_AddsCorrectEntities()
         {
-            await UserService.AddFriend(MockUserService.Admin.Id, MockUserService.User2.Id);
+            await UserService.AddFriend(Admin.Id, User2.Id);
 
-            Assert.True(Context.Friends.Any(cof => cof.Friend1Id == MockUserService.Admin.Id
-                                                             && cof.Friend2Id == MockUserService.User2.Id));
-            Assert.True(Context.Friends.Any(cof => cof.Friend2Id == MockUserService.Admin.Id
-                                                             && cof.Friend1Id == MockUserService.User2.Id));
+            Assert.True(Context.Friends.Any(cof => cof.Friend1Id == Admin.Id
+                                                             && cof.Friend2Id == User2.Id));
+            Assert.True(Context.Friends.Any(cof => cof.Friend2Id == Admin.Id
+                                                             && cof.Friend1Id == User2.Id));
         }
 
         [Fact]
         public async Task DeleteFriends_RemovesExactlyTwoEntities()
         {
             AddFriend();
-            var userId = MockUserService.Admin.Id;
-            var friendsIds = new List<Guid> { MockUserService.User2.Id };
+            var userId = Admin.Id;
+            var friendsIds = new List<Guid> { User2.Id };
 
             await UserService.DeleteFriends(userId, friendsIds);
 
@@ -118,22 +118,22 @@ namespace Tests
         public async Task DeleteFriends_RemovesCorrectEntities()
         {
             AddFriend();
-            var userId = MockUserService.Admin.Id;
-            var friendsIds = new List<Guid> { MockUserService.User2.Id };
+            var userId = Admin.Id;
+            var friendsIds = new List<Guid> { User2.Id };
 
             await UserService.DeleteFriends(userId, friendsIds);
 
-            Assert.False(Context.Friends.Any(cof => cof.Friend1Id == MockUserService.Admin.Id
-                                                             && cof.Friend2Id == MockUserService.User2.Id));
-            Assert.False(Context.Friends.Any(cof => cof.Friend2Id == MockUserService.Admin.Id
-                                                             && cof.Friend1Id == MockUserService.User2.Id));
+            Assert.False(Context.Friends.Any(cof => cof.Friend1Id == Admin.Id
+                                                             && cof.Friend2Id == User2.Id));
+            Assert.False(Context.Friends.Any(cof => cof.Friend2Id == Admin.Id
+                                                             && cof.Friend1Id == User2.Id));
         }
 
         [Fact]
         public async Task InviteFriends_AddsExactlyOneEntity()
         {
-            var inviterId = MockUserService.Admin.Id;
-            var invitedIds = new List<Guid> { MockUserService.User2.Id };
+            var inviterId = Admin.Id;
+            var invitedIds = new List<Guid> { User2.Id };
 
             await UserService.InviteFriends(inviterId, invitedIds);
 
@@ -144,8 +144,8 @@ namespace Tests
         public async Task InviteFriends_FriendAlreadyAdded_DoesNotAddAnyEntity()
         {
             AddFriend();
-            var inviterId = MockUserService.Admin.Id;
-            var invitedIds = new List<Guid> { MockUserService.User2.Id };
+            var inviterId = Admin.Id;
+            var invitedIds = new List<Guid> { User2.Id };
 
             await UserService.InviteFriends(inviterId, invitedIds);
 
@@ -155,12 +155,12 @@ namespace Tests
         [Fact]
         public async Task InviteFriends_AddsCorrectEntity()
         {
-            var inviterId = MockUserService.Admin.Id;
-            var invitedIds = new List<Guid> { MockUserService.User2.Id };
+            var inviterId = Admin.Id;
+            var invitedIds = new List<Guid> { User2.Id };
 
             await UserService.InviteFriends(inviterId, invitedIds);
 
-            Assert.True(Context.Invitations.Any(i => i.InviterId == inviterId && i.InvitedId == MockUserService.User2.Id));
+            Assert.True(Context.Invitations.Any(i => i.InviterId == inviterId && i.InvitedId == User2.Id));
         }
 
         [Fact]
@@ -168,20 +168,20 @@ namespace Tests
         {
             AddInvitation();
 
-            var inviterId = MockUserService.Admin.Id;
+            var inviterId = Admin.Id;
             var invitedIds = new List<Guid>
             {
-                MockUserService.User2.Id,
-                MockUserService.User1.Id,
-                MockUserService.Admin.Id
+                User2.Id,
+                User1.Id,
+                Admin.Id
             };
 
             var actualExistingNotInvitedUsers = await UserService.InviteFriends(inviterId, invitedIds);
 
             var expectedExistingNotInvitedUsers = new HashSet<string>
             {
-                MockUserService.User1.Id.ToString(),
-                MockUserService.Admin.Id.ToString(),
+                User1.Id.ToString(),
+                Admin.Id.ToString(),
             };
 
             Assert.True(expectedExistingNotInvitedUsers.SetEquals(actualExistingNotInvitedUsers));
@@ -196,30 +196,30 @@ namespace Tests
 
             var userRelatedEntities = new UserRelatedEntities
             {
-                FriendsIds = new List<Guid> { MockUserService.Admin.Id, MockUserService.User1.Id },
-                InvitedIds = new List<Guid> { MockUserService.Admin.Id, MockUserService.User1.Id },
-                InvitersIds = new List<Guid> { MockUserService.Admin.Id, MockUserService.User1.Id },
-                ConversationIds = new List<Guid> { Conversation.Id, MockUserService.User2.Id },
-                ConversationMembersIds = new List<Guid> { MockUserService.Admin.Id,
-                                                          MockUserService.User2.Id,
-                                                          MockUserService.User1.Id },
-                ConversationManagersIds = new List<Guid> { MockUserService.Admin.Id,
-                                                           MockUserService.User2.Id,
-                                                           MockUserService.User1.Id }
+                FriendsIds = new List<Guid> { Admin.Id, User1.Id },
+                InvitedIds = new List<Guid> { Admin.Id, User1.Id },
+                InvitersIds = new List<Guid> { Admin.Id, User1.Id },
+                ConversationIds = new List<Guid> { Conversation.Id, User2.Id },
+                ConversationMembersIds = new List<Guid> { Admin.Id,
+                                                          User2.Id,
+                                                          User1.Id },
+                ConversationManagersIds = new List<Guid> { Admin.Id,
+                                                           User2.Id,
+                                                           User1.Id }
             };
 
             var expectedNotExistingUserRelatedEntities = new UserRelatedEntities
             {
-                FriendsIds = new List<Guid> { MockUserService.User1.Id },
-                InvitedIds = new List<Guid> { MockUserService.Admin.Id, MockUserService.User1.Id },
-                InvitersIds = new List<Guid> { MockUserService.User1.Id },
-                ConversationIds = new List<Guid> { MockUserService.User2.Id },
-                ConversationMembersIds = new List<Guid> { MockUserService.User1.Id },
-                ConversationManagersIds = new List<Guid> { MockUserService.User2.Id,
-                                                           MockUserService.User1.Id }
+                FriendsIds = new List<Guid> { User1.Id },
+                InvitedIds = new List<Guid> { Admin.Id, User1.Id },
+                InvitersIds = new List<Guid> { User1.Id },
+                ConversationIds = new List<Guid> { User2.Id },
+                ConversationMembersIds = new List<Guid> { User1.Id },
+                ConversationManagersIds = new List<Guid> { User2.Id,
+                                                           User1.Id }
             };
 
-            var actualNotExistingUserRelatedEntities = await UserService.GetNotExisting(MockUserService.User2.Id,
+            var actualNotExistingUserRelatedEntities = await UserService.GetNotExisting(User2.Id,
                                                                                             userRelatedEntities);
 
             Assert.Equal(expectedNotExistingUserRelatedEntities, actualNotExistingUserRelatedEntities);
@@ -229,8 +229,8 @@ namespace Tests
         public async Task DeleteInvitations_RemovesExactlyOneEntity()
         {
             AddInvitation();
-            var inviterId = MockUserService.Admin.Id;
-            var invitedIds = new List<Guid> { MockUserService.User2.Id };
+            var inviterId = Admin.Id;
+            var invitedIds = new List<Guid> { User2.Id };
 
             await UserService.DeleteInvitations(inviterId, invitedIds);
 
@@ -241,13 +241,13 @@ namespace Tests
         public async Task DeleteInvitations_RemovesCorrectEntity()
         {
             AddInvitation();
-            var inviterId = MockUserService.Admin.Id;
-            var invitedIds = new List<Guid> { MockUserService.User2.Id };
+            var inviterId = Admin.Id;
+            var invitedIds = new List<Guid> { User2.Id };
 
             await UserService.DeleteInvitations(inviterId, invitedIds);
 
             Assert.False(Context.Invitations.Any(cof => cof.InviterId == inviterId
-                                                             && cof.InvitedId == MockUserService.User2.Id));
+                                                             && cof.InvitedId == User2.Id));
         }
 
         [Fact]
@@ -255,7 +255,7 @@ namespace Tests
         {
             AddInvitation();
 
-            var userIsInvited = await UserService.IsUserInvited(MockUserService.Admin.Id, MockUserService.User2.Id);
+            var userIsInvited = await UserService.IsUserInvited(Admin.Id, User2.Id);
 
             Assert.True(userIsInvited);
         }
@@ -263,7 +263,7 @@ namespace Tests
         [Fact]
         public async Task IsUserInvited_UserIsNotInvited_ReturnsFalse()
         {
-            var userIsInvited = await UserService.IsUserInvited(MockUserService.Admin.Id, MockUserService.User2.Id);
+            var userIsInvited = await UserService.IsUserInvited(Admin.Id, User2.Id);
 
             Assert.False(userIsInvited);
         }
@@ -284,8 +284,8 @@ namespace Tests
 
             var expectedUsersIds = new HashSet<Guid>
             {
-                MockUserService.User1.Id,
-                MockUserService.User2.Id,
+                User1.Id,
+                User2.Id,
             };
 
             var actualUsersIds = actualUsersPublicData.Select(upd => upd.Id);
@@ -296,12 +296,12 @@ namespace Tests
         [Fact]
         public async Task Search_WithGuid_ReturnsCorrectEntity()
         {
-            var query = MockUserService.User1.Id.ToString();
+            var query = User1.Id.ToString();
             var actualUsersPublicData = await UserService.Search(query);
 
             var expectedUsersIds = new HashSet<Guid>
             {
-                MockUserService.User1.Id,
+                User1.Id,
             };
 
             var actualUsersIds = actualUsersPublicData.Select(upd => upd.Id);
