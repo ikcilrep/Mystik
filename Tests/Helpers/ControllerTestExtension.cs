@@ -7,21 +7,10 @@ namespace Tests.Helpers
 {
     public static class ControllerTestExtensions
     {
-        public static T WithAdminIdentity<T>(this T controller) where T : Controller
+        public static T WithUserIdentity<T>(this T controller, User user) where T : Controller
         {
-            return controller.WithIdentity(MockUserService.Admin.Id.ToString(), Role.Admin);
+            return controller.WithIdentity(user.Id.ToString(), user.Role);
         }
-
-        public static T WithUser1Identity<T>(this T controller) where T : Controller
-        {
-            return controller.WithIdentity(MockUserService.User1.Id.ToString(), Role.User);
-        }
-
-        public static T WithUser2Identity<T>(this T controller) where T : Controller
-        {
-            return controller.WithIdentity(MockUserService.User2.Id.ToString(), Role.User);
-        }
-
         private static T EnsureHttpContext<T>(this T controller) where T : Controller
         {
             if (controller.ControllerContext == null)

@@ -16,7 +16,7 @@ namespace Tests
         [Fact]
         public async Task GetRemoved_AsAuthorizedUser_ReturnsCorrectEntities()
         {
-            UsersController = UsersController.WithAdminIdentity();
+            UsersController = UsersController.WithUserIdentity(Admin);
 
             AddFriend();
             AddInvitation();
@@ -32,25 +32,25 @@ namespace Tests
 
             var userRelatedEntities = new UserRelatedEntities
             {
-                FriendsIds = new List<Guid> { MockUserService.User2.Id },
-                InvitedIds = new List<Guid> { MockUserService.User2.Id },
+                FriendsIds = new List<Guid> { User2.Id },
+                InvitedIds = new List<Guid> { User2.Id },
                 InvitersIds = new List<Guid> { },
                 ConversationIds = new List<Guid> { Conversation.Id },
-                ConversationMembersIds = new List<Guid> { MockUserService.User2.Id },
-                ConversationManagersIds = new List<Guid> { MockUserService.Admin.Id },
+                ConversationMembersIds = new List<Guid> { User2.Id },
+                ConversationManagersIds = new List<Guid> { Admin.Id },
             };
 
             var expectedNotExistingUserRelatedEntities = new UserRelatedEntities
             {
-                FriendsIds = new List<Guid> { MockUserService.User2.Id },
-                InvitedIds = new List<Guid> { MockUserService.User2.Id },
+                FriendsIds = new List<Guid> { User2.Id },
+                InvitedIds = new List<Guid> { User2.Id },
                 InvitersIds = new List<Guid> { },
                 ConversationIds = new List<Guid> { },
                 ConversationMembersIds = new List<Guid> { },
                 ConversationManagersIds = new List<Guid> { },
             };
 
-            var actualNotExistingUserRelatedEntitiesAction = await UsersController.GetRemoved(MockUserService.Admin.Id, userRelatedEntities);
+            var actualNotExistingUserRelatedEntitiesAction = await UsersController.GetRemoved(Admin.Id, userRelatedEntities);
 
             Assert.IsAssignableFrom<OkObjectResult>(actualNotExistingUserRelatedEntitiesAction);
 
@@ -63,9 +63,9 @@ namespace Tests
         [Fact]
         public async Task GetRemove_AsUnauthorizedUser_Forbids()
         {
-            UsersController = UsersController.WithUser1Identity();
+            UsersController = UsersController.WithUserIdentity(User1);
 
-            var result = await UsersController.GetRemoved(MockUserService.Admin.Id, new UserRelatedEntities { });
+            var result = await UsersController.GetRemoved(Admin.Id, new UserRelatedEntities { });
 
             Assert.IsAssignableFrom<ForbidResult>(result);
         }
@@ -73,7 +73,7 @@ namespace Tests
         [Fact]
         public async Task Get_ReturnsCorrectEntities()
         {
-            UsersController = UsersController.WithAdminIdentity();
+            UsersController = UsersController.WithUserIdentity(Admin);
 
             var model = new Get { };
 
@@ -88,25 +88,25 @@ namespace Tests
         [Fact]
         public async Task GetById_AsAuthorizedUser_ReturnsCorrectEntity()
         {
-            UsersController = UsersController.WithUser1Identity();
+            UsersController = UsersController.WithUserIdentity(User1);
 
             var model = new Get { };
-            var jsonRepresentableUserResult = await UsersController.Get(MockUserService.User1.Id, model);
+            var jsonRepresentableUserResult = await UsersController.Get(User1.Id, model);
 
             Assert.IsAssignableFrom<OkObjectResult>(jsonRepresentableUserResult);
 
             var jsonRepresentableUser = (jsonRepresentableUserResult as OkObjectResult).Value as JsonRepresentableUser;
 
-            Assert.Equal(MockUserService.User1.Id, jsonRepresentableUser.Id);
+            Assert.Equal(User1.Id, jsonRepresentableUser.Id);
         }
 
         [Fact]
         public async Task GetById_AsUnauthorizedUser_Forbids()
         {
-            UsersController = UsersController.WithUser1Identity();
+            UsersController = UsersController.WithUserIdentity(User1);
 
             var model = new Get { };
-            var jsonRepresentableUserResult = await UsersController.Get(MockUserService.User2.Id, model);
+            var jsonRepresentableUserResult = await UsersController.Get(User2.Id, model);
 
             Assert.IsAssignableFrom<ForbidResult>(jsonRepresentableUserResult);
         }
@@ -114,23 +114,23 @@ namespace Tests
         [Fact]
         public async Task GetPublicData_UserExists_ReturnsCorrectEntity()
         {
-            UsersController = UsersController.WithUser1Identity();
+            UsersController = UsersController.WithUserIdentity(User1);
 
-            var publicDataResult = await UsersController.GetPublicData(MockUserService.User2.Id);
+            var publicDataResult = await UsersController.GetPublicData(User2.Id);
 
 
             Assert.IsAssignableFrom<OkObjectResult>(publicDataResult);
 
             var publicData = (publicDataResult as OkObjectResult).Value as UserPublicData;
-            Assert.Equal(MockUserService.User2.Id, publicData.Id);
+            Assert.Equal(User2.Id, publicData.Id);
         }
 
         [Fact]
         public async Task GetPublicData_UserDoesNotExist_ReturnsNotFound()
         {
-            UsersController = UsersController.WithUser1Identity();
+            UsersController = UsersController.WithUserIdentity(User1);
 
-            var publicDataResult = await UsersController.GetPublicData(MockUserService.NotExistingUser.Id);
+            var publicDataResult = await UsersController.GetPublicData(NotExistingUser.Id);
 
             Assert.IsAssignableFrom<NotFoundResult>(publicDataResult);
         }
@@ -138,9 +138,9 @@ namespace Tests
         [Fact]
         public async Task Delete_AsAuthorizedUser_ReturnsOk()
         {
-            UsersController = UsersController.WithUser1Identity();
+            UsersController = UsersController.WithUserIdentity(User1);
 
-            var result = await UsersController.Delete(MockUserService.User1.Id);
+            var result = await UsersController.Delete(User1.Id);
 
             Assert.IsAssignableFrom<OkResult>(result);
         }
@@ -148,9 +148,9 @@ namespace Tests
         [Fact]
         public async Task Delete_AsUnauthorizedUser_Forbids()
         {
-            UsersController = UsersController.WithUser1Identity();
+            UsersController = UsersController.WithUserIdentity(User1);
 
-            var result = await UsersController.Delete(MockUserService.User2.Id);
+            var result = await UsersController.Delete(User2.Id);
 
             Assert.IsAssignableFrom<ForbidResult>(result);
         }
@@ -158,9 +158,9 @@ namespace Tests
         [Fact]
         public async Task Delete_AsUnauthorizedUser_DoesNotDelete()
         {
-            UsersController = UsersController.WithUser1Identity();
+            UsersController = UsersController.WithUserIdentity(User1);
 
-            await UsersController.Delete(MockUserService.User2.Id);
+            await UsersController.Delete(User2.Id);
 
             Assert.Equal(InitialNumberOfUsers, Context.Users.Count());
         }
@@ -172,8 +172,8 @@ namespace Tests
 
             var model = new Authentication
             {
-                Username = MockUserService.User1.Username,
-                Password = MockUserService.User1.Password,
+                Username = User1.Username,
+                Password = User1.Password,
             };
 
             var result = await UsersController.Authenticate(model);
@@ -182,7 +182,7 @@ namespace Tests
 
             var resultValue = (result as OkObjectResult).Value;
 
-            Assert.Equal(resultValue.GetProperty("Id"), MockUserService.User1.Id);
+            Assert.Equal(resultValue.GetProperty("Id"), User1.Id);
         }
 
         [Fact]
@@ -192,8 +192,8 @@ namespace Tests
 
             var model = new Authentication
             {
-                Username = MockUserService.User1.Username,
-                Password = MockUserService.User2.Password,
+                Username = User1.Username,
+                Password = User2.Password,
             };
 
             var result = await UsersController.Authenticate(model);
@@ -206,9 +206,9 @@ namespace Tests
         {
             var model = new Registration
             {
-                Nickname = MockUserService.NotExistingUser.Nickname,
-                Username = MockUserService.NotExistingUser.Username,
-                Password = MockUserService.NotExistingUser.Password,
+                Nickname = NotExistingUser.Nickname,
+                Username = NotExistingUser.Username,
+                Password = NotExistingUser.Password,
             };
 
             var result = await UsersController.Register(model);
@@ -221,8 +221,8 @@ namespace Tests
         {
             var model = new Registration
             {
-                Nickname = MockUserService.NotExistingUser.Nickname,
-                Username = MockUserService.NotExistingUser.Username,
+                Nickname = NotExistingUser.Nickname,
+                Username = NotExistingUser.Username,
                 Password = "",
             };
 
@@ -238,8 +238,8 @@ namespace Tests
 
             var expectedUsersIds = new HashSet<Guid>
             {
-                MockUserService.User1.Id,
-                MockUserService.User2.Id,
+                User1.Id,
+                User2.Id,
             };
 
             var actualUsersIds = actualUsersPublicData.Select(upd => upd.Id);
@@ -250,12 +250,12 @@ namespace Tests
         [Fact]
         public async Task Search_WithGuid_ReturnsCorrectEntity()
         {
-            var query = MockUserService.User1.Id.ToString();
+            var query = User1.Id.ToString();
             var actualUsersPublicData = await UsersController.Search(query);
 
             var expectedUsersIds = new HashSet<Guid>
             {
-                MockUserService.User1.Id,
+                User1.Id,
             };
 
             var actualUsersIds = actualUsersPublicData.Select(upd => upd.Id);

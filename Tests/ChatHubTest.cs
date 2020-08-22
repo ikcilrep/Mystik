@@ -18,7 +18,7 @@ namespace Tests
         [Fact]
         public async Task SendMessage_UserIsInConversation_MessageIsReceived()
         {
-            ChatHub = ChatHub.WithUser1Identity();
+            ChatHub = ChatHub.WithUserIdentity(User1);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -36,7 +36,7 @@ namespace Tests
         [Fact]
         public async Task SendMessage_UserIsNotInConversation_MessageIsNotReceived()
         {
-            ChatHub = ChatHub.WithUser2Identity();
+            ChatHub = ChatHub.WithUserIdentity(User2);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -53,7 +53,7 @@ namespace Tests
         [Fact]
         public async Task EditMessage_UserIsTheSender_MessageIsEdited()
         {
-            ChatHub = ChatHub.WithUser1Identity();
+            ChatHub = ChatHub.WithUserIdentity(User1);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -75,7 +75,7 @@ namespace Tests
         [Fact]
         public async Task EditMessage_UserIsNotTheSender_MessageIsNotEdited()
         {
-            ChatHub = ChatHub.WithAdminIdentity();
+            ChatHub = ChatHub.WithUserIdentity(Admin);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -94,7 +94,7 @@ namespace Tests
         [Fact]
         public async Task DeleteMessage_UserIsTheSender_MessageIsDeleted()
         {
-            ChatHub = ChatHub.WithUser1Identity();
+            ChatHub = ChatHub.WithUserIdentity(User1);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -113,7 +113,7 @@ namespace Tests
         [Fact]
         public async Task DeleteMessage_UserIsNotTheSender_MessageIsNotDeleted()
         {
-            ChatHub = ChatHub.WithAdminIdentity();
+            ChatHub = ChatHub.WithUserIdentity(Admin);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -131,7 +131,7 @@ namespace Tests
         [Fact]
         public async Task CreateConversation_AddedUsersJoinTheConversation()
         {
-            ChatHub = ChatHub.WithUser1Identity();
+            ChatHub = ChatHub.WithUserIdentity(User1);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -140,7 +140,7 @@ namespace Tests
             mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
             all.Setup(icc => icc.JoinConversation(It.IsAny<JsonRepresentableConversation>()));
 
-            await ChatHub.CreateConversation("Some Conversation", new byte[] { }, new List<Guid> { MockUserService.User1.Id });
+            await ChatHub.CreateConversation("Some Conversation", new byte[] { }, new List<Guid> { User1.Id });
 
             all.VerifyAll();
         }
@@ -148,7 +148,7 @@ namespace Tests
         [Fact]
         public async Task DeleteConversation_UserIsTheManager_ConversationIsDeleted()
         {
-            ChatHub = ChatHub.WithAdminIdentity();
+            ChatHub = ChatHub.WithUserIdentity(Admin);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -165,7 +165,7 @@ namespace Tests
         [Fact]
         public async Task DeleteConversation_UserIsNotTheManager_ConversationIsNotDeleted()
         {
-            ChatHub = ChatHub.WithUser1Identity();
+            ChatHub = ChatHub.WithUserIdentity(User1);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -182,7 +182,7 @@ namespace Tests
         [Fact]
         public async Task ChangeConversationName_UserIsTheManager_NameIsChanged()
         {
-            ChatHub = ChatHub.WithAdminIdentity();
+            ChatHub = ChatHub.WithUserIdentity(Admin);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -199,7 +199,7 @@ namespace Tests
         [Fact]
         public async Task ChangeConversationName_UserIsNotTheManager_NameIsNotChanged()
         {
-            ChatHub = ChatHub.WithUser1Identity();
+            ChatHub = ChatHub.WithUserIdentity(User1);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -215,7 +215,7 @@ namespace Tests
         [Fact]
         public async Task InviteFriends_InvitedUsersReceiveAnInvitation()
         {
-            ChatHub = ChatHub.WithUser1Identity();
+            ChatHub = ChatHub.WithUserIdentity(User1);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -224,7 +224,7 @@ namespace Tests
             mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
             all.Setup(icc => icc.ReceiveInvitation(It.IsAny<Guid>()));
 
-            await ChatHub.InviteFriends(new List<Guid> { MockUserService.User2.Id });
+            await ChatHub.InviteFriends(new List<Guid> { User2.Id });
 
             all.VerifyAll();
         }
@@ -232,7 +232,7 @@ namespace Tests
         [Fact]
         public async Task DeleteInvitations_InvitationsAreDeleted()
         {
-            ChatHub = ChatHub.WithUser2Identity();
+            ChatHub = ChatHub.WithUserIdentity(User2);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -249,7 +249,7 @@ namespace Tests
         [Fact]
         public async Task AddFriend_TheFriendIsAdded()
         {
-            ChatHub = ChatHub.WithAdminIdentity();
+            ChatHub = ChatHub.WithUserIdentity(Admin);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -266,7 +266,7 @@ namespace Tests
         [Fact]
         public async Task DeleteFriends_TheFriendIsDeleted()
         {
-            ChatHub = ChatHub.WithUser1Identity();
+            ChatHub = ChatHub.WithUserIdentity(User1);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -283,7 +283,7 @@ namespace Tests
         [Fact]
         public async Task AddConversationMembers_UserIsTheManager_MembersAreAdded()
         {
-            ChatHub = ChatHub.WithAdminIdentity();
+            ChatHub = ChatHub.WithUserIdentity(Admin);
 
             await SetMessageContent();
 
@@ -295,7 +295,7 @@ namespace Tests
             all.Setup(icc => icc.JoinConversation(It.IsAny<JsonRepresentableConversation>()));
             all.Setup(icc => icc.AddConversationMembers(It.IsAny<Guid>(), It.IsAny<IEnumerable<Guid>>()));
 
-            await ChatHub.AddConversationMembers(Conversation.Id, new List<Guid> { MockUserService.User2.Id });
+            await ChatHub.AddConversationMembers(Conversation.Id, new List<Guid> { User2.Id });
 
             all.VerifyAll();
         }
@@ -303,7 +303,7 @@ namespace Tests
         [Fact]
         public async Task AddConversationMembers_UserIsNotTheManager_MembersAreNotAdded()
         {
-            ChatHub = ChatHub.WithUser1Identity();
+            ChatHub = ChatHub.WithUserIdentity(User1);
 
             await SetMessageContent();
 
@@ -313,7 +313,7 @@ namespace Tests
 
             mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
 
-            await ChatHub.AddConversationMembers(Conversation.Id, new List<Guid> { MockUserService.User2.Id });
+            await ChatHub.AddConversationMembers(Conversation.Id, new List<Guid> { User2.Id });
 
             all.Verify(icc => icc.JoinConversation(It.IsAny<JsonRepresentableConversation>()), Times.Never);
             all.Verify(icc => icc.AddConversationMembers(It.IsAny<Guid>(), It.IsAny<IEnumerable<Guid>>()), Times.Never);
@@ -322,7 +322,7 @@ namespace Tests
         [Fact]
         public async Task DeleteConversationMembers_UserIsTheManager_MembersAreDeleted()
         {
-            ChatHub = ChatHub.WithAdminIdentity();
+            ChatHub = ChatHub.WithUserIdentity(Admin);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -332,7 +332,7 @@ namespace Tests
             all.Setup(icc => icc.LeaveConversation(It.IsAny<Guid>()));
             all.Setup(icc => icc.DeleteConversationMembers(It.IsAny<Guid>(), It.IsAny<IEnumerable<Guid>>()));
 
-            await ChatHub.DeleteConversationMembers(Conversation.Id, new List<Guid> { MockUserService.User1.Id });
+            await ChatHub.DeleteConversationMembers(Conversation.Id, new List<Guid> { User1.Id });
 
             all.VerifyAll();
         }
@@ -340,7 +340,7 @@ namespace Tests
         [Fact]
         public async Task DeleteConversationMembers_UserIsNotTheManager_MembersAreNotDeleted()
         {
-            ChatHub = ChatHub.WithUser1Identity();
+            ChatHub = ChatHub.WithUserIdentity(User1);
 
             AddUser2ToConversation();
 
@@ -350,7 +350,7 @@ namespace Tests
 
             mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
 
-            await ChatHub.DeleteConversationMembers(Conversation.Id, new List<Guid> { MockUserService.User2.Id });
+            await ChatHub.DeleteConversationMembers(Conversation.Id, new List<Guid> { User2.Id });
 
             all.Verify(icc => icc.LeaveConversation(It.IsAny<Guid>()), Times.Never);
             all.Verify(icc => icc.DeleteConversationMembers(It.IsAny<Guid>(), It.IsAny<IEnumerable<Guid>>()), Times.Never);
@@ -359,7 +359,7 @@ namespace Tests
         [Fact]
         public async Task UpdateUser_NicknameIsChanged_FriendsUpdateTheUser()
         {
-            ChatHub = ChatHub.WithAdminIdentity();
+            ChatHub = ChatHub.WithUserIdentity(Admin);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -375,14 +375,14 @@ namespace Tests
         [Fact]
         public async Task UpdateUser_NicknameHasNotChanged_FriendsDoNotUpdateTheUser()
         {
-            ChatHub = ChatHub.WithAdminIdentity();
+            ChatHub = ChatHub.WithUserIdentity(Admin);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
             mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
 
-            await ChatHub.UpdateUser(null, MockUserService.NotExistingUser.Password);
+            await ChatHub.UpdateUser(null, NotExistingUser.Password);
 
             all.Verify(icc => icc.UpdateFriend(It.IsAny<Guid>(), It.IsAny<string>()), Times.Never);
         }
@@ -390,7 +390,7 @@ namespace Tests
         [Fact]
         public async Task DeleteUser_UserIsDeletedByHimself_FriendsDeleteTheUser()
         {
-            ChatHub = ChatHub.WithUser1Identity();
+            ChatHub = ChatHub.WithUserIdentity(User1);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -399,7 +399,7 @@ namespace Tests
 
             all.Setup(icc => icc.DeleteFriend(It.IsAny<Guid>()));
 
-            await ChatHub.DeleteUser(MockUserService.User1.Id);
+            await ChatHub.DeleteUser(User1.Id);
 
             all.VerifyAll();
         }
@@ -407,14 +407,14 @@ namespace Tests
         [Fact]
         public async Task DeleteUser_UserIsDeletedByAnOtherUser_FriendsDoNotDeleteTheUser()
         {
-            ChatHub = ChatHub.WithUser2Identity();
+            ChatHub = ChatHub.WithUserIdentity(User2);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
             ChatHub.Clients = mockClients.Object;
             mockClients.Setup(ihcc => ihcc.Users(It.IsAny<IReadOnlyList<string>>())).Returns(all.Object);
 
-            await ChatHub.DeleteUser(MockUserService.User1.Id);
+            await ChatHub.DeleteUser(User1.Id);
 
             all.Verify(icc => icc.DeleteFriend(It.IsAny<Guid>()), Times.Never);
         }
@@ -422,7 +422,7 @@ namespace Tests
         [Fact]
         public async Task DeleteUser_UserIsDeletedByAnAdmin_FriendsDeleteUser()
         {
-            ChatHub = ChatHub.WithAdminIdentity();
+            ChatHub = ChatHub.WithUserIdentity(Admin);
 
             var mockClients = new Mock<IHubCallerClients<IChatClient>>();
             var all = new Mock<IChatClient>();
@@ -431,7 +431,7 @@ namespace Tests
 
             all.Setup(icc => icc.DeleteFriend(It.IsAny<Guid>()));
 
-            await ChatHub.DeleteUser(MockUserService.User1.Id);
+            await ChatHub.DeleteUser(User1.Id);
         }
     }
 }

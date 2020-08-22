@@ -20,17 +20,9 @@ namespace Tests.Helpers
             hub.Context = mockContext.Object;
             return hub;
         }
-        public static T WithAdminIdentity<T>(this T hub) where T : Hub
+        public static T WithUserIdentity<T>(this T hub, User user) where T : Hub
         {
-            return hub.WithIdentity(MockUserService.Admin.Id.ToString(), Role.Admin);
+            return hub.WithIdentity(user.Id.ToString(), user.Role);
         }
-        public static T WithUser1Identity<T>(this T hub) where T : Hub
-        {
-            return hub.WithIdentity(MockUserService.User1.Id.ToString(), Role.User);
-        }
-        public static T WithUser2Identity<T>(this T hub) where T : Hub
-        {
-            return hub.WithIdentity(MockUserService.User2.Id.ToString(), Role.User);
-        }
-    }
+   }
 }
