@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Mystik.Entities;
 using Mystik.Helpers;
-using Mystik.Models;
 using Mystik.Models.User;
 using Mystik.Services;
 
@@ -33,21 +32,58 @@ namespace Mystik.Controllers
             _userService = userService;
         }
 
-        [Authorize(Roles = Role.Admin)]
-        public async Task<IEnumerable<User>> Get()
+        [HttpGet("removed/{id}")]
+        public async Task<IActionResult> GetRemoved(Guid id, UserRelatedEntities model)
         {
-            return await _userService.GetAll();
+            var currentUserId = Guid.Parse(User.Identity.Name);
+            if (currentUserId == id)
+            {
+                var removedEntities = await _userService.GetNotExisting(id, model);
+                return Ok(removedEntities);
+            }
+            return Forbid();
+        }
+
+        [Authorize(Roles = Role.Admin)]
+        public async Task<IEnumerable<JsonRepresentableUser>> Get(Get model)
+        {
+            if (model.Since == null)
+            {
+                model.Since = DateTime.UnixEpoch;
+            }
+
+            var users = await _userService.GetAll();
+            return await users.GetJsonRepresentableUsers(model.Since);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
+        public async Task<IActionResult> Get(Guid id, Get model)
         {
+            if (model.Since == null)
+            {
+                model.Since = DateTime.UnixEpoch;
+            }
+
             var currentUserId = Guid.Parse(User.Identity.Name);
 
             if (id != currentUserId && !User.IsInRole(Role.Admin))
                 return Forbid();
 
-            return Ok(await _userService.Retrieve(id));
+            var user = await _userService.Retrieve(id);
+            return Ok(await user.ToJsonRepresentableObject(model.Since));
+        }
+
+        [HttpGet("public/{id}")]
+        public async Task<IActionResult> GetPublicData(Guid id)
+        {
+            var user = await _userService.Retrieve(id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user.GetPublicData());
         }
 
         [HttpDelete("{id}")]
@@ -62,38 +98,10 @@ namespace Mystik.Controllers
             return Ok();
         }
 
-        [HttpPatch("{id}")]
-        public async Task<IActionResult> Patch(Guid id, Patch model)
+        [HttpGet("search/{query}")]
+        public async Task<IEnumerable<UserPublicData>> Search(string query)
         {
-            try
-            {
-                var currentUserId = Guid.Parse(User.Identity.Name);
-
-                if (id != currentUserId && !User.IsInRole(Role.Admin))
-                    return Forbid();
-
-                await _userService.Update(id, model);
-                return Ok();
-            }
-            catch (AppException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
-        [Authorize(Roles = Role.Admin)]
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(Guid id, Put model)
-        {
-            try
-            {
-                await _userService.Update(id, model);
-                return Ok();
-            }
-            catch (AppException ex)
-            {
-                return BadRequest(new { message = ex.Message });
-            }
+            return await _userService.Search(query);
         }
 
         [AllowAnonymous]
@@ -122,8 +130,6 @@ namespace Mystik.Controllers
             return Ok(new
             {
                 Id = user.Id,
-                Nickname = user.Nickname,
-                Username = user.Username,
                 Token = tokenString
             });
         }

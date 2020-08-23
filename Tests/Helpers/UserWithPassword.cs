@@ -12,10 +12,10 @@ namespace Tests.Helpers
             string nickname,
             string username,
             string password,
-            string id) : base(nickname, username, password)
+            Guid id) : base(nickname, username, password)
         {
             Password = password;
-            Id = Guid.Parse(id);
+            Id = id;
         }
     }
 }

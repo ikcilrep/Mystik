@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Mystik.Data;
 using Mystik.Entities;
-using Mystik.Models;
-using Mystik.Models.Message;
 
 namespace Mystik.Services
 {
@@ -25,7 +23,7 @@ namespace Mystik.Services
             {
                 SenderId = senderId,
                 ConversationId = conversationId,
-                SentTime = DateTime.UtcNow
+                CreatedDate = DateTime.UtcNow,
             };
 
             _context.Add(message);
@@ -50,30 +48,23 @@ namespace Mystik.Services
             _context.Dispose();
         }
 
-        public async Task<IEnumerable<Message>> GetAll()
-        {
-            return await _context.Messages.AsNoTracking().ToListAsync();
-        }
-
         public async Task<Message> Retrieve(Guid id)
         {
             return await _context.FindAsync<Message>(id);
         }
 
-        public async Task Update(Guid id, Patch model)
+        public async Task Edit(Guid id, byte[] newEncryptedContent)
         {
-            var message = new Message { Id = id };
-            await message.SetEncryptedContent(model.EncryptedContent);
+            var message = await _context.FindAsync<Message>(id);
+
+            await message.SetEncryptedContent(newEncryptedContent);
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> IsTheConversationMember(Guid conversationId, Guid userId)
         {
-            return await _context.UserConversations.AnyAsync(mc => mc.ConversationId == conversationId && mc.UserId == userId);
-        }
-
-        public IEnumerable<Message> GetMessagesFromConversation(Guid conversationId)
-        {
-            return _context.Messages.Where(m => m.ConversationId == conversationId);
+            return await _context.ConversationMembers.AnyAsync(cm => cm.ConversationId == conversationId && cm.UserId == userId);
         }
     }
 }

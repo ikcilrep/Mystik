@@ -13,7 +13,8 @@ namespace Mystik.Entities
         public User Sender { get; set; }
         public Guid ConversationId { get; set; }
         public Conversation Conversation { get; set; }
-        public DateTime SentTime { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
 
         [NotMapped]
         public String EncryptedContentPath => Path.Combine(AppSettings.EncryptedMessagesPath, Id.ToString());
@@ -21,20 +22,20 @@ namespace Mystik.Entities
         public async Task SetEncryptedContent(byte[] encryptedContent)
         {
             await File.WriteAllBytesAsync(EncryptedContentPath, encryptedContent);
+            ModifiedDate = DateTime.UtcNow;
         }
 
         public async Task<byte[]> GetEncryptedContent() => await File.ReadAllBytesAsync(EncryptedContentPath);
 
         public void DeleteEncryptedContent() => File.Delete(EncryptedContentPath);
 
-        public async Task<object> ToJsonRepresentableObject()
+        public async Task<JsonRepresentableMessage> ToJsonRepresentableObject()
         {
-            return new
+            return new JsonRepresentableMessage
             {
                 Id = Id,
-                SenderId = SenderId,
-                ConversationId = ConversationId,
-                SentTime = SentTime,
+                Sender = Sender.GetPublicData(),
+                CreatedDate = CreatedDate,
                 EncryptedContent = await GetEncryptedContent()
             };
         }

@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Mystik.Data;
 using Mystik.Helpers;
+using Mystik.Hubs;
 using Mystik.Services;
 
 namespace Mystik
@@ -33,14 +34,14 @@ namespace Mystik
             services.AddControllers();
             services.AddDbContext<DataContext>(options =>
             {
-                string connectionString = Configuration["DEFAULT_CONNECTION"];
+                string connectionString = Configuration["MYSTIK_DEFAULT_CONNECTION"];
                 options.UseNpgsql(connectionString);
             });
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IConversationService, ConversationService>();
             services.AddScoped<IMessageService, MessageService>();
-
+            services.AddSignalR();
             services.AddCors();
             services.AddControllers();
 
@@ -63,6 +64,19 @@ namespace Mystik
                         {
                             context.Fail("Unauthorized");
                         }
+                    },
+
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) &&
+                            (path.StartsWithSegments("/chat")))
+                        {
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
                     }
                 };
                 x.SaveToken = true;
@@ -88,17 +102,13 @@ namespace Mystik
 
             app.UseRouting();
 
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
-
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chat");
             });
         }
     }

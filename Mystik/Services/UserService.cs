@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Mystik.Data;
 using Mystik.Entities;
 using Mystik.Helpers;
-using Mystik.Models.User;
 
 namespace Mystik.Services
 {
@@ -33,7 +33,7 @@ namespace Mystik.Services
                 return null;
             }
 
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.Username == username);
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Username == username);
 
             if (user == null)
             {
@@ -58,61 +58,89 @@ namespace Mystik.Services
             await _context.SaveChangesAsync();
             return user;
         }
+        public IIncludableQueryable<User, User> UsersWithAllRepresentableData => _context.Users
+                                       .Include(u => u.Friends1)
+                                            .ThenInclude(cof => cof.Friend1)
+                                       .Include(u => u.ManagedConversations)
+                                       .Include(u => u.ParticipatedConversations)
+                                            .ThenInclude(cm => cm.Conversation)
+                                            .ThenInclude(c => c.Members)
+                                            .ThenInclude(cm => cm.User)
+                                       .Include(u => u.ParticipatedConversations)
+                                           .ThenInclude(cm => cm.Conversation)
+                                           .ThenInclude(c => c.Messages)
+                                           .ThenInclude(m => m.Sender)
+                                       .Include(u => u.ParticipatedConversations)
+                                           .ThenInclude(cm => cm.Conversation)
+                                           .ThenInclude(c => c.Managers)
+                                       .Include(u => u.ReceivedInvitations)
+                                            .ThenInclude(i => i.Inviter)
+                                       .Include(u => u.SentInvitations)
+                                            .ThenInclude(i => i.Invited);
 
         public async Task<User> Retrieve(Guid id)
         {
-            return await _context.FindAsync<User>(id);
+            return await UsersWithAllRepresentableData.FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        public async Task Update(Guid id, User updatedUser)
+        public async Task<IReadOnlyList<string>> Delete(Guid id)
         {
-            var user = await _context.FindAsync<User>(id);
-            _context.Entry(user).CurrentValues.SetValues(updatedUser);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task Delete(Guid id)
-        {
-            var user = await _context.Users.Include(u => u.ManagedConversations)
-                                           .ThenInclude(mc => mc.Conversation)
-                                           .ThenInclude(c => c.ManagedConversations)
-                                           .Include(u => u.UserConversations)
-                                           .ThenInclude(uc => uc.Conversation)
-                                           .ThenInclude(c => c.UserConversations)
+            var user = await _context.Users.Include(u => u.Friends1)
+                                           .Include(u => u.ManagedConversations)
+                                                .ThenInclude(cm => cm.Conversation)
+                                                .ThenInclude(c => c.Managers)
+                                           .Include(u => u.ParticipatedConversations)
+                                                .ThenInclude(cm => cm.Conversation)
+                                                .ThenInclude(c => c.Members)
                                            .FirstAsync(u => u.Id == id);
+            var usersToNotify = user.GetRelatedUsers();
 
-            var abandonedManagedConversations = user.ManagedConversations.Where(mc => mc.Conversation.ManagedConversations.Count == 1)
-                                                                         .Select(mc => mc.Conversation);
+            var abandonedManagedConversations = user.ManagedConversations.Where(cm => cm.Conversation.Managers.Count == 1)
+                                                                         .Select(cm => cm.Conversation);
 
-            var abandonedConversations = user.UserConversations.Where(mc => mc.Conversation.UserConversations.Count == 1)
-                                                               .Select(mc => mc.Conversation);
+            var abandonedConversations = user.ParticipatedConversations.Where(cm => cm.Conversation.Members.Count == 1)
+                                                               .Select(cm => cm.Conversation);
 
             _context.RemoveRange(abandonedManagedConversations);
             _context.RemoveRange(abandonedConversations);
 
             _context.Remove(user);
             await _context.SaveChangesAsync();
+
+            return usersToNotify;
         }
 
         public async Task<IEnumerable<User>> GetAll()
         {
-            return await _context.Users.AsNoTracking().ToListAsync();
+            return await UsersWithAllRepresentableData.ToListAsync();
         }
 
-        public async Task Update(Guid id, Patch model)
+        public async Task<IReadOnlyList<string>> Update(Guid id, string newNickname, string newPassword)
         {
-            var user = await _context.FindAsync<User>(id);
-            var updatedUser = model.ToUser(user);
-            ValidateNickname(updatedUser.Nickname);
+            var user = await _context.Users.Include(u => u.Friends1)
+                                           .Include(u => u.ParticipatedConversations)
+                                                .ThenInclude(cm => cm.Conversation)
+                                                    .ThenInclude(c => c.Members)
+                                           .FirstOrDefaultAsync(u => u.Id == id);
 
-            if (model.Password != null)
+            var usersToNotify = (newNickname == null || newNickname == user.Nickname) ? new List<string>() : user.GetRelatedUsers();
+
+            if (newNickname != null)
             {
-                ValidatePassword(model.Password);
+                ValidateNickname(newNickname);
+                user.Nickname = newNickname;
+                user.ModifiedDate = DateTime.UtcNow;
             }
 
-            _context.Entry(user).CurrentValues.SetValues(updatedUser);
+            if (newPassword != null)
+            {
+                ValidatePassword(newPassword);
+                user.SetPassword(newPassword);
+            }
 
             await _context.SaveChangesAsync();
+
+            return usersToNotify;
         }
 
         public void Dispose()
@@ -189,10 +217,115 @@ namespace Mystik.Services
                 throw new AppException("Username mustn't be longer than sixty four characters.");
             }
 
-            if (await _context.Users.AnyAsync(user => user.Username == username))
+            if (await _context.Users.AnyAsync(u => u.Username == username))
             {
                 throw new AppException($"Username \"{username}\" has already been taken.");
             }
+        }
+
+        public async Task AddFriend(Guid inviterId, Guid invitedId)
+        {
+            _context.Add(new CoupleOfFriends
+            {
+                Friend1Id = inviterId,
+                Friend2Id = invitedId,
+                CreatedDate = DateTime.UtcNow
+            });
+
+            _context.Add(new CoupleOfFriends
+            {
+                Friend1Id = invitedId,
+                Friend2Id = inviterId,
+                CreatedDate = DateTime.UtcNow
+            });
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteFriends(Guid id, List<Guid> usersIds)
+        {
+            var existingFriends = _context.Friends.Where(cof => (cof.Friend1Id == id && usersIds.Contains(cof.Friend2Id))
+                                                              || (cof.Friend2Id == id && usersIds.Contains(cof.Friend1Id)));
+            _context.RemoveRange(existingFriends);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IReadOnlyList<string>> InviteFriends(Guid inviterId, List<Guid> invitedIds)
+        {
+            var existingNotInvitedUsers = await _context.Users.Include(u => u.Friends1)
+                                                              .Include(u => u.ReceivedInvitations)
+                                                              .Include(u => u.SentInvitations)
+                                                              .Where(u => invitedIds.Contains(u.Id)
+                                                                            && u.Friends1.All(cof => cof.Friend1Id != inviterId)
+                                                                            && u.ReceivedInvitations.All(i => i.InviterId != inviterId)
+                                                                            && u.SentInvitations.All(i => i.InvitedId != inviterId))
+                                                              .Select(u => u.Id).ToListAsync();
+            _context.AddRange(existingNotInvitedUsers.Select(invitedId => new Invitation
+            {
+                InviterId = inviterId,
+                InvitedId = invitedId,
+                CreatedDate = DateTime.UtcNow
+            }));
+
+            await _context.SaveChangesAsync();
+
+            return existingNotInvitedUsers.ToStringList();
+        }
+
+        public async Task DeleteInvitations(Guid inviterId, List<Guid> invitedIds)
+        {
+            var existingInvitations = _context.Invitations.Where(i => inviterId == i.InviterId
+                                                                     && invitedIds.Contains(i.InvitedId));
+            _context.RemoveRange(existingInvitations);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsUserInvited(Guid inviterId, Guid invitedId)
+        {
+            return await _context.Invitations.AnyAsync(i => i.InviterId == inviterId && i.InvitedId == invitedId);
+        }
+
+        public async Task<UserRelatedEntities> GetNotExisting(Guid id, UserRelatedEntities entities)
+        {
+            var user = await _context.Users.Include(u => u.Friends1)
+                                           .Include(u => u.SentInvitations)
+                                           .Include(u => u.ReceivedInvitations)
+                                           .Include(u => u.ParticipatedConversations)
+                                                .ThenInclude(c => c.Conversation)
+                                                    .ThenInclude(c => c.Members)
+                                           .Include(u => u.ParticipatedConversations)
+                                                .ThenInclude(c => c.Conversation)
+                                                    .ThenInclude(c => c.Managers)
+                                           .FirstOrDefaultAsync(u => u.Id == id);
+            return new UserRelatedEntities
+            {
+                FriendsIds = entities.FriendsIds.Where(id => user.Friends1.All(cof => id != cof.Friend1Id)),
+                InvitedIds = entities.InvitedIds.Where(id => user.SentInvitations.All(i => id != i.InvitedId)),
+                InvitersIds = entities.InvitersIds.Where(id => user.ReceivedInvitations.All(i => id != i.InviterId)),
+                ConversationIds = entities.ConversationIds.Where(id => user.ParticipatedConversations.All(cm => id != cm.ConversationId)),
+                ConversationMembersIds = entities.ConversationMembersIds.Where(id => user.ParticipatedConversations.SelectMany(cm => cm.Conversation.Members)
+                                                                                                                   .All(cm => id != cm.UserId)),
+                ConversationManagersIds = entities.ConversationManagersIds.Where(id => user.ParticipatedConversations.SelectMany(cm => cm.Conversation.Managers)
+                                                                                                                     .All(cm => id != cm.ManagerId)),
+            };
+        }
+
+        public async Task<IEnumerable<UserPublicData>> Search(string query)
+        {
+            var id = new Guid();
+            if (Guid.TryParse(query, out id))
+            {
+                var user = await _context.Users.FindAsync(id);
+                if (user != null)
+                {
+                    return new List<UserPublicData> { user.GetPublicData() };
+                }
+            }
+
+            return _context.Users.Where(u => u.Nickname.Contains(query))
+                                 .Select(u => u.GetPublicData());
         }
     }
 }
