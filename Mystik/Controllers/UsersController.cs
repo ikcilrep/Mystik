@@ -114,6 +114,7 @@ namespace Mystik.Controllers
                 return BadRequest(new { message = "Username or password is incorrect." });
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(AppSettings.Secret);
+            var expirationDate = DateTime.UtcNow.AddDays(7);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -121,7 +122,7 @@ namespace Mystik.Controllers
                     new Claim(ClaimTypes.Name, user.Id.ToString()),
                     new Claim(ClaimTypes.Role, user.Role)
                 }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = expirationDate,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -130,7 +131,8 @@ namespace Mystik.Controllers
             return Ok(new
             {
                 Id = user.Id,
-                Token = tokenString
+                Token = tokenString,
+                ExpirationDate = expirationDate
             });
         }
 
