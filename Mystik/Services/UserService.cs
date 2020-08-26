@@ -168,12 +168,12 @@ namespace Mystik.Services
             }
             if (password.Length < 8)
             {
-                throw new AppException("Password must be at least eight characters long.");
+                throw new AppException("Password must be at least 8 characters long.");
             }
 
             if (password.Length > 512)
             {
-                throw new AppException("Password mustn't be longer than five hundred and twelve characters.");
+                throw new AppException("Password mustn't be longer than 512 characters.");
             }
 
             if (!_digit.IsMatch(password))
@@ -209,7 +209,7 @@ namespace Mystik.Services
 
             if (username.Length > 64)
             {
-                throw new AppException("Username mustn't be longer than sixty four characters.");
+                throw new AppException("Username mustn't be longer than 64 characters.");
             }
 
             if (await _context.Users.AnyAsync(u => u.Username == username))
