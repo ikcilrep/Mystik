@@ -171,6 +171,11 @@ namespace Mystik.Services
                 throw new AppException("Password must be at least eight characters long.");
             }
 
+            if (password.Length > 512)
+            {
+                throw new AppException("Password mustn't be longer than five hundred and twelve characters.");
+            }
+
             if (!_digit.IsMatch(password))
             {
                 throw new AppException("Password must contain at least one digit.");
