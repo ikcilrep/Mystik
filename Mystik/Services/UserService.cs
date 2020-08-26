@@ -155,11 +155,6 @@ namespace Mystik.Services
                 throw new AppException("Nickname is required.");
             }
 
-            if (nickname[0] == '@')
-            {
-                throw new AppException("Nickname mustn't begin with \"@\".");
-            }
-
             if (nickname.Length > 64)
             {
                 throw new AppException("Nickname mustn't be longer than sixty four characters.");
@@ -205,11 +200,6 @@ namespace Mystik.Services
             if (string.IsNullOrWhiteSpace(username))
             {
                 throw new AppException("Username is required.");
-            }
-
-            if (username[0] == '@')
-            {
-                throw new AppException("Username mustn't begin with \"@\".");
             }
 
             if (username.Length > 64)
