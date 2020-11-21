@@ -99,7 +99,7 @@ namespace Mystik.Controllers
             return Ok();
         }
 
-        [HttpGet("search/{query}")]
+        [HttpGet("search")]
         public async Task<IEnumerable<UserPublicData>> Search(string query)
         {
             return await _userService.Search(query);
