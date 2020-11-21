@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Mystik.Entities;
 using Mystik.Helpers;
+using Mystik.Models;
 using Mystik.Models.User;
 using Mystik.Services;
 

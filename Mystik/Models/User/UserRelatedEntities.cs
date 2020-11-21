@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Mystik.Entities
+namespace Mystik.Models
 {
     public class UserRelatedEntities
     {

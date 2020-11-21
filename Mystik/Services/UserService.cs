@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Mystik.Data;
 using Mystik.Entities;
 using Mystik.Helpers;
+using Mystik.Models;
 
 namespace Mystik.Services
 {
