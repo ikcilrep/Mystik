@@ -32,7 +32,7 @@ namespace Mystik.Controllers
             _userService = userService;
         }
 
-        [HttpGet("removed/{id}")]
+        [HttpPost("removed/{id}")]
         public async Task<IActionResult> GetRemoved(Guid id, UserRelatedEntities model)
         {
             var currentUserId = Guid.Parse(User.Identity.Name);
@@ -56,7 +56,7 @@ namespace Mystik.Controllers
             return await users.GetJsonRepresentableUsers(model.Since);
         }
 
-        [HttpGet("{id}")]
+        [HttpPost("{id}")]
         public async Task<IActionResult> Get(Guid id, Get model)
         {
             if (model.Since == null)
