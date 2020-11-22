@@ -143,6 +143,7 @@ namespace Mystik.Hubs
             var currentUserId = Context.GetCurrentUserId();
             if (await _userService.IsUserInvited(inviterId, currentUserId))
             {
+                await _userService.DeleteInvitations(inviterId, new List<Guid>() { currentUserId });
                 await _userService.AddFriend(inviterId, currentUserId);
 
                 await Clients.User(inviterId.ToString()).AddFriend(currentUserId);
