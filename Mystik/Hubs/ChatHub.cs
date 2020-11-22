@@ -28,7 +28,7 @@ namespace Mystik.Hubs
 
         public async Task SendMessage(byte[] encryptedContent, Guid conversationId)
         {
-            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            var currentUserId = Context.GetCurrentUserId();
             var conversation = await _conversationService.Retrieve(conversationId);
             if (conversation != null
                 && await _messageService.IsTheConversationMember(conversationId, currentUserId))
@@ -49,7 +49,7 @@ namespace Mystik.Hubs
 
         public async Task EditMessage(Guid messageId, byte[] newEncryptedContent)
         {
-            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            var currentUserId = Context.GetCurrentUserId();
             var message = await _messageService.Retrieve(messageId);
 
             if (message != null && message.SenderId == currentUserId)
@@ -64,7 +64,7 @@ namespace Mystik.Hubs
 
         public async Task DeleteMessage(Guid messageId)
         {
-            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            var currentUserId = Context.GetCurrentUserId();
             var message = await _messageService.Retrieve(messageId);
 
             if (message != null && message.SenderId == currentUserId)
@@ -79,7 +79,7 @@ namespace Mystik.Hubs
 
         public async Task CreateConversation(string name, byte[] passwordHashData, IEnumerable<Guid> usersIds)
         {
-            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            var currentUserId = Context.GetCurrentUserId();
             var conversation = await _conversationService.Create(name, passwordHashData, currentUserId);
             var membersIds = usersIds.ToHashSet();
 
@@ -98,7 +98,7 @@ namespace Mystik.Hubs
             {
                 var members = await _conversationService.Delete(conversationId);
 
-                members = members.Where(id => id != Context.User.Identity.Name).ToStringList();
+                members = members.Where(id => id != Context.GetCurrentUserId().ToString()).ToStringList();
 
                 await Clients.Users(members).LeaveConversation(conversationId);
             }
@@ -110,7 +110,7 @@ namespace Mystik.Hubs
             {
                 var members = await _conversationService.ChangeName(conversationId, newName);
 
-                members = members.Where(id => id != Context.User.Identity.Name).ToStringList();
+                members = members.Where(id => id != Context.GetCurrentUserId().ToString()).ToStringList();
 
                 await Clients.Users(members).ChangeConversationName(conversationId, newName);
             }
@@ -118,13 +118,13 @@ namespace Mystik.Hubs
 
         private async Task<bool> CanTheCurrentUserModifyTheConversation(Guid conversationId)
         {
-            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            var currentUserId = Context.GetCurrentUserId();
             return await _conversationService.IsTheConversationManager(conversationId, currentUserId);
         }
 
         public async Task InviteFriends(List<Guid> invitedIds)
         {
-            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            var currentUserId = Context.GetCurrentUserId();
             var usersToNotify = await _userService.InviteFriends(currentUserId, invitedIds);
 
             await Clients.Users(usersToNotify).ReceiveInvitation(currentUserId);
@@ -132,7 +132,7 @@ namespace Mystik.Hubs
 
         public async Task DeleteInvitations(List<Guid> invitedIds)
         {
-            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            var currentUserId = Context.GetCurrentUserId();
             await _userService.DeleteInvitations(currentUserId, invitedIds);
 
             await Clients.Users(invitedIds.ToStringList()).DeleteInvitation(currentUserId);
@@ -140,7 +140,7 @@ namespace Mystik.Hubs
 
         public async Task AddFriend(Guid inviterId)
         {
-            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            var currentUserId = Context.GetCurrentUserId();
             if (await _userService.IsUserInvited(inviterId, currentUserId))
             {
                 await _userService.AddFriend(inviterId, currentUserId);
@@ -151,7 +151,7 @@ namespace Mystik.Hubs
 
         public async Task DeleteFriends(List<Guid> friendsIds)
         {
-            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            var currentUserId = Context.GetCurrentUserId();
             await _userService.DeleteFriends(currentUserId, friendsIds);
 
             await Clients.Users(friendsIds.ToStringList()).DeleteFriend(currentUserId);
@@ -173,7 +173,7 @@ namespace Mystik.Hubs
 
         public async Task DeleteConversationMembers(Guid conversationId, List<Guid> usersIds)
         {
-            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            var currentUserId = Context.GetCurrentUserId();
             if (await CanTheCurrentUserModifyTheConversation(conversationId) || (usersIds.Count == 1 && usersIds.Single() == currentUserId))
             {
                 var usersToDeleteIds = await usersIds.GetUsersToDelete(
@@ -191,7 +191,7 @@ namespace Mystik.Hubs
 
         public async Task UpdateUser(string newNickname, string newPassword)
         {
-            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            var currentUserId = Context.GetCurrentUserId();
 
             var usersToNotify = await _userService.Update(currentUserId, newNickname, newPassword);
 
@@ -203,7 +203,7 @@ namespace Mystik.Hubs
 
         public async Task DeleteUser(Guid userId)
         {
-            var currentUserId = Guid.Parse(Context.User.Identity.Name);
+            var currentUserId = Context.GetCurrentUserId();
             if (userId == currentUserId || Context.User.IsInRole(Role.Admin))
             {
                 var usersToNotify = await _userService.Delete(userId);

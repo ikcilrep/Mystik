@@ -36,7 +36,7 @@ namespace Mystik.Controllers
         [HttpPost("removed/{id}")]
         public async Task<IActionResult> GetRemoved(Guid id, UserRelatedEntities model)
         {
-            var currentUserId = Guid.Parse(User.Identity.Name);
+            var currentUserId = User.GetCurrentUserId();
             if (currentUserId == id)
             {
                 var removedEntities = await _userService.GetNotExisting(id, model);
@@ -65,7 +65,7 @@ namespace Mystik.Controllers
                 model.Since = DateTime.UnixEpoch;
             }
 
-            var currentUserId = Guid.Parse(User.Identity.Name);
+            var currentUserId = User.GetCurrentUserId(); 
 
             if (id != currentUserId && !User.IsInRole(Role.Admin))
                 return Forbid();
@@ -90,7 +90,7 @@ namespace Mystik.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var currentUserId = Guid.Parse(User.Identity.Name);
+            var currentUserId = User.GetCurrentUserId();
 
             if (id != currentUserId && !User.IsInRole(Role.Admin))
                 return Forbid();
@@ -120,7 +120,7 @@ namespace Mystik.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString()),
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                     new Claim(ClaimTypes.Role, user.Role)
                 }),
                 Expires = expirationDate,

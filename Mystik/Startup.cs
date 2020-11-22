@@ -58,7 +58,7 @@ namespace Mystik
                     OnTokenValidated = async context =>
                     {
                         var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                        var userId = Guid.Parse(context.Principal.Identity.Name);
+                        var userId = context.GetCurrentUserId();
                         var user = await userService.Retrieve(userId);
                         if (user == null)
                         {
