@@ -16,7 +16,7 @@ namespace Mystik.Hubs
         Task ChangeConversationName(Guid conversationId, string newName);
         Task ReceiveInvitation(Guid inviterId);
         Task DeleteInvitation(Guid inviterId);
-        Task AddFriend(Guid inviterId);
+        Task AddFriend(Guid invitedId);
         Task DeleteFriend(Guid friendId);
         Task UpdateFriend(Guid friendId, string newNickname);
         Task DeleteConversationMembers(Guid conversationId, IEnumerable<Guid> membersIds);

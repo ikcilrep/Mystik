@@ -145,7 +145,7 @@ namespace Mystik.Hubs
             {
                 await _userService.AddFriend(inviterId, currentUserId);
 
-                await Clients.User(inviterId.ToString()).AddFriend(inviterId);
+                await Clients.User(inviterId.ToString()).AddFriend(currentUserId);
             }
         }
 
