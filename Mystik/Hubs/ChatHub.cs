@@ -40,7 +40,8 @@ namespace Mystik.Hubs
                     Id = message.Id,
                     EncryptedContent = encryptedContent,
                     CreatedDate = message.CreatedDate,
-                    SenderId = currentUserId
+                    SenderId = currentUserId,
+                    ConversationId = message.ConversationId
                 };
 
                 await Clients.Users(conversation.GetMembers())
