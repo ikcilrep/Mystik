@@ -53,7 +53,7 @@ namespace Mystik.Entities
 
         public IReadOnlyList<string> GetMembers()
         {
-            return Members.ToStringList();
+            return Members.Select(m => m.UserId).ToStringList();
         }
 
         public override bool Equals(object obj)
