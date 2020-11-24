@@ -36,7 +36,7 @@ namespace Mystik.Services
             return existingUsers.ToList();
         }
 
-        public async Task<Conversation> Create(string name, byte[] passwordHashData, Guid userId)
+        public async Task<Guid> Create(string name, byte[] passwordHashData, Guid userId)
         {
 
             var conversationId = Guid.NewGuid();
@@ -53,14 +53,14 @@ namespace Mystik.Services
                 PasswordHashData = passwordHashData,
                 Managers = new HashSet<ConversationManager> { managedConversation },
                 ModifiedDate = DateTime.UtcNow,
-                Messages = new HashSet<Message>{},
-                Members = new HashSet<ConversationMember> {}
+                Messages = new HashSet<Message> { },
+                Members = new HashSet<ConversationMember> { }
             };
             _context.Add(conversation);
             _context.Add(managedConversation);
 
             await _context.SaveChangesAsync();
-            return conversation;
+            return conversationId;
         }
 
         public async Task<IReadOnlyList<string>> Delete(Guid id)
@@ -99,7 +99,9 @@ namespace Mystik.Services
                                                .Include(c => c.Messages)
                                                    .ThenInclude(m => m.Sender)
                                                .Include(c => c.Managers)
+                                                   .ThenInclude(cm => cm.Manager)
                                                .Include(c => c.Members)
+                                                   .ThenInclude(cm => cm.User)
                                                .FirstAsync(c => c.Id == id);
         }
 

@@ -34,7 +34,7 @@ namespace Mystik.Entities
             return new JsonRepresentableMessage
             {
                 Id = Id,
-                Sender = Sender.GetPublicData(),
+                SenderId = SenderId,
                 CreatedDate = CreatedDate,
                 EncryptedContent = await GetEncryptedContent()
             };

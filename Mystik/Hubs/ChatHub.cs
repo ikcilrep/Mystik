@@ -39,7 +39,7 @@ namespace Mystik.Hubs
                     Id = message.Id,
                     EncryptedContent = encryptedContent,
                     CreatedDate = message.CreatedDate,
-                    Sender = new UserPublicData { Id = currentUserId }
+                    SenderId = currentUserId
                 };
 
                 await Clients.Users(conversation.GetMembers())
@@ -77,16 +77,17 @@ namespace Mystik.Hubs
             }
         }
 
-        public async Task CreateConversation(string name, byte[] passwordHashData, IEnumerable<Guid> usersIds)
+        public async Task CreateConversation(string name, List<byte> passwordHashDataList, IEnumerable<Guid> usersIds)
         {
+            var passwordHashData = passwordHashDataList.ToArray();
             var currentUserId = Context.GetCurrentUserId();
-            var conversation = await _conversationService.Create(name, passwordHashData, currentUserId);
+            var conversationId = await _conversationService.Create(name, passwordHashData, currentUserId);
             var membersIds = usersIds.ToHashSet();
-
             membersIds.Add(currentUserId);
 
-            await _conversationService.AddMembers(conversation.Id, membersIds);
+            await _conversationService.AddMembers(conversationId, membersIds);
 
+            var conversation = await _conversationService.Retrieve(conversationId);
             var representableConversation = await conversation.ToJsonRepresentableObject();
 
             await Clients.Users(membersIds.ToStringList()).JoinConversation(representableConversation);
