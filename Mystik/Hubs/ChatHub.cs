@@ -26,8 +26,9 @@ namespace Mystik.Hubs
             _userService = userService;
         }
 
-        public async Task SendMessage(byte[] encryptedContent, Guid conversationId)
+        public async Task SendMessage(List<byte> encryptedContentList, Guid conversationId)
         {
+            var encryptedContent = encryptedContentList.ToArray();
             var currentUserId = Context.GetCurrentUserId();
             var conversation = await _conversationService.Retrieve(conversationId);
             if (conversation != null
